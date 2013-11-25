@@ -3,7 +3,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
                              http://maven.apache.org/xsd/maven-4.0.0.xsd">
    <modelVersion>4.0.0</modelVersion>
-   <name>converter.git Maven Settings</name>
+   <name>ThinApp Factory Maven Settings</name>
    <groupId>com.vmware.thinapp</groupId>
    <artifactId>pom</artifactId>
    <version>1.0-SNAPSHOT</version>
@@ -48,25 +48,46 @@ dependency so that slf4j is used. -->
                </execution>
             </executions>
          </plugin>
-	 <!-- Disable source jar generation. -->
+         <!-- Disable source jar generation. -->
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-source-plugin</artifactId>
             <executions>
                <execution>
-		 <id>attach-sources</id>
-		 <phase>never</phase>
+                 <id>attach-sources</id>
+                 <phase>never</phase>
                </execution>
             </executions>
          </plugin>
       </plugins>
    </build>
-   <distributionManagement>
-      <snapshotRepository>
-         <id>gobuild</id>
-         <name>gobuild</name>
-         <url>${gobuildOutput}</url>
-         <uniqueVersion>false</uniqueVersion>
-      </snapshotRepository>
-   </distributionManagement>
+
+   <profiles>
+      <profile>
+         <id>use-online-repositories</id>
+
+         <activation>
+            <property>
+               <name>useOnlineRepositories</name>
+               <value>true</value>
+            </property>
+         </activation>
+
+         <repositories>
+            <repository>
+               <id>akka-repo</id>
+               <name>akka release repository (old)</name>
+               <url>http://repo.akka.io/releases</url>
+            </repository>
+         </repositories>
+
+         <pluginRepositories>
+            <pluginRepository>
+               <id>jcompressor-release-repo</id>
+               <name>jcompressor release repository</name>
+               <url>http://jcompressor.googlecode.com/svn/maven/releases</url>
+            </pluginRepository>
+         </pluginRepositories>
+      </profile>
+   </profiles>
 </project>

@@ -14,3 +14,15 @@ META-INF
 *.iws
 rebel.xml
 
+# utils
+*.exe
+
+# vim
+.*.swp
+.*.swo
+
+# python
+*.egg
+*.egg-info
+*.pyc
+build
