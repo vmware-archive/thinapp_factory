@@ -49,7 +49,11 @@ public class VIConstants
    public static final String GUEST_FULLNAME    = "guestFullName";
    public static final String GUEST_ID          = "guestId";
 
-   /** List of guestId's that are supported by TAF */
+   /**
+    * List of guestId's that are supported by TAF
+    * @see http://pubs.vmware.com/vsphere-50/index.jsp?topic=%2Fcom.vmware.wssdk.apiref.doc_50%2Fvim.vm.GuestOsDescriptor.GuestOsIdentifier.html
+    */
    public static final List<String> GUEST_ID_SUPPOTRED = Arrays.asList(
+         "winvista64Guest", "windows7_64Guest", "windows8_64Guest", "winXPPro64Guest",
          "winvistaGuest", "windows7Guest", "windows8Guest", "winXPProGuest");
 }
