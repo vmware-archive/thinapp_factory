@@ -1,0 +1,141 @@
+################################################################################
+## ThinApp Factory WebUI
+## (c) 2011 VMware, Inc. All rights reserved.
+################################################################################
+
+################################################################################
+## dashboard-index.vm
+##
+## The dashbaord view shows common system statistics and such.
+################################################################################
+
+<script type="text/javascript">
+addLoad(function () {
+   VmTAF.dmgr = new DashboardManager(false);
+   VmTAF.dmgr.UpdateDashboard(10000);
+});
+</script>
+<div>
+   <div class="stack-editor dashMainSection ui-widget">
+      <div class="stack-header ui-widget-header ui-corner-top">
+         <span class="dashVideoLink">
+            #if( "$!appfactory.howToVideoUrl" != "" )
+               <a href="#" onclick="VmTAF.dmgr.ShowVideo('$appfactory.howToVideoUrl');">
+                  #springMessage("M.DASHBOARD.VIDEO_LINK")
+               </a>
+            #end
+         </span>
+         <span class="text">Getting Started with $appfactory.productName </span>
+      </div>
+
+      <div class="stack-group ui-widget-content" style="padding:0;">
+         <div id="workflow">
+            <map name='imap'>
+               <area href='#pageUrl("newui/settings#5")'
+                     title='#springMessage("M.DASHBOARD.TOOLTIP.FEED")'
+                     alt='#springMessage("M.DASHBOARD.TOOLTIP.FEED")'
+                     shape=RECT coords='30,125,88,185'>
+               <area href='#pageUrl("newui/settings#4")'
+                     title='#springMessage("M.DASHBOARD.TOOLTIP.FILESHARE")'
+                     alt='#springMessage("M.DASHBOARD.TOOLTIP.FILESHARE")'
+                     shape=RECT coords='21,190,90,260'>
+               <area href='#pageUrl("apps/add")'
+                     title='#springMessage("M.DASHBOARD.TOOLTIP.FILEUPLOAD")'
+                     alt='#springMessage("M.DASHBOARD.TOOLTIP.FILEUPLOAD")'
+                     shape=RECT coords='15,270,90,345'>
+               <area href='#pageUrl("newui/installers")'
+                     title='#springMessage("M.DASHBOARD.TOOLTIP.SELECT_APP")'
+                     alt='#springMessage("M.DASHBOARD.TOOLTIP.SELECT_APP")'
+                     shape=RECT coords='190,180,285,280'>
+##               <area href='#pageUrl("recipes")'
+##                     title='#springMessage("M.DASHBOARD.TOOLTIP.SELECT_RECIPE")'
+##                     alt='#springMessage("M.DASHBOARD.TOOLTIP.SELECT_RECIPE")'
+##                     shape=RECT coords='340,190,430,265'>
+               <area href='#pageUrl("newui/installers")'
+                     title='#springMessage("M.DASHBOARD.TOOLTIP.CONVERT")'
+                     alt='#springMessage("M.DASHBOARD.TOOLTIP.CONVERT")'
+                     shape=RECT coords='497,195,585,265'>
+               <area href='#pageUrl("newui/installers")'
+                     title='#springMessage("M.DASHBOARD.TOOLTIP.MANUAL_MODE")'
+                     alt='#springMessage("M.DASHBOARD.TOOLTIP.MANUAL_MODE")'
+                     shape=RECT coords='505,325,605,423'>
+               <area href='#pageUrl("newui/projects")'
+                     title='#springMessage("M.DASHBOARD.TOOLTIP.CONFIG_PKG_SETTINGS")'
+                     alt='#springMessage("M.DASHBOARD.TOOLTIP.CONFIG_PKG_SETTINGS")'
+                     shape=RECT coords='580,20,665,100'>
+               <area href='#pageUrl("newui/projects")'
+                     title='#springMessage("M.DASHBOARD.TOOLTIP.BUILDS")'
+                     alt='#springMessage("M.DASHBOARD.TOOLTIP.BUILDS")'
+                     shape=RECT coords='670,190,762,265'>
+               <area href="#springUrl('/store')" target="window"
+                     title='#springMessage("M.DASHBOARD.TOOLTIP.APP_STORE")'
+                     alt='#springMessage("M.DASHBOARD.TOOLTIP.APP_STORE")'
+                     shape=RECT coords='850,150,980,300'>
+            </map>
+            <img src="#imageUrl("workflow-2.png")" height="426" width="1000" usemap="#imap" alt="Workflow Diagram">
+         </div> ## workflow
+      </div>
+
+      <div class="stack-footer ui-widget-header ui-corner-bottom">&nbsp;</div>
+   </div>
+
+   <div class="stack-editor dashMainSection ui-widget">
+      <div class="stack-header ui-widget-header ui-corner-top">
+         <span class="text">System Data</span>
+      </div>
+
+      <div class="stack-group ui-widget-content" style="text-align:center;">
+         <div class="dash-box">
+            <div class="dash-box-header">
+               <a class="title-link"
+                  href="#pageUrl('newui/settings#4')">Subscribed File Shares</a></div>
+            <div class="dash-box-content stat" id="fileshare-stats">
+               <div class="ajax-loader"></div>
+            </div>
+         </div>
+         <div class="dash-box">
+            <div class="dash-box-header">
+               <a class="title-link"
+                  href="#pageUrl('newui/settings#5')">Subscribed Feeds</a></div>
+            <div class="dash-box-content stat" id="feed-stats">
+               <div class="ajax-loader"></div>
+            </div>
+         </div>
+         <div class="dash-box">
+            <div class="dash-box-header">
+               <a class="title-link"
+                  href="#pageUrl('newui/installers')">Subscribed Applications</a></div>
+            <div class="dash-box-content stat" id="app-stats">
+               <div class="ajax-loader"></div>
+            </div>
+         </div>
+         <div class="dash-box">
+            <div class="dash-box-header">
+               <a class="title-link"
+                  href="#pageUrl('newui/tasks')">Running Tasks</a></div>
+            <div class="dash-box-content stat" id="task-stats">
+               <div class="ajax-loader"></div>
+            </div>
+         </div>
+         <div class="dash-box">
+            <div class="dash-box-header">
+               <a class="title-link"
+                  href="#pageUrl('newui/projects')">Published Projects</a></div>
+            <div class="dash-box-content stat" id="build-stats">
+               <div class="ajax-loader"></div>
+            </div>
+         </div>
+         <div class="dash-box">
+            <div class="dash-box-header">
+               <a class="title-link"
+                  href="#pageUrl('newui/settings#0')">Workpools</a>
+            </div>
+            <div class="dash-box-content stat" id="workpool-stats">
+               <div class="ajax-loader"></div>
+            </div>
+         </div>
+      </div>
+      <div class="stack-footer ui-widget-header ui-corner-bottom">&nbsp;</div>
+   </div>
+
+</div> ## dashboard-content

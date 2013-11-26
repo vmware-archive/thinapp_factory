@@ -1,0 +1,110 @@
+/* ***********************************************************************
+ * VMware ThinApp Factory
+ * Copyright (c) 2009-2013 VMware, Inc. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * ***********************************************************************/
+
+
+.application {
+   padding: 0;
+   margin: 2px;
+   margin-bottom: 5px;
+}
+
+.application.app-block .app-icon {
+   float: left;
+   width: 40px;
+   padding: 0;
+}
+
+.application.app-block .app-details {
+   margin-left: 40px;
+   padding: 0;
+   text-align: left !important;
+
+}
+
+.application .app-name {
+   font-weight: bold;
+   padding: 0;
+}
+
+.application .app-version {
+   padding: 0;
+}
+
+.application .app-desc {
+   font-style: italic;
+   color: #555;
+   font-size: 75%;
+   padding: 0;
+}
+.application.app-inline {
+   display: table;
+}
+.application.app-inline .app-icon {
+   display: table-cell;
+   padding: 2px;
+   vertical-align: middle;
+}
+.application.app-inline .app-details {
+   display: table-cell;
+   padding: 2px;
+   vertical-align: middle;
+}
+.application.app-inline .app-name {
+   display: inline;
+}
+.application.app-inline .app-version {
+   display: inline;
+   padding-left: 5px;
+}
+.application.app-inline .app-desc {
+   display: inline;
+   padding-left: 5px;
+}
+
+.big {
+    width:100%;
+    border-radius:30px;
+}
+
+.one-liner {
+    text-align: center;
+    padding:5px;
+}
+
+.picker-row {
+    padding: 5px 0;
+}
+
+.picker-row select {
+   max-width: 90%;
+}
+
+.button-holder {
+    padding-top: 10px;
+}
+#build-history-table .osColumn {
+    width:20%;
+}
+/* Upload progress span needs extra css to accomodate the save span */
+.upload-progress-bar {
+   padding: 3px 5px 0 0 !important;
+   width: 88%;
+}
+
+#wpImgButtons {
+   margin: 0 0 10px 0;
+}

@@ -1,0 +1,76 @@
+################################################################################
+## ThinApp Factory WebUI
+## (c) 2011 VMware, Inc. All rights reserved.
+################################################################################
+
+################################################################################
+## workpool-image.vm
+##
+## This file contains the HTML view for showing a list of workpool images.
+## No data is shown in the view by default: An ajax call is made to the server
+## to download feed data and populate the table dynamically.
+################################################################################
+
+<script type="text/javascript" charset="UTF-8">
+#if ($newUI)
+addLoad(function () {
+#end
+   VmTAF.contentNavigator.AddReadyFunction(function _vmImageReady() {
+      VmTAF.imgMgr = new VmImageManager(true, $("#image-table"));
+      VmTAF.imgMgr.UpdateImage(30000);
+   });
+
+   VmTAF.contentNavigator.AddCleanupFunction(function _vmImageCleanup() {
+      VmTAF.imgMgr = VmTAF.imgMgr.Destruct();
+      $('#img-delete-dialog').remove();
+   });
+#if ($newUI)
+});
+#end
+</script>
+
+#parse("include/main-top.vm")
+
+## Note: Form is mainly used for style & not to POST data to the server.
+<form class="primary" onsubmit="return false;">
+
+   ##
+   ## Buttons for interacting with datastores.
+   ##
+   <div class="button-row">
+      <button class="button" id="img-delete"
+         onclick="VmTAF.imgMgr.InitDeleteSelectedImage($('#img-delete-dialog'));">
+         #springMessage('T.COMMON.DELETE')
+      </button>
+      <button class="button single-button" id="wp-list"
+         onclick="VmTAF.contentNavigator.LoadPage('/admin/settings');">
+         #springMessage('T.BUTTON.VIEW_WORKPOOL')
+      </button>
+   </div>
+
+   ##
+   ## Table for workpool images
+   ## This gets populated dynamically using Ajax calls from Javascript.
+   ##
+   <table id="image-table" class="data">
+      <thead>
+         <tr>
+            <th width="20px"><input type="checkbox" class="table-row-selector"/></th>
+            <th width="220px">Image Name</th>
+            <th>Associated Workpools</th>
+            <th width="200px">Status</th>
+            <th width="140px">OS Type</th>
+            <th width="140px">OS Variant</th>
+         </tr>
+      </thead>
+      <tbody>
+         ## Data is loaded dynamically from TableWrapper
+      </tbody>
+   </table>
+</form>
+
+<div id="img-delete-dialog" class="no-show">
+   ## Placeholder for delete popup to ask for vm deletion while removing image from taf.
+</div>
+
+#parse("include/main-bottom.vm")

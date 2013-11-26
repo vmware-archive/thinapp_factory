@@ -1,0 +1,51 @@
+################################################################################
+## ThinApp Factory WebUI
+## (c) 2011 VMware, Inc. All rights reserved.
+################################################################################
+
+################################################################################
+## builds-by-app.vm
+##
+## Shows a table of applications that have builds; each row shows the
+## application, and info about the builds (count, etc)
+################################################################################
+
+<script type="text/javascript">
+#if ($newUI)
+addLoad(function () {
+#end
+   VmTAF.contentNavigator.AddReadyFunction(function _buildsByAppReady() {
+      // Create a button row and set the button with the current view as active.
+      $('#viewButtons').find('#${buildView}').addClass('ui-state-active').attr('disabled', false);
+      $('#viewButtons').buttonset();
+      VmTAF.buildManager = new BuildManager($("#apps-table"), null, null, true);
+      VmTAF.buildManager.UpdateAppsView(3000);
+   });
+
+   VmTAF.contentNavigator.AddCleanupFunction(function _buildsByAppCleanup() {
+      VmTAF.buildManager = VmTAF.buildManager.Destruct();
+   });
+#if ($newUI)
+});
+#end
+</script>
+
+#parse("builds/builds-title.vm")
+
+<form id="builds-form" class="primary" onsubmit="return false;">
+   <table id="apps-table" class="data">
+      <thead>
+         <tr>
+            ## For now, there are no row operations, so hide the checkbox
+            ## <th width="20"><input type="checkbox" class="table-row-selector"/></th>
+            <th width="320px">#springMessage("T.APPS.APPLICATION")</th>
+            <th>#springMessage("T.APPS.VENDOR")</th>
+            <th>#springMessage("T.BUILDS.MOST_RECENT_BUILD")</th>
+            <th>#springMessage("T.BUILDS.PUBLISHED_TOTAL")</th>
+         </tr>
+      </thead>
+      <tbody>
+         ## Populated dynamically by BuildManager
+      </tbody>
+   </table>
+</form>

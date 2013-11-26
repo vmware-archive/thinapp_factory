@@ -1,0 +1,77 @@
+################################################################################
+## ThinApp Factory WebUI
+## (c) 2011 VMware, Inc. All rights reserved.
+################################################################################
+
+################################################################################
+## builds-index.vm
+##
+## This file contains the HTML view for showing a list of builds, with an
+## optional state value. No data is shown in the view by default: An ajax call
+## is made to the server to download build data and populate the table
+## dynamically.
+################################################################################
+
+<script type="text/javascript">
+#if ($newUI)
+addLoad(function () {
+#end
+   VmTAF.contentNavigator.AddReadyFunction(function _buildsIndexReady() {
+      VmTAF.buildManager = new BuildManager($("#builds-table"), "$!status");
+      VmTAF.buildManager.UpdateBuildsView(3000);
+   });
+
+   VmTAF.contentNavigator.AddCleanupFunction(function _buildsIndexCleanup() {
+      VmTAF.buildManager = VmTAF.buildManager.Destruct();
+   });
+#if ($newUI)
+});
+#end
+</script>
+
+#parse("include/main-top.vm")
+
+<form
+      id="builds-form"
+      class="primary"
+      onsubmit="return false;">
+
+   <div class="button-row">
+      ## This is a bit forced; perhaps there is a better way?
+      #if (!$status || $status == "STAGED")
+         <button
+            class="button"
+            onclick="VmTAF.buildManager.SetStatuses('PUBLISHED');">
+            Publish
+         </button>
+      #end
+      #if (!$status || $status == "PUBLISHED")
+         <button
+            class="button"
+            onclick="VmTAF.buildManager.SetStatuses('STAGED');">
+            Unpublish
+         </button>
+      #end
+      <button
+         class="button"
+         onclick="VmTAF.buildManager.RebuildSelected();">
+         Rebuild
+      </button>
+      <button
+         class="button"
+         onclick="VmTAF.buildManager.DeleteSelected();">
+         Delete
+      </button>
+      #if (!$status || $status == "STAGED")
+         <button
+            class="button"
+            onclick="VmTAF.contentNavigator.LoadPage('/builds/import');">
+            Import
+         </button>
+      #end
+   </div>
+
+   #parse("include/builds-table.vm")
+</form>
+
+#parse("include/main-bottom.vm")

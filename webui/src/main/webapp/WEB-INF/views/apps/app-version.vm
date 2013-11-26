@@ -1,0 +1,43 @@
+################################################################################
+## ThinApp Factory WebUI
+## (c) 2011 VMware, Inc. All rights reserved.
+################################################################################
+
+################################################################################
+## app-version.vm
+##
+## This is a HTML template that displays other versions of the app.
+## Each of these is a link that load the respective apps.
+################################################################################
+
+<div id="app-version">
+   <div class="section-head">Other Versions</div>
+   #if($appVersions && !$appVersions.isEmpty())
+      <table id="feed-applications-table" class="data ui-widget">
+         <tr>
+            <th class="ui-state-default">Application</th>
+            <th class="ui-state-default">Version</th>
+            <th class="ui-state-default">Vendor</th>
+            <th class="ui-state-default">Language</th>
+            <th class="ui-state-default">Revision</th>
+            <th class="ui-state-default">Data Source</th>
+         </tr>
+         #foreach($item in $appVersions)
+            <tr class="ui-widget-content">
+               <td><a href="#" onclick="VmTAF.appMgr.PrepareDataAndNavigate('/apps/detail/${item.id}');">
+                  ${item.name}</a>
+               </td>
+               <td> ${item.version}</td>
+               <td>$!{item.vendor}</td>
+               <td>$!{item.locale}</td>
+               <td>$!{item.installerRevision}</td>
+               <td><div class="data-source-icon data-source-type-$!{item.dataSourceType}"></div>
+                  $!{item.dataSourceName}
+               </td>
+            </tr>
+         #end
+      </table>
+   #else
+      <div class="no-version">#springMessage("M.APPS.NO_OTHER_VERSION")</div>
+   #end
+</div>

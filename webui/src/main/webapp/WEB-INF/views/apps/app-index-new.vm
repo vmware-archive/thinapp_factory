@@ -1,0 +1,60 @@
+################################################################################
+## ThinApp Factory WebUI
+## (c) 2011 VMware, Inc. All rights reserved.
+################################################################################
+
+################################################################################
+## app-index-new.vm
+##
+## The list view with a sidebar for the application list page (newUI).
+################################################################################
+
+<script type="text/javascript" charset="UTF-8">
+    //define config object
+    addLoad(function () {
+        AfMakeAsyncDialog(
+                "#idDialog",
+                "#idNewFileshareButton",
+                "$contextPath/fileshares/create?dialog=true",
+                "New Fileshare"
+        );
+        AfMakeAsyncDialog(
+                "#idDialog",
+                "#idUploadInstallerButton",
+                "$contextPath/apps/add?dialog=true",
+                "Upload Installer",
+                { OK: { text: 'Upload & Save' }, CANCEL: { text: 'Close Dialog' } }
+        );
+        AfMakeAsyncDialog(
+                "#idDialog",
+                "#idSubscribeFeeds",
+                "$contextPath/feeds/create?dialog=true",
+                "Subscribe to Feed"
+        );
+    });
+</script>
+
+<div class="sidebar">
+   <div class="sidebar-section">
+      <div class="sidebar-head">#springMessage("T.INTALLERS")</div>
+      <ul class="sidebarList">## Todo: localize
+         <li><a href="#springUrl('/fileshare/create')">Add Fileshare</a></li>
+         <li class="button-link" id="idUploadInstallerButton">Upload Installer...</li>
+         <li class="button-link" id="idSubscribeFeeds">Subscribe to Feed...</li>
+      </ul>
+   </div>
+
+   <div class="sidebar-section">
+      <div class="sidebar-head">#springMessage("T.APPS.VENDORS")</div>
+      <ul class="sidebarList" id="idVendors"></ul>
+   </div>
+
+   <div class="sidebar-section">
+      <div class="sidebar-head">#springMessage("T.DATA_SOURCES")</div>
+      <ul class="sidebarList" id="idSources"></ul>
+   </div>
+</div>
+<div class="mainContent">
+    #parse($legacyView)
+</div>
+<div id="idDialog"></div>

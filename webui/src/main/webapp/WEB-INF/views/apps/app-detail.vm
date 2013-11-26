@@ -1,0 +1,92 @@
+################################################################################
+## ThinApp Factory WebUI
+## (c) 2011 VMware, Inc. All rights reserved.
+################################################################################
+
+################################################################################
+## app-detail.vm
+##
+## This is the HTML view for displaying the application detail page.
+## This page consists of the following sections:
+##   1. App info section on left
+##   2. App header with app and version#&nbsp;&nbsp;
+##   3. Latest app version available section.
+##   4. Recipe section - links to create/pick recipe & display picked recipe.
+##   5. Build capture widget to select wp, ds, rt and capture(auto/mm)
+##   6. Capture history for that app.
+##   7. Other version of the same app displayed with latest version first.
+################################################################################
+
+<script type="text/javascript">
+#if ($newUI)
+#set($insideTab=true)
+addLoad(function () {
+#end
+   VmTAF.contentNavigator.AddReadyFunction(function _buildDefineReady() {
+      VmTAF.appMgr = new AppManager(
+         $('#build-history-table'),
+         null,
+         ${app.id} );
+      VmTAF.appMgr.buildValidator = new Validator('#app-build-form');
+      VmTAF.appMgr.LoadBuildHistoryAndButton(5000, $('#app-build-form'));
+      VmTAF.appMgr.RenderIcon(${icons});
+      VmTAF.appMgr.RenderUris('.uri-field span');
+   });
+
+   VmTAF.contentNavigator.AddCleanupFunction(function _buildDefineCleanup() {
+      VmTAF.appMgr.Destruct();
+      delete VmTAF.appMgr;
+   });
+#if ($newUI)
+});
+#end
+</script>
+#parse("include/main-top.vm")
+
+## Main page defining the app page.
+<div class="app-detail-main">
+   <div class="app-left">
+      #set($allowEdit = 1)
+      #parse("apps/app-info.vm")
+   </div>
+
+   <div class="app-page">
+      <div class="app-top">
+         ## App, recipe and build options are displayed in this section.
+         <div class="build-pick-holder">
+            <form id="app-build-form">
+               <input type="hidden" name="applicationId" value="${app.id}"/>
+               <input type="hidden" name="recipeId" value="$!{recipe.id}"/>
+               #parse("builds/build-wp-rt-ds-picker.vm")
+            </form>
+         </div>
+         <div class="app-center">
+            <div class="desc">${app.name} ${app.version}</div>
+
+            #if ($newerApp) ## If there is a newer app, inform the user.
+               <div id="new-version">
+                  <div class="icon"></div>
+                  <span>A newer version
+                     <b><a href="#" onclick="VmTAF.appMgr.PrepareDataAndNavigate('/apps/detail/${newerApp.id}');"
+                        >${newerApp.name} ${newerApp.version}</a></b>
+                     is available !
+                  </span>
+               </div>
+            #end
+
+            <div class="app-recipe">
+               #parse("apps/app-recipe.vm")
+            </div>
+         </div>
+         <div class="clearDiv"></div>
+      </div>
+
+      ## Include app capture request history.
+      #parse("apps/app-build-history.vm")
+
+      ## Application's other versions that are available here.
+      #parse("apps/app-version.vm")
+   </div>
+</div>
+
+#parse("include/main-bottom.vm")

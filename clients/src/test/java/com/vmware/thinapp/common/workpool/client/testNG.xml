@@ -1,0 +1,28 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="Workpool API Test Suite" verbose="1" parallel="false"
+thread-count="2"  >
+   <test verbose="2" name="WorkPoolApiTest">
+      <parameter name="wpUrl" value="http://10.114.64.43/mm/workpool" />
+      <parameter name="sourceIso" value="[Storage1 (2)] iso/en_windows_xp_professional_with_service_pack_3_x86_cd_vl_x14-73974.iso" />
+      <parameter name="networkName" value="VM Network" />
+      <parameter name="osType" value="winXPPro" />
+      <parameter name="osVariant" value="" />
+      <parameter name="vmUserName" value="apitester" />
+      <parameter name="vmOrg" value="VMware" />
+      <parameter name="vmLicKey" value="DV8QH-FX2F9-62XKH-QXF77-K4GQM" />
+      <parameter name="vmKMSServer" value="" />
+      <parameter name="vmImageCreatedName" value="xerox-thinlab-05-xp-apiTestCreateWPFromISO" />
+      <parameter name="isoWorkPoolCreatedName" value="apiTestCreateWPFromISO-xp-wp" />
+      <parameter name="existingImageWorkpoolCreatedName" value="apiTestCreateWPFromExistingImage-xp-wp" />
+      <parameter name="workPoolMaximum" value="5" />
+      <classes>
+         <class name="com.vmware.thinapp.common.workpool.client.WorkpoolClientTestNG">
+            <methods>
+               <include name="createLinkedWP_deleteWP_ExistingVMImage"></include>
+               <include name="createLinkedWP_FromISO"></include>
+               <include name="deleteLinkedWP_FromISO"></include>
+            </methods>
+         </class>
+      </classes>
+   </test>
+</suite>

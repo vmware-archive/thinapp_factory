@@ -1,0 +1,25 @@
+################################################################################
+## ThinApp Factory WebUI
+## (c) 2011 VMware, Inc. All rights reserved.
+################################################################################
+
+################################################################################
+## builds-title.vm
+##
+## Shows the title and the various views associated with the builds listing 
+## page. This shows the current, active and disabled views.
+################################################################################
+
+## Display the following under the 'mainContent' section.
+<div class="panel-title">
+   $pageTitle
+   <span id="viewButtons" class="choice-buttons">
+      ## Button ids are based on BuildController.BuildView enums.
+      <button id="allBuilds" onclick='VmTAF.contentNavigator.LoadPage("/builds");'>
+         #springMessage("M.BUILDS.VIEW_ALL")</button>
+      <button id="byapp" onclick='VmTAF.contentNavigator.LoadPage("/builds?view=byapp");'>
+         #springMessage("M.BUILDS.VIEW_BYAPP")</button>
+      <button id="appBuilds" disabled title='#springMessage("M.BUILDS.PERAPP_DISABLED")'>
+         #springMessage("M.BUILDS.VIEW_PERAPP")</button>
+   </span>
+</div>

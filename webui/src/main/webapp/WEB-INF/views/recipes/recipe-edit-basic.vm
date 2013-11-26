@@ -1,0 +1,28 @@
+################################################################################
+## ThinApp Factory WebUI
+## (c) 2011 VMware, Inc. All rights reserved.
+################################################################################
+
+################################################################################
+## recipe-edit-basic.vm
+##
+## The tab in the recipe editor that handles basic recipe info, such as its
+## name, description, and the applications it applies to.
+################################################################################
+
+<div class="button-row">
+   <button
+      class="button"
+      onclick="VmTAF.recipeManager.SaveRecipe();">
+      #springMessage("T.RECIPES.SAVE_RECIPE")
+   </button>
+   <button
+      class="button"
+      onclick="VmTAF.recipeManager.cancel();">
+      #springMessage("T.COMMON.CANCEL")
+   </button>
+</div>
+
+<div id="recipe-basic-stack">
+   ## Stack editor added here by RecipeManager
+</div>

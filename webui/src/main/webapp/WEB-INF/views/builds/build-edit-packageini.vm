@@ -1,0 +1,116 @@
+################################################################################
+## ThinApp Factory WebUI
+## (c) 2011 VMware, Inc. All rights reserved.
+################################################################################
+
+################################################################################
+## build-edit-packageini.vm
+##
+## This view allows editing of "INI" data.
+################################################################################
+
+<div class="button-row">
+   <button
+      class="button"
+      onclick="VmTAF.buildManager.SavePackageIni('$buildId', VmTAF.buildEditor.iniEditor.GetIniData(),
+         function(data) {
+            VmTAF.buildEditor.iniEditor.Populate(data);
+            VmTAF.buildEditor.iniEditor.PopulateSection(null, true);
+            VmTAF.buildEditor.iniEditor.MarkAsUnchanged();
+         });">
+      Save Package INI
+   </button>
+   <button
+      class="button"
+      onclick="VmTAF.buildManager.ResetAndReload('$buildId', 'packageini',
+         function(data) {
+            VmTAF.buildEditor.iniEditor.Populate(data);
+            VmTAF.buildEditor.iniEditor.PopulateSection(null, true);
+            VmTAF.buildEditor.iniEditor.MarkAsUnchanged();
+         });">
+      Reset Package INI
+   </button>
+
+   <select id="thinappRuntime" class="thinappRuntime no-show"
+      onchange="VmTAF.buildEditor.iniEditor.RuntimeHzSupportedChanged();
+                if (VmTAF.isHzCapable($(this).val()) && $(this).find('#runtimeGroupHorizon').length > 0)
+                { $('#addHorizonHolder').slideDown(300); } else { $('#addHorizonHolder').slideUp(300); } ">
+         #selectOption($runtimeSelect.eachOptionArray, ${runtimeSelect.initialValue})
+   </select>
+   ## Hide 'add horizon settings' for now, let the iniData load unhide this when applicable.
+   <span id="addHorizonHolder" class="no-show"
+      onclick="VmTAF.buildEditor.iniEditor.RuntimeHzSupportedChanged();">
+      <input type="checkbox" id="addHorizon" name="addHorizonIntegration" />
+      <label for="addHorizon">#springMessage("T.COMMON.APPLY_HORIZON")</label>
+   </span>
+</div>
+
+<div id="packageini-editor" class="packageini-editor">
+   <div class="ini-sections" onsubmit="return false;">
+      <form onsubmit="return false;"
+            onkeypress="return (window.event.keyCode != 13);">
+         <div class="stack-editor">
+            <div class="stack-header">
+               <span>Sections</span>
+            </div>
+            <div class="stack-group pad-all">
+               <div class="stack-row">
+                  ## INI sections shown in a select list.
+                  ## The values are populated dyamically by the IniEditor.
+                  <select id="package-ini-select">
+                  </select>
+               </div>
+            </div>
+            <div class="stack-footer"> ## XXX Replace these with nice icons.
+               <button
+                  class="button" alt="New"
+                  onclick="VmTAF.buildEditor.iniEditor.CreateNewSection();">
+                  New
+               </button>
+               <button
+                  class="button"  alt="Rename"
+                  onclick="VmTAF.buildEditor.iniEditor.RenameCurrentSection();">
+                  Rename
+               </button>
+               <button
+                  class="button"
+                  onclick="VmTAF.buildEditor.iniEditor.DuplicateCurrentSection();">
+                  Duplicate
+               </button>
+               <button
+                  class="button"
+                  onclick="VmTAF.buildEditor.iniEditor.DeleteCurrentSection();">
+                  Delete
+               </button>
+            </div> ##stack-footer
+         </div> ##stack-editor
+      </form>
+   </div> ## .ini-sections
+
+   <div class="ini-data">
+      <form id="packageini-data-form" action="jQuery.noop();"
+            onsubmit="return false;"
+            onkeypress="return (window.event.keyCode != 13);">
+         <div class="stack-editor editable">
+            <div class="stack-header">
+               <span id="ini-label">Data</span>
+            </div>
+            ## The INI section data will be a list of form input fields that
+            ## will be inserted here. They are created dyamically by the IniEditor.
+            <div class="stack-group ui-widget-content" id="ini-stack-group">
+               <div class="stack-row">
+
+               </div>
+            </div>
+            <div class="stack-footer">
+               <button
+                  class="button"
+                  onclick="VmTAF.buildEditor.iniEditor.CreateNewValue();">
+                  New Value
+               </button>
+            </div> ##stack-footer
+         </div> ##stack-editor
+      </form>
+   </div> ## .ini-data
+</div>
+<div class="clearDiv"></div>

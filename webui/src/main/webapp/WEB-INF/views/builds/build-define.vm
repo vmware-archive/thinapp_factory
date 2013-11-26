@@ -1,0 +1,55 @@
+################################################################################
+## ThinApp Factory WebUI
+## (c) 2011 VMware, Inc. All rights reserved.
+################################################################################
+
+################################################################################
+## build-define.vm
+##
+## This is the HTML view for defining a new set of builds from some
+## preselected applications. The applications to build are defined in the
+## model.
+################################################################################
+
+<script type="text/javascript">
+#if ($newUI)
+addLoad(function () {
+#end
+   VmTAF.contentNavigator.AddReadyFunction(function _buildDefineReady() {
+      VmTAF.buildManager = new BuildManager();
+
+      /* Put application IDs into an array */
+      var appIds = [];
+      #foreach($appId in $appIds)
+         appIds.push("$appId");
+      #end
+
+      /* Put match types into an array */
+      var matchTypes = [];
+      #foreach($mt in $recipeMatchTypes)
+         matchTypes.push("$mt");
+      #end
+
+      VmTAF.buildManager.GetBuildDefinitionsAndPopulateForm(
+         $("#build-form-content"),
+         appIds,
+         #if($horizonEnabled) true #else false #end ,
+         matchTypes);
+   });
+
+   VmTAF.contentNavigator.AddCleanupFunction(function _buildDefineCleanup() {
+      VmTAF.buildManager.Destruct();
+      delete VmTAF.buildManager;
+   });
+#if ($newUI)
+});
+#end
+</script>
+
+#parse("include/main-top.vm")
+
+<div id="build-form-content">
+   ## Populated by BuildManager
+</div>
+
+#parse("include/main-bottom.vm")

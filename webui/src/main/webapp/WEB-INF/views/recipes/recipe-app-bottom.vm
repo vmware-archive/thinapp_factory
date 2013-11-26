@@ -1,0 +1,19 @@
+################################################################################
+## ThinApp Factory WebUI
+## (c) 2011 VMware, Inc. All rights reserved.
+################################################################################
+
+################################################################################
+## recipe-app-bottom.vm
+##
+## This is the html component that closes the divs opened as part of
+## recipe-app-top.vm
+################################################################################
+
+## If displayed in association with app, close the divs opened earlier
+#if($app)
+      </div> ## closing <div class="recipe-main">
+   </div> ## closing <div class="recipe-app-main">
+#end
+
+#parse("include/main-bottom.vm")

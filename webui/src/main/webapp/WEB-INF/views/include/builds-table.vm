@@ -1,0 +1,32 @@
+################################################################################
+## ThinApp Factory WebUI
+## (c) 2011 VMware, Inc. All rights reserved.
+################################################################################
+
+################################################################################
+## builds-table.vm
+##
+## Outline for a table that shows builds. Since this table is used in more than
+## one place but manipulated by the same Javascript, it is extracted here into
+## an include file.
+################################################################################
+
+<table id="builds-table" class="data">
+   <thead>
+      <tr>
+         <th width="20"><input type="checkbox" class="table-row-selector"/></th>
+         <th>#springMessage("T.BUILDS.BUILD_NAME")</th>
+         <th>#springMessage("T.APPS.APPLICATION")</th>
+         <th>#springMessage("T.BUILDS.LAST_BUILT")</th>
+         <th>#springMessage("T.BUILDS.NUM_FILES")</th>
+         <th>#springMessage("T.COMMON.STATUS")</th>
+         <th>#springMessage("T.COMMON.OS")</th>
+         <th>#springMessage("T.COMMON.RUNTIME")</th>
+         <th>#springMessage("T.COMMON.DATASTORE")</th>
+         <th>#springMessage("T.COMMON.SOURCE")</th>
+      </tr>
+   </thead>
+   <tbody>
+      ## Populated dynamically by BuildManager
+   <tbody>
+</table>

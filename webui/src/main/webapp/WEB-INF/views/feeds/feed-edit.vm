@@ -1,0 +1,63 @@
+################################################################################
+## ThinApp Factory WebUI
+## (c) 2011 VMware, Inc. All rights reserved.
+################################################################################
+
+################################################################################
+## feeds-edit.vm
+##
+## This is the view that is used for editing existing feeds, and for creating
+## new ones. The contents of the view change depending on whether $feedId is
+## defined: if defined, an 'edit' view is displayed, else a 'create' view is
+## displayed. NOTE: Even when editing, no data is shown. An Ajax call to the
+## appropriate AppFactory API call must be made the fetch the feed data and
+## populate this form.
+################################################################################
+
+##
+## If there is a feedId attached to the view, then the view is being used
+## to EDIT a feed. So, once the form has loaded, fetch the feed details from
+## the server and populate the form with it.
+##
+<script type="text/javascript">
+#if ($newUI)
+#set($insideTab = true)
+addLoad(function () {
+#end
+   window.fmgr = null;
+   window.validator = null;
+
+   VmTAF.contentNavigator.AddReadyFunction(function _feedEditReady() {
+      window.fmgr = new FeedManager( #if($feedId) $('#feed-applications-table'), $feedId #end );
+
+      /* Populate the form if editing a feed */
+      #if ($feedId)
+         window.fmgr.GetFeedAndPopulateForm($feedId);
+      #end
+      window.validator = new Validator('#feed-form');
+   });
+
+   VmTAF.contentNavigator.AddCleanupFunction(function _feedEditCleanup() {
+      fmgr = window.fmgr.Destruct();
+      validator = window.validator.Destruct();
+   });
+#if ($newUI)
+});
+#end
+</script>
+<div class="panel-title">
+   <div class="desc"><a href="#springUrl('/settings')">Settings</a> &gt; <a href="#springUrl('/settings#5')">$pageTitle</a> &gt;
+#if ($feedId)
+   Edit Feed
+#else
+   Add Feed
+#end
+   </div>
+</div>
+#parse("include/main-top.vm")
+
+<div class='feed-edit-content'>
+#parse("feeds/feed-form.vm")
+</div>
+
+#parse("include/main-bottom.vm")

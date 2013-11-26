@@ -1,0 +1,134 @@
+################################################################################
+## ThinApp Factory WebUI
+## (c) 2011 VMware, Inc. All rights reserved.
+################################################################################
+
+################################################################################
+## build-edit-home.vm
+##
+## This view loads a build edit page data.
+################################################################################
+
+#parse("include/main-top.vm")
+
+<script type="text/javascript">
+#if ($newUI)
+
+addLoad(function () {
+#end
+   VmTAF.contentNavigator.AddReadyFunction(function _buildEditReady() {
+      // Set default tab to packageini if not passed.
+      var tabIndex = jQuery.inArray("$what", ["packageini", "registry", "filesystem"] );
+      if ( tabIndex < 0 ) {
+         tabIndex = 0;
+      }
+
+      // Loading jquery ui tab and configuring it.
+      $( "#build-tabs" ).tabs({
+         cache: true,
+         selected: tabIndex,
+         show: function() { $(this).show(); }
+      });
+
+      // Create a new build manager
+      VmTAF.buildManager = new BuildManager();
+
+      if (VmTAF.newUI) {
+        // load the build settings in-page
+        //
+        VmTAF.buildManager.LoadBuildSettings("$buildId", null,
+         function _success(data) {
+            /* Success: open the build editor page */
+            VmTAF.buildSettings = data;
+            VmTAF.buildEditor = new BuildEditor('$buildId', VmTAF.buildSettings);
+
+           // add unload handler
+           $(window).bind("beforeunload", function(e) {
+               if (VmTAF.buildEditor && VmTAF.buildEditor.HasChanges()) {
+                   return "There are unsaved changes.";
+               }
+           });
+         },
+         function _error() {
+            /* Fail: stay where we are */
+            AfLog("Failed to load build settings; editor not opened");
+            VmTAF.buildEditor = null;
+         });
+      } else {
+        // the old UI loaded the build settings on the PRIOR page for some
+        // reason, even though this seems to break back/forward
+        //
+
+        // Create a new build editor
+        if (VmTAF.buildSettings) {
+           // Build settings have already been loaded
+           VmTAF.buildEditor = new BuildEditor('$buildId', VmTAF.buildSettings);
+        }
+        else {
+           // No build settings; should not happen
+           AfLog('Error: build settings should be loaded BEFORE loading the build edit view');
+           VmTAF.buildEditor = null;
+        }
+      }
+   });
+
+   VmTAF.contentNavigator.AddVerifyFunction(function _buildEditVerify() {
+      if (VmTAF.buildEditor && VmTAF.buildEditor.HasChanges()) {
+         if (AfConfirm(
+            'Save Changes',
+            'There are unsaved changes. Do you want to save them now?')) {
+
+            /* Yes: save everything that needs it */
+            VmTAF.buildManager.SavePackageIni('$buildId', VmTAF.buildEditor.iniEditor.GetIniData());
+            VmTAF.buildManager.SaveRegistry(VmTAF.buildEditor.regEditor);
+            // NOTE: fsEditor does not make changes yet...
+         }
+         else {
+            /* Verify failed! Stay on this page */
+            return false;
+         }
+      }
+      /* Verify success: OK to load next page */
+      return true;
+   });
+
+   VmTAF.contentNavigator.AddCleanupFunction(function _buildEditCleanup() {
+      VmTAF.buildManager = VmTAF.buildManager.Destruct();
+      VmTAF.buildEditor = VmTAF.buildEditor.Destruct();
+      VmTAF.buildSettings = null;
+      return true;
+   });
+#if ($newUI)
+});
+#end
+</script>
+
+<div class="taf-horiz-tabs" id="build-tabs">
+   <ul class="ui-corner-top">
+      <li><a href="#packageini">
+            Package INI
+            <span class="change-marker no-show" id="packageini-change-marker">*</span>
+      </a></li>
+      <li><a href="#registry">
+            Registry
+            <span class="change-marker no-show" id="registry-change-marker">*</span>
+      </a></li>
+      <li><a href="#filesystem">
+            File System
+            <span class="change-marker no-show" id="filesystem-change-marker">*</span>
+      </a></li>
+   </ul>
+   <div id="packageini" class="pad-all">
+      #parse("builds/build-edit-packageini.vm")
+   </div>
+   <div id="registry" class="pad-all">
+      #parse("builds/build-edit-registry.vm")
+   </div>
+   <div id="filesystem" class="pad-all">
+      #parse("builds/build-edit-filesystem.vm")
+   </div>
+   ## Empty div needed to create dialogs
+   <div id="dialog-holder" class="yui-skin-sam"/></div>
+</div>
+
+#parse("include/main-bottom.vm")

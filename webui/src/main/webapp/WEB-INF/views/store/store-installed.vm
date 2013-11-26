@@ -1,0 +1,80 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+################################################################################
+## ThinApp Factory WebUI
+## (c) 2011 VMware, Inc. All rights reserved.
+################################################################################
+
+################################################################################
+## store/store-installed.vm
+##
+## Shows the builds a user has installed, and lets the user manage them.
+################################################################################
+<html>
+
+<head>
+   #set($pageTitle = 'VMware ThinApp Store')
+   #parse("include/head.vm")
+</head>
+
+<body>
+
+<div id="page">
+   <div id="page-header">
+      #set($headerLink = "$contextPath/store")
+      #set($headerLinkLabel = "ThinApp Store")
+      #parse("store/store-header.vm")
+   </div> ## #page-header
+
+   <div class="page-body-wrapper">
+      <div id="page-body">
+         <div class="panel">
+            <div class="panel-title">My Applications</div>
+            <div id="appstore" class="appstore">
+
+               ## Popup button to download apps
+               <a class="button activate-link" href="" id="action-button">
+                  <div class="label">Uninstall Applications</div>
+                  <div class="appCount"></div>
+               </a>
+
+               <div id="category-tabs" class="display-block taf-horiz-tabs">
+                  <ul class="ui-corner-top">
+                  </ul>
+               </div>
+
+            </div> ## appstore
+         </div> ## panel
+      </div> ## page-body
+   </div> ## page-body-wrapper
+
+   <div class='af-dialog'><div id='modal-overlay'></div></div>
+
+</div> ## page
+<div id="thinplugin"></div>
+
+</body>
+
+<script type="text/javascript" charset="UTF-8">
+   AfAddOnLoadEvent(function() {
+      var APPSTORE = new AppStoreManager( {
+         serverName : '$serverName',
+         serverPort : '$serverPort',
+         actionButton : $('#action-button'),
+         action : "uninstall",
+         tabView : false
+      });
+
+      AfPleaseWaitModalInit();
+
+      APPSTORE.PopulateInstalledBuilds();
+      APPSTORE.InstallEventHandlers($('#category-tabs .thinapp'));
+      //APPSTORE.CreateViewLink($('.panel-title-right')); XXX show both views.
+
+      AfLog('appstore installed is ready');
+   });
+</script>
+
+<script src="#jsUrl("/thinplugin.js")" type="text/javascript" charset="utf-8"></script>
+<script src="#jsUrl("/AppStore.js")" type="text/javascript" charset="utf-8"></script>
+
+</html>

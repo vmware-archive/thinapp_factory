@@ -1,0 +1,95 @@
+################################################################################
+## ThinApp Factory WebUI
+## (c) 2011 VMware, Inc. All rights reserved.
+################################################################################
+
+################################################################################
+## build-wp-rt-pick.vm
+##
+## This is the HTML view for picking workpool and or ThinApp runtime version
+## This is a reusable template which offers flexibility while building apps.
+## The model for this .
+################################################################################
+
+## This section is displayed only if the @buildcomponents var is set.
+#if ($buildComponents)
+   <div id="build-wp-rt-ds-picker" class="small-widget ui-widget ui-state-highlight ui-corner-all">
+
+      #if(!$buildComponents.isRebuild)
+         ## Workpool dropdown.
+         <div class="picker-row wp-picker">
+            <label for="workpoolId">Select Workpool</label>
+            <div class="field select">
+               <select name="workpoolId" id="workpoolId" validate="{required:true}">
+                     #selectOption($buildComponents.workpoolOptions.eachOptionArray,
+                        ${buildComponents.workpoolOptions.initialValue})
+               </select>
+            </div>
+         </div>
+      #end
+      ## Runtime dropdown.
+      <div class="picker-row rt-picker">
+         <label for="runtimeId">#springMessage("T.COMMON.THINAPP_VERSION")</label>
+         <div class="field select">
+            <select name="runtimeId" id="runtimeId" validate="{required:true}"
+                  onchange="if (VmTAF.isHzCapable($(this).val()) && $(this).find('#runtimeGroupHorizon').length > 0)
+                            { $('#addHorizonHolder').slideDown(300); } else { $('#addHorizonHolder').slideUp(300); } ">
+                #selectOption($buildComponents.runtimeOptions.eachOptionArray,
+                   ${buildComponents.runtimeOptions.initialValue})
+            </select>
+         </div>
+      </div>
+      ## Display 'add horizon settings' checkbox only when horizon is enabled.&nbsp;
+      ## Toggle disabled when runtime does not support horizon integration.
+      <div id="addHorizonHolder" class='picker-row rt-hz-select #{if}(!$horizonEnabled) no-show #{end}'>
+         <input type="checkbox" id="addHorizon" name="addHorizonIntegration" #if($horizonChecked) CHECKED #end />
+         <label for="addHorizon">#springMessage("T.COMMON.APPLY_HORIZON")</label>
+      </div>
+
+      ## Destination datastore dropdown.
+      <div class="picker-row ds-picker">
+         <label for="datastoreId">Project Location</label>
+         <div class="field select">
+            <select name="datastoreId" id="datastoreId" validate="{required:true}">
+                #selectOption($buildComponents.datastoreOptions.eachOptionArray,
+                   ${buildComponents.datastoreOptions.initialValue})
+            </select>
+         </div>
+      </div>
+
+      #if($recipe && $recipe.variables)
+         <div class="row-group">
+            #foreach($item in ${recipe.variables})
+               <div class="picker-row">
+                  <label#if($item.required) class="stack-required"#end>${item.name}</label>
+                  <div class="field text long">
+                     <input type="text" name="${item.name}" subproperty="recipeVariableValues"
+                        #if($item.required) validate="{required:true}" #end >
+                     </input>
+                  </div>
+               </div>
+            #end
+         </div>
+      #end
+
+      ## Auto, manual capture or rebuild buttons.
+      ## Event handlers for these buttons are applied dynamically.
+      <div class="button-holder">
+         #if($isRebuild)
+            ## Show rebuild button
+            <div class="big" id="rebuild">
+               #springMessage('T.BUILDS.REBUILD')
+            </div>
+         #else
+            <div class="big" id="auto-capture">
+               #springMessage('T.APPS.AUTO_CAPTURE')
+            </div>
+            <div class="one-liner">or</div>
+            <div class="big" id="manual-capture">
+               #springMessage('T.APPS.MANUAL_CAPTURE')
+            </div>
+         #end
+      </div>
+
+   </div>
+#end

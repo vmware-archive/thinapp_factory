@@ -1,0 +1,89 @@
+################################################################################
+## ThinApp Factory WebUI
+## (c) 2011 VMware, Inc. All rights reserved.
+################################################################################
+
+################################################################################
+## settings-index.vm
+##
+## XXX
+################################################################################
+
+#parse("include/main-top.vm")
+
+<div class="taf-horiz-tabs" id="settings-tabs">
+   <ul>
+      <li><a href="${contextPath}/workpools?subtab=${subtab}">
+         #springMessage('T.WORKPOOL')
+      </a></li>
+      <li><a href="${contextPath}/datastores">
+         #springMessage('T.STORAGE')
+      </a></li>
+      <li><a href="${contextPath}/config">
+         #springMessage('T.CONFIG')
+      </a></li>
+      <li><a href="${contextPath}/admin">
+         #springMessage('T.ADMIN')
+      </a></li>
+#if($newUI)
+      <li><a href="${contextPath}/fileshares">
+         #springMessage('T.FILE_SHARES')
+      </a></li>
+      <li><a href="${contextPath}/feeds">
+         #springMessage('T.FEEDS')
+      </a></li>
+      <li><a href="${contextPath}/admin/about">
+         #springMessage('T.ABOUT')
+      </a></li>
+#end
+   </ul>
+</div>
+
+<script type="text/javascript">
+#if ($newUI)
+addLoad(function () {
+#end
+   window.tafOnLoad = null;
+   VmTAF.contentNavigator.AddReadyFunction(function _settingsReady() {
+      // Loading jquery ui tab and configuring it.
+
+      var updateSettingsTabIndex = function() {
+         if (window.location.hash && window.location.hash.length > 1) {
+            VmTAF.settingsTabIndex = parseInt(window.location.hash.substr(1));
+         }
+      };
+      updateSettingsTabIndex();
+
+      $(window).bind( 'hashchange', function(e) {
+         updateSettingsTabIndex();
+         $('#settings-tabs').tabs("select", VmTAF.settingsTabIndex);
+      });
+
+      $('#settings-tabs').tabs({
+         cache: true,
+         selected: VmTAF.settingsTabIndex || 0,
+         select: function(){
+             $(this).index($(document.location.hash));
+         },
+         load: function(event, ui) {
+           if (window.tafOnLoad && typeof(window.tafOnLoad)=='function') {
+             window.tafOnLoad();
+             window.tafOnLoad = null;
+           }
+         },
+         show: function(event, ui) {
+            var tabs = $('#settings-tabs').tabs();
+            VmTAF.settingsTabIndex = tabs.tabs('option', 'selected');
+#if($newUI)
+            window.location.replace('#'+VmTAF.settingsTabIndex);
+#end
+            $(this).show();
+         }
+      });
+   });
+#if ($newUI)
+});
+#end
+</script>
+
+#parse("include/main-bottom.vm")

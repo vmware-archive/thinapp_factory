@@ -1,0 +1,94 @@
+################################################################################
+## ThinApp Factory WebUI
+## (c) 2011 VMware, Inc. All rights reserved.
+################################################################################
+
+################################################################################
+## datastores-index.vm
+##
+## This file contains the HTML view for showing a list of datastores.
+## No data is shown in the view by default: An ajax call is made to the server
+## to download feed data and populate the table dynamically.
+################################################################################
+
+<script type="text/javascript">
+#if ($newUI)
+#set($insideTab=true)
+addLoad(function () {
+#end
+   VmTAF.contentNavigator.AddReadyFunction(function _datastoresReady() {
+      VmTAF.dsMgr = new DatastoreManager($("#datastores-table"), '$!status');
+      VmTAF.dsMgr.UpdateDatastores(30000);
+   });
+
+   VmTAF.contentNavigator.AddCleanupFunction(function _datastoresCleanup() {
+      VmTAF.dsMgr = VmTAF.dsMgr.Destruct();
+   });
+#if ($newUI)
+});
+#end
+</script>
+
+#parse("include/main-top.vm")
+
+## Note: the form is mainly used for style, it is not used to POST data
+## to the server.
+<form class="primary" onsubmit="return false;">
+
+   ##
+   ## Buttons for interacting with datastores.
+   ##
+   <div class="button-row">
+      <button class="button single-button"
+         id="ds-add"
+         onclick="VmTAF.contentNavigator.LoadPage('/datastores/create');">
+         #springMessage('T.COMMON.ADD')
+      </button>
+
+      <button class="button"
+         id="ds-delete"
+         onclick="VmTAF.dsMgr.DeleteSelectedDatastores();">
+         #springMessage('T.COMMON.DELETE')
+      </button>
+
+      ## TODO: we could get a list of status values from the server, and
+      ## create these buttons dynamically. This will remove a hard coded
+      ## string dependency.
+      <button class="button"
+         id="ds-online"
+         onclick="VmTAF.dsMgr.SetSelectedDatastoresStatus('online');">
+         #springMessage('T.COMMON.ONLINE')
+      </button>
+
+      <button class="button"
+         id="ds-offline"
+         onclick="VmTAF.dsMgr.SetSelectedDatastoresStatus('offline');">
+         #springMessage('T.COMMON.OFFLINE')
+      </button>
+   </div>
+
+   ##
+   ## Table for datastores
+   ## This gets populated dynamically using Ajax calls from Javascript.
+   ##
+   <table id="datastores-table" class="data">
+      <thead>
+         <tr>
+            <th><input type="checkbox" class="table-row-selector"/></th>
+            <th>Name</th>
+            <th>Status</th>
+            <th>Server/Share</th>
+            <th>Free Space</th>
+            <th>Default</th>
+         </tr>
+      </thead>
+      <tbody>
+         ## Data is loaded dynamically from FileShareManager
+      </tbody>
+   </table>
+
+</form>
+
+#springMessage('M.STORAGE.OFFLINE.WARN')
+
+#parse("include/main-bottom.vm")

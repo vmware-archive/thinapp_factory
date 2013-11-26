@@ -1,0 +1,87 @@
+################################################################################
+## ThinApp Factory WebUI
+## (c) 2011 VMware, Inc. All rights reserved.
+################################################################################
+
+################################################################################
+## fileshare-sync-table.vm
+## This template renders two tab panes with datatables: new or updated apps and
+## deleted apps from a file share.
+################################################################################
+
+#set($insideTab = true)
+
+<div class="stack-group no-show" id="edit-meta-data-stack-group"> ## Edit Meta-data
+
+   <div class="stack-row-head">
+      <div class="label">
+         <div class="icon"></div>
+         <label>#springMessage('T.FILE_SHARES.EDIT_APP_INFO')</label>
+      </div>
+      <div class="field">
+      </div>
+   </div>
+   <div class="stack-row">
+      <div class="taf-horiz-tabs" id="settings-tabs">
+         <ul>
+            <li>
+               <a href="#updated">#springMessage('T.FILE_SHARES.UPDATED')</a>
+            </li>
+            <li id="deleted-tab" class="no-show">
+               <a href="#deleted">#springMessage('T.FILE_SHARES.DELETED')</a>
+            </li>
+         </ul>
+         <div id="updated" class="pad-all">
+            <div class='fileshare-import-table'>
+               <table id="fileshare-import-table" class="data">
+                  <thead>
+                     <tr>
+                        <th width="200"><input type="checkbox" class="table-row-selector"/> Skip Import</th>
+                        <th width="200">Install Command</th>
+                        <th width="200"><em>*</em> Name</th>
+                        <th width="150"><em>*</em> Version</th>
+                        <th width="30">Vendor</th>
+                        <th width="30">Revision</th>
+                        <th width="30">Language</th>
+                     </tr>
+                  </thead>
+               </table>
+            </div> ## fileshare-import-table
+         </div> ## updated
+         <div id="deleted" class="pad-all">
+            <div class='fileshare-import-table-removed'>
+               <table id="fileshare-import-table-removed" class="data">
+                  <thead>
+                     <tr>
+                        <th width="200">Installer</th>
+                        <th width="200">Name</th>
+                        <th width="150">Version</th>
+                        <th width="30">Vendor</th>
+                        <th width="30">Revision</th>
+                        <th width="30">Language</th>
+                     </tr>
+                  </thead>
+               </table>
+            </div> ## fileshare-import-table-removed
+         </div> ## deleted
+      </div> ## taf-horiz-tabs
+   </div> ## stack-row
+
+</div> ## edit-meta-data-stack-group
+
+<script type="text/javascript">
+#if ($newUI)
+addLoad(function () {
+#end
+   VmTAF.contentNavigator.AddReadyFunction(function _settingsReady() {
+      // Loading jquery ui tab and configuring it.
+      $('#settings-tabs').tabs({
+         cache: true,
+         selected: 0,
+         show: function() { $(this).show(); }
+      });
+   });
+#if ($newUI)
+});
+#end
+</script>

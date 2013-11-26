@@ -1,0 +1,28 @@
+################################################################################
+## ThinApp Factory WebUI
+## (c) 2011 VMware, Inc. All rights reserved.
+################################################################################
+
+################################################################################
+## header.vm
+##
+## Page fragment that should appear at the top of every page. This includes
+## the VMware logo, and the common 'help', 'about', 'logout' links, etc.
+################################################################################
+
+<div class='head-left'>
+   <span class='logo'>&nbsp;</span>
+   <span class='name'>$pageTitle</span>
+   <span class='light-gradient'>&nbsp;</span>
+</div>
+
+<div class='head-right'>
+   <span class='dark-gradient'>&nbsp;</span>
+   <span class='right-nav'>
+      <ul>
+         <li class="last"><a href="$headerLink">$headerLinkLabel</a></li>
+      </ul>
+   </span>
+</div>
+
+#parse("include/license-check.vm")

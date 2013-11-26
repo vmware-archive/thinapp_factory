@@ -1,0 +1,222 @@
+/* ***********************************************************************
+ * VMware ThinApp Factory
+ * Copyright (c) 2009-2013 VMware, Inc. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * ***********************************************************************/
+
+
+/* first or middle sibling, last sibling: no children */
+.ygtvtn, .ygtvln {
+   background: transparent;
+   height:14px;
+   cursor: default;
+}
+
+/* first or middle sibling, last sibling: collapsible */
+.ygtvtm, .ygtvlm  {
+   background: url(jquery-ui/images/ui-icons_217bc0_256x240.png) -66px -13px no-repeat;
+   height:16px;
+   cursor:pointer;
+}
+
+/* first or middle sibling, last sibling: collapsible, hover */
+.ygtvtmh, .ygtvlmh {
+   background: url(jquery-ui/images/ui-icons_217bc0_256x240.png) -66px +3px no-repeat;
+   height:16px;
+   cursor:pointer;
+}
+
+/* first or middle sibling, last sibling: expandable */
+.ygtvtp, .ygtvlp {
+   background: url(jquery-ui/images/ui-icons_217bc0_256x240.png) -34px -13px no-repeat;
+   height:16px;
+   cursor:pointer;
+}
+
+/* first or middle sibling, last sibling: expandable, hover */
+.ygtvtph, .ygtvlph {
+   background: url(jquery-ui/images/ui-icons_217bc0_256x240.png) -34px +3px no-repeat;
+   height:16px;
+   cursor:pointer;
+}
+a.ygtvspacer {
+   text-decoration: none;
+}
+
+/* Loading icon */
+.ygtvloading {
+   background: url(images/loading.gif) 0 6px no-repeat;
+   width:1em;
+   height:16px;
+}
+
+/* Disable loading icon for registry tree to avoid flickering */
+#registry-holder .ygtvloading {
+   background: url("jquery-ui/images/ui-icons_217bc0_256x240.png") no-repeat -34px -13px;
+}
+
+/* the style for the empty cells that are used for rendering the depth
+ * of the node */
+.ygtvdepthcell {
+   background: transparent;
+   width:1em;
+   height:14px;
+}
+
+.ygtvblankdepthcell {
+   background: transparent;
+   width:1em;
+   height:14px;
+}
+
+/* the style of the div around each node */
+.ygtvitem {
+}
+
+/* the style of the div around each node's collection of children */
+.ygtvchildren { }
+
+* html .ygtvchildren {
+   height:1%;
+}
+
+/* the style of the text label in ygTextNode */
+.ygtvlabel, .ygtvlabel:link, .ygtvlabel:visited, .ygtvlabel:hover {
+   /*
+   margin-left:2px;
+   text-decoration: none;
+   font-size: 12px;
+   */
+}
+
+/*
+ * Display icons before labels. The css class names are dynamically generated.
+ */
+.Datacenter .ygtvlabel {
+   background: url(images/vi/datacenter.png) 0 -1px no-repeat;
+   padding: 0 0 0 18px !important;
+}
+
+.Folder .ygtvlabel {
+   background: url(images/folder-open.png) 0 1px no-repeat;
+   padding: 0 0 0 18px !important;
+}
+
+.ComputeResource .ygtvlabel {
+   background: url(images/vi/host.png) 0 -1px no-repeat;
+   padding: 0 0 0 18px !important;
+}
+
+.ResourcePool .ygtvlabel {
+   background: url(images/vi/resource-pool.png) 0 -1px no-repeat;
+   padding: 0 0 0 18px !important;
+}
+
+.VirtualMachine .ygtvlabel {
+   background: url(images/vi/vm.png) 0 -1px no-repeat;
+   padding: 0 0 0 18px !important;
+}
+
+.Datastore .ygtvlabel {
+   background: url(images/vi/datastore.png) 0 -1px no-repeat;
+   padding: 0 0 0 18px !important;
+}
+
+.Network .ygtvlabel {
+   background: url(images/vi/network.png) 0 -1px no-repeat;
+   padding: 0 0 0 18px !important;
+}
+
+.iso .ygtvlabel {
+   background: url(images/vi/isoimage.png) 0 -1px no-repeat;
+   padding: 0 0 0 18px !important;
+}
+
+/* Overwrite with folder-open when highlighted */
+.icon-label.ygtv-highlight .ygtv-highlight1 .ygtvlabel {
+   background: url(images/folder-open.png) 0 1px no-repeat;
+}
+
+/***   Additional customization   ***/
+table.ygtvdepth0 {
+   width:100%;
+   border-bottom: 1px solid #d2d3d4;
+   font-weight: bold;
+   color: #2b5480;
+}
+.ygtvcontent {
+   width: 100%;
+   padding: 0;
+   margin: 0;
+}
+.ygtvitem span:hover {
+   text-decoration: underline;
+}
+
+.ygtvitem span.inventory-count {
+   float: right;
+   padding: 1px 3px;
+   text-decoration: none !important;
+   background-color: #E9F3F9;
+   border: 1px solid #9AD7F5;
+   -webkit-border-radius: 3px;
+   -moz-border-radius: 3px;
+   border-radius: 3px;
+   font-size: 11px;
+}
+
+/***   Folders icons for expand and collapse with dotted lines.   ***/
+
+/* first or middle sibling, last sibling: collapsible */
+ #filesystem-tree-holder .ygtvtm, #filesystem-tree-holder .ygtvlm {
+   background: url(images/folder-open.png) 0 6px no-repeat;
+   width:1em;
+   height:16px;
+   cursor:pointer;
+}
+
+/* first or middle sibling, last sibling: collapsible, hover */
+#filesystem-tree-holder .ygtvtmh, #filesystem-tree-holder .ygtvlmh {
+   background: url(images/folder-open.png) 0 6px no-repeat;
+   width:1em;
+   height:16px;
+   cursor:pointer;
+}
+
+/* first or middle sibling, last sibling: expandable */
+#filesystem-tree-holder .ygtvtp, #filesystem-tree-holder .ygtvlp {
+   background: url(images/folder-close.png) 0 6px no-repeat;
+   width:1em;
+   height:16px;
+   cursor:pointer;
+}
+
+/* first or middle sibling, last sibling: expandable, hover */
+#filesystem-tree-holder .ygtvtph, #filesystem-tree-holder .ygtvlph {
+   background: url(images/folder-close.png) 0 6px no-repeat;
+   width:1em;
+   height:16px;
+   cursor:pointer;
+}
+
+/* Selection highlighting */
+.ygtv-highlight .ygtv-highlight1 {
+   background-color: #E4EFF6;
+   border: 1px solid #3580BF;
+}
+/* Text color overwrite from default white. */
+.ygtv-highlight .ygtv-highlight1 .ygtvlabel {
+   color: #3580BF;
+   background-color: #E4EFF6;
+}

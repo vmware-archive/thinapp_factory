@@ -1,0 +1,7 @@
+#if (!$insideTab)
+   <div class="panel-title">
+      $pageTitle
+   </div>
+   
+   <div class="panel-content"> ## (closed in main-bottom.vm)
+#end

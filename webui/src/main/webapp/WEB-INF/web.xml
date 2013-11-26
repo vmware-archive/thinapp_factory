@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xmlns="http://java.sun.com/xml/ns/javaee"
+   xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+   version="2.5">
+
+   <filter>
+      <filter-name>UrlRewriteFilter</filter-name>
+      <filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>
+      <init-param>
+         <param-name>statusEnabled</param-name>
+         <param-value>true</param-value>
+      </init-param>
+   </filter>
+   <filter-mapping>
+     <filter-name>UrlRewriteFilter</filter-name>
+     <url-pattern>/*</url-pattern>
+   </filter-mapping>
+
+   <!--
+      - Location of the XML file that defines the root application context
+      - Applied by ContextLoaderListener.
+      - However, this app-level global context isn't accessible by web-level
+      - MVC context (DispatcherServlet) via @annotation configuration.
+     -->
+   <context-param>
+      <param-name>contextConfigLocation</param-name>
+      <param-value>
+         /WEB-INF/spring/security-config.xml
+         /WEB-INF/spring/app-config.xml
+         /WEB-INF/spring/hibernate-config.xml
+      </param-value>
+   </context-param>
+
+   <filter>
+      <filter-name>springSecurityFilterChain</filter-name>
+      <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+   </filter>
+
+   <filter-mapping>
+      <filter-name>springSecurityFilterChain</filter-name>
+      <url-pattern>/*</url-pattern>
+   </filter-mapping>
+
+   <listener>
+       <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+   </listener>
+
+   <servlet>
+      <servlet-name>ThinApp Factory Dispatcher Servlet</servlet-name>
+      <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+      <init-param>
+         <param-name>contextConfigLocation</param-name>
+         <param-value>
+            /WEB-INF/spring/mvc-config.xml
+         </param-value>
+      </init-param>
+      <load-on-startup>1</load-on-startup>
+   </servlet>
+
+   <servlet>
+      <servlet-name>resources</servlet-name>
+      <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+      <load-on-startup>2</load-on-startup>
+   </servlet>
+
+   <servlet>
+      <servlet-name>cometServlet</servlet-name>
+      <servlet-class>org.atmosphere.cpr.MeteorServlet</servlet-class>
+      <init-param>
+         <param-name>org.atmosphere.servlet</param-name>
+         <param-value>org.springframework.web.servlet.DispatcherServlet</param-value>
+      </init-param>
+      <init-param>
+         <param-name>org.atmosphere.cpr.broadcasterClass</param-name>
+         <param-value>org.atmosphere.cpr.DefaultBroadcaster</param-value>
+      </init-param>
+      <init-param>
+         <param-name>org.atmosphere.cpr.CometSupport.maxInactiveActivity</param-name>
+         <param-value>30</param-value>
+      </init-param>
+      <init-param>
+         <param-name>org.atmosphere.useStream</param-name>
+         <param-value>true</param-value>
+      </init-param>
+      <init-param>
+         <param-name>org.atmosphere.useWebSocket</param-name>
+         <param-value>false</param-value>
+      </init-param>
+      <init-param>
+         <param-name>org.atmosphere.useNative</param-name>
+         <param-value>true</param-value>
+      </init-param>
+      <init-param>
+         <param-name>contextConfigLocation</param-name>
+         <param-value>/WEB-INF/spring/atmosphere-config.xml</param-value>
+      </init-param>
+      <load-on-startup>2</load-on-startup>
+   </servlet>
+
+   <servlet-mapping>
+      <servlet-name>ThinApp Factory Dispatcher Servlet</servlet-name>
+      <url-pattern>/*</url-pattern>
+   </servlet-mapping>
+
+   <servlet-mapping>
+      <servlet-name>resources</servlet-name>
+      <url-pattern>/static/*</url-pattern>
+   </servlet-mapping>
+
+   <servlet-mapping>
+      <servlet-name>cometServlet</servlet-name>
+      <url-pattern>/comet/*</url-pattern>
+   </servlet-mapping>
+
+   <!-- App Factory Web Context Init Listener to initialize settings for
+      global application scope -->
+   <listener>
+      <listener-class>com.vmware.appfactory.common.AfWebContextInitListener</listener-class>
+   </listener>
+
+   <!-- This listener will stop the FileCleaner reaper thread that runs when
+      a DiskFileItem is used for CommonsMultipartResolver -->
+   <listener>
+      <listener-class>org.apache.commons.fileupload.servlet.FileCleanerCleanup</listener-class>
+  </listener>
+
+</web-app>

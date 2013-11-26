@@ -1,0 +1,79 @@
+################################################################################
+## ThinApp Factory WebUI
+## (c) 2011 VMware, Inc. All rights reserved.
+################################################################################
+
+################################################################################
+## tasks-index.vm
+##
+## Shows a list of tasks. An optional model parameter $metaStatus can be used
+## to filter the view to those types of tasks only.
+################################################################################
+
+<script type="text/javascript" charset="UTF-8">
+#if ($newUI)
+addLoad(function () {
+#end
+   window.tmgr = null;
+
+   VmTAF.contentNavigator.AddReadyFunction(function _tasksReady() {
+      window.tmgr = new TaskManager($("#tasks-table"), "$!metaStatus");
+      window.tmgr.UpdateTasks(30000);
+   });
+
+   VmTAF.contentNavigator.AddCleanupFunction(function _tasksCleanup() {
+      window.tmgr = window.tmgr.Destruct();
+   });
+#if ($newUI)
+});
+#end
+</script>
+
+#parse("include/main-top.vm")
+
+<form
+   class="primary"
+   onsubmit="return false;">
+
+   <div class="button-row">
+      ##<button
+      ##   class="button"
+      ##   onClick="alert('not implemented'); return false;">
+      ##   Pause
+      ##</button>
+      <button
+         class="button"
+         onClick="tmgr.AbortSelectedTasks();">
+         Cancel
+      </button>
+      ##<button
+      ##   class="button"
+      ##   onClick="alert('not implemented'); return false;">
+      ##   Force
+      ##</button>
+      <button
+         class="button"
+         onClick="tmgr.Cleanup();">
+         Clean up
+      </button>
+   </div>
+
+   <table id="tasks-table" class="data">
+      <thead>
+         <tr>
+            <th width="5%"><input type="checkbox" class="table-row-selector"/></th>
+            <th width="5%">ID</th>
+            <th width="10%">Type</th>
+            <th width="24%">Description</th>
+            <th width="20%">Status</th>
+            <th width="12%">Queued</th>
+            <th width="12%">Started</th>
+            <th width="12%">Finished</th>
+         </tr>
+      </thead>
+      <tbody>
+      </tbody>
+   </table>
+</form>
+
+#parse("include/main-bottom.vm")

@@ -1,0 +1,189 @@
+################################################################################
+## ThinApp Factory WebUI
+## (c) 2011 VMware, Inc. All rights reserved.
+################################################################################
+
+################################################################################
+## app-add-form.vm
+##
+## Contains the form specific template for upload an application.
+################################################################################
+
+## Data is submitted to the server via an Ajax form post.
+<div class="stack-editor editable">
+
+#if (!$isDialog)
+    <div class="stack-header">
+        <span>Add New Installer</span>
+    </div>
+#end
+
+      ## The file upload form.
+      <form id="uploadForm" method="POST" onsubmit="return false;" enctype="multipart/form-data">
+         <div class="stack-group ui-widget-content">
+            <div class="stack-row-head">
+               <div id="upload-error-holder" class="inline-error"/>
+               <div class="label">
+                  <div class="icon"></div>
+                  <label>Installer Location</label>
+               </div>
+            </div>
+
+            <div class="stack-row">
+               <div class="label">
+                  <label class="stack-required" for="uploadFile">Select an installer</label>
+               </div>
+               <div class="field text short">
+                  <input validate="{required:true}" id="uploadFile" type="file" name="uploadFile" accept="*.exe,*.msi">
+               </div>
+            </div>
+
+            ## Upload progress is initially hidden; we show it when the upload starts.
+            <div class="stack-row no-show">
+               <div class="label">
+                  <label>Upload Progress</label>
+               </div>
+               <div class="field">
+                  ## Displays upload progress while file is uploaded to server.
+                  <span id="progressHolder" class="upload-progress-bar"></span>
+                  ## Displays loading gif while saving uploaded file.
+                  <img id="saveImgLoading" class="no-show" src="#imageUrl('ajax-loader.gif')"/>
+               </div>
+            </div>
+         </div>
+      </form> ## upload form
+
+      ## This is the main form. It contains application metadata only.
+      ## The file to upload is contained in it's own form and is submitted programmatically.
+      <form id="applicationMetadataForm" onsubmit="return false;">
+         ## Stack group: Application metadata.
+         <div class="stack-group ui-widget-content">
+            <div class="stack-row-head">
+               <div class="label">
+                  <div class="icon"></div>
+                  <label>Application Info</label>
+               </div>
+            </div>
+
+            ## Application Name
+            <div class="stack-row">
+               <div class="label">
+                  <label class="stack-required" for="idAppAddFormName">Name</label>
+               </div>
+               <div class="field text short">
+                  <input name="appName" id="idAppAddFormName" type="text" placeholder="My application name"
+                     validate="{required:true}" onblur="this.value=jQuery.trim(this.value)">
+               </div>
+            </div> ## stack-row
+
+            ## Application Version
+            <div class="stack-row">
+               <div class="label">
+                  <label for="idAppAddFormVersion" class="stack-required">Version</label>
+               </div>
+               <div class="field text short">
+                  <input name="appVersion" id="idAppAddFormVersion" type="text" placeholder="1.0"
+                     validate="{required:true}" onblur="this.value=jQuery.trim(this.value)">
+               </div>
+            </div>
+
+            ## Application Vendor
+            <div class="stack-row">
+               <div class="label">
+                  <label for="idAppAddFormVendor">Vendor</label>
+               </div>
+               <div class="field text short">
+                  <input name="appVendor" id="idAppAddFormVendor" type="text" placeholder="My application vendor"
+                     onblur="this.value=jQuery.trim(this.value)">
+                  </div>
+               </div>
+
+            ## Application Installer Revision
+            <div class="stack-row">
+               <div class="label">
+                  <label for="idAppAddFormRevision">Revision</label>
+               </div>
+               <div class="field text short">
+                  <input name="appRevision" id="idAppAddFormRevision" type="text" placeholder="1" onblur="this.value=jQuery.trim(this.value)">
+               </div>
+            </div>
+
+            ## Application Locale
+            <div class="stack-row">
+               <div class="label">
+                  <label for="idAppAddFormLocale">Locale</label>
+               </div>
+               <div class="field text short">
+                  <input name="appLocale" id="idAppAddFormLocale" type="text" placeholder="US" onblur="this.value=jQuery.trim(this.value)">
+               </div>
+            </div>
+
+            ## Install commands for the uploaded app.
+            <div class="stack-row">
+               <div class="label">
+                  <label for="idAppAddFormInstallCommand">Install Command</label>
+               </div>
+               <div class="field text short">
+                  <input name="appInstallCommandOption" id="idAppAddFormInstallCommand" type="text" 
+                     placeholder="$appfile" onblur="this.value=jQuery.trim(this.value)">
+               </div>
+            </div>
+         </div> ## stack-group
+
+         ## Stack group: Destination data store.
+         <div class="stack-group ui-widget-content">
+            <div class="stack-row-head">
+               <div class="label">
+                  <div class="icon"></div>
+                  <label>Destination Datastore</label>
+               </div>
+            </div>
+
+            <div class="stack-row">
+               <div class="label">
+                  <label for="idAppAddFormDsId" class="stack-required">Select destination datastore</label>
+               </div>
+               <div class="field select">
+                  <select name="dsId" id="idAppAddFormDsId" validate="{required:true}">
+                      #selectOption($datastoreOptions.eachOptionArray, ${datastoreOptions.initialValue})
+                  </select>
+               </div>
+            </div>
+         </div>
+
+         ## Hidden field used to store the uploadId. Its required for tracking upload progress.
+         <input type="hidden" name="uploadId" value="-1" />
+      </form> ## main form
+
+      #if ($isDialog)
+         <script type="text/javascript" charset="utf-8">
+            VmTAF.appAddMgr = new AppManager();
+            VmTAF.appAddMgr.validator = new Validator('#applicationMetadataForm');
+
+            window.onTafDialogOk = function(dialog) {
+               var params = {
+                  self: VmTAF.appAddMgr,
+                  holder: $('#applicationMetadataForm'),
+                  uploadForm: $("#uploadForm")
+               };
+               VmTAF.appAddMgr.validator.OnSubmit(
+                  function(args) {
+                     VmTAF.dialogHolder = dialog;
+                     VmTAF.appAddMgr.SubmitNewApplicationForm(args);
+                  }, params
+               );
+               return true;
+            };
+         </script>
+      #else
+         ## NOTE: Not part of any form. Data is submitted from Javascript when 'Save' button is pressed.
+         <div class="stack-footer">
+            <button class="button" onclick="VmTAF.SubmitAppForm(); return false;">
+               Save
+            </button>
+            <button class="button" onclick="VmTAF.contentNavigator.GoBack();">
+               Cancel
+            </button>
+         </div> ##stack-footer
+      #end
+</div> ##stack-editor

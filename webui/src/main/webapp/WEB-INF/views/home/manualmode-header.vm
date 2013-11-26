@@ -1,0 +1,23 @@
+################################################################################
+## ThinApp Factory WebUI
+## (c) 2011 VMware, Inc. All rights reserved.
+################################################################################
+
+################################################################################
+## manualmode-header.vm
+##
+## Page fragment that should appear at the top of manual mode capture page. 
+## This includes application display name that is currently converting to 
+## ThinApp using manual capture.
+################################################################################
+<div class='head-left'>
+   <span class='name'>Manual Capture -  $appName</span>
+   <span class='light-gradient'>&nbsp;</span>
+</div>
+
+<div class='head-right'>
+   <span class='dark-gradient'>&nbsp;</span>
+
+   <span class='right-nav'>
+   </span>
+</div>

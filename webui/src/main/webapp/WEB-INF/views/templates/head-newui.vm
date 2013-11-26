@@ -1,0 +1,57 @@
+################################################################################
+## ThinApp Factory WebUI
+## (c) 2011 VMware, Inc. All rights reserved.
+################################################################################
+##
+################################################################################
+## head-newui.vm
+##
+## This template contains the head html tag related content in the "new" UI
+## This is also used for Eula page, and eventually into login pages.
+################################################################################
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="robots" content="all,index,follow">
+  <meta name="rating" content="general">
+
+  <title>$pageTitle - #springMessage("T.COMMON.PAGE_TITLE")</title>
+##
+#if(!$newUI)
+  #set ($newUI = false)
+#end
+#if(!$yuiSupport)
+  #set ($yuiSupport = false)
+#end
+#if(!$compressJSandCSS)
+  #set($compressJSandCSS = !$appfactory.javaScriptLoggingEnabled)
+#end
+#if ($!yuiSupport)
+  #set($compressedCss = "#cssUrl('all-yui.css')")
+  #set($compressedJs = "#jsUrl('all-yui.js')")
+#else
+    #set($compressedCss = "#cssUrl('all.css')")
+    #set($compressedJs = "#jsUrl('all.js')")
+#end
+#if(!$appfactory.skinName)
+    #set ($appfactory.skinName = "base")
+#end
+#set($skinPath = "${contextPath}/static/css/skins/${appfactory.skinName}")
+#set($imagePath = "${skinPath}/images")
+
+<script type="text/javascript">
+chain=function(args){return function(){for(var i = 0;i<args.length;i++){args[i]();}}};
+function addLoad(fn){window.tafOnLoad=typeof(window.tafOnLoad)!='function'?fn:chain([window.tafOnLoad,fn]);}
+</script>
+  <link rel="shortcut icon" type="image/vnd.microsoft.icon" href="#imageUrl("favicon.ico")" />
+  #if ($!compressJSandCSS)
+    <link href="$compressedCss" media="screen" rel="stylesheet" type="text/css">
+  #else
+    <href href="#staticUrl("css/skins/jquery/base/jquery.ui.base.css")" media="screen" rel="stylesheet" type="text/css">
+    <link href="$contextPath/static/css/newui/default.css" media="screen" rel="stylesheet" type="text/css">
+    <link href="#cssUrl("appfactory.css")" media="screen" rel="stylesheet" type="text/css">
+    <link href="#cssUrl("stack-editor.css")" media="screen" rel="stylesheet" type="text/css">
+    <link href="#cssUrl("datatable/data_table_jqueryui_fix.css")" media="screen" rel="stylesheet" type="text/css">
+  #end
+</head>

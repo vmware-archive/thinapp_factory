@@ -1,0 +1,38 @@
+#if(!$appfactory.skinName)
+    #set ($appfactory.skinName = "base")
+#end
+## note: these macros have no whitespace because apparently
+##       the velocity macro processor does not ignore leading
+##       or trailing whitespace, which leads to unintended
+##       spaces in our URLs.  Unfortunately this makes it quite
+##       difficult to read.
+#macro(staticUrl $relative_url)${staticPath}/${relative_url}#end
+#macro(cssUrl $relative_url)#staticUrl("css/skins/${appfactory.skinName}/${relative_url}")#end
+#macro(jsUrl $relative_url)#staticUrl("js/${relative_url}") #end
+#macro(imageUrl $relative_url)#cssUrl("images/${relative_url}")#end
+#macro(apiUrl $relative_url)${contextPath}/api/${relative_url}#end
+#macro(pageUrl $relative_url)${contextPath}/${relative_url}#end
+
+## Translates the $key only if the $translate flag is set, else returns $key.
+#macro (translateIfSet $key $translate)
+   #if ($translate) #springMessage($key) #else $key #end
+#end
+
+## Macro to iterate over the EachOption object and display drop down options.
+#macro(selectOption $eachOptionArray $selected)
+   #foreach($option in $eachOptionArray)
+      #if("${option.class.simpleName}" == "GroupOption")
+         <optgroup label='#translateIfSet("${option.display}", ${option.translate})'
+               #if(${option.id}) id="${option.id}" #end >
+            #selectOption(${option.eachOptionArray}, $selected)
+         </optgroup>
+      #else
+         <option value="${option.key}" #if(${option.id}) id="${option.id}" #end
+            #if ($option.disabled) disabled="true"
+            #elseif ("$selected" == "${option.key}") selected
+            #end >
+            #translateIfSet("${option.display}", ${option.translate})
+         </option>
+      #end
+   #end
+#end

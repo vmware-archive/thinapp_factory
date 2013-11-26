@@ -1,0 +1,383 @@
+################################################################################
+## ThinApp Factory WebUI
+## (c) 2011 VMware, Inc. All rights reserved.
+################################################################################
+
+################################################################################
+## workpool-edit.vm
+##
+## Page used for editing existing workpool or creating new ones.
+################################################################################
+
+##
+## If there is a workpoolId attached to the view, then the view is being used
+## to EDIT a workpool. So, once the form has loaded, fetch the data from
+## the server and populate the form.
+##
+<script type="text/javascript" charset="UTF-8">
+#if ($newUI)
+#set($insideTab = true)
+addLoad(function () {
+#end
+   VmTAF.contentNavigator.AddReadyFunction(function _workpoolEditReady() {
+      VmTAF.wpMgr = new WorkpoolManager(
+         #if ($cloneSupported) true #else false #end ,
+         #if ($isWS) true #else false #end);
+
+      // The slider will only be deployed if the holderDiv #wp-slider exists.
+      var sliderDiv = $('#wp-slider');
+      if (sliderDiv) {
+         sliderDiv.slider({
+            min: 1,
+            max: 30,
+            value: $defaultMaxInstance ,
+            animate: true,
+            slide: function(event, ui) { $('#wp-maximum').val(ui.value).focus(); $(this).focus(); }
+         });
+         // Set the initial value here after slider is initialized.
+         $('#wp-maximum').val( sliderDiv.slider('value') );
+      }
+
+      #if ($workpoolId)
+         VmTAF.wpMgr.GetWorkpoolAndPopulateEditForm('$workpoolId');
+      #else
+         $('#vi-browser').dialog({
+            autoOpen: false,
+            minHeight: 400,
+            height: 400,
+            minWidth: 670,
+            width: 670,
+            show: 'slide',
+            zIndex: 500,
+            modal: true,
+            buttons: { 'Cancel': function() { $(this).dialog('close'); } }
+         });
+         // $('#vi-browser').is(':data(dialog)') - To check if dialog exists
+         VmTAF.wpMgr.PopulateOsTypeDropdown($('#osTypeHolder'));
+      #end
+      VmTAF.wpMgr.validator = new Validator('#workpool-form');
+
+      // TODO Remove this one backend supports CustomWorkpool case.
+      #if(!$cloneSupported)
+         // Since only 1 option for non clone supported, start with it.
+         $('#selectISO').click();
+      #end
+   });
+
+   VmTAF.contentNavigator.AddCleanupFunction(function _workpoolEditCleanup() {
+      VmTAF.wpMgr.validator = VmTAF.wpMgr.validator.Destruct();
+      VmTAF.wpMgr = VmTAF.wpMgr.Destruct();
+      $('#wp-slider').slider('destroy');
+      #if (!$workpoolId)
+         $('#vi-browser').dialog('destroy');
+         // Invoking destroy dialog leaves orphan div, hence remove it explicitly.
+         $('#vi-browser').remove();
+      #end
+   });
+#if ($newUI)
+});
+#end
+</script>
+
+<div class="panel-title">
+   <div class="desc"><a href="#springUrl('/settings')">Settings</a> &gt; <a href="#springUrl('/settings#0')">$pageTitle</a> &gt;
+      #if ($workpoolId)
+         Edit Workpool
+      #else
+         Add Workpool
+      #end
+   </div>
+</div>
+
+#parse("include/main-top.vm")
+
+<div class='workpool-edit-content'>
+
+   ## Data is submitted via an Ajax call after serializing the form.
+   <form id="workpool-form" onsubmit="return false;">
+      <div class="stack-editor editable">
+         <div class="stack-header">
+            <span>#if($workpoolId) Edit #else Add #end Workpool</span>
+         </div>
+         <div class="stack-group"> ## Workpool info
+            <div class="stack-row-head">
+               <div class="label">
+                  <div class="icon"></div>
+                  <label>Workpool</label>
+               </div>
+            </div>
+            <div class="stack-row">
+               <div class="label">
+                  <label for="idWorkpoolEditName" class="stack-required">Workpool Name</label>
+               </div>
+               <div class="field text short">
+                  <input name="name" id="idWorkpoolEditName" type="text" maxlength="50" placeholder="unique workpool name" validate="{required:true}"
+                     onblur="this.value=jQuery.trim(this.value)">
+               </div>
+            </div>
+
+            #if ($isWS) ## For WKST set maximum to $defaultMaxInstance and hide this field
+               <input type="hidden" name="maximum" value="$defaultMaxInstance" />
+            #else
+               <div class="stack-row">
+                  <div class="label">
+                     <label class="stack-required" for="wp-maximum">Maximum number of instances</label>
+                  </div>
+                  <div class="field text number">
+                     <input name="maximum" id="wp-maximum" type="text" maxlength="4"
+                        validate="{required:true, digits: true, range: [1, 30]}"
+                        onblur="this.value=jQuery.trim(this.value); jQuery('#wp-slider').slider('value', this.value);">
+                     <div id="wp-slider" class="slider"></div>
+                  </div>
+               </div>
+            #end
+
+            #if($workpoolId)
+               ## If editing, put workpool id into a hidden input
+               <input type="hidden" name="workpoolId" value="$workpoolId">
+               ## Display the status, type and osType of the workpool.
+               <div class="stack-row">
+                  <div class="label"><label>Workpool Type</label></div>
+                  <div class="field"><span id="wp-type"></span></div>
+               </div>
+               <div class="stack-row">
+                  <div class="label"><label>OS Type</label></div>
+                  <div class="field"><span id="wp-osType"></span></div>
+               </div>
+               <div class="stack-row no-show">
+                  <div class="label"><label>OS Variant</label></div>
+                  <div class="field"><span id="wp-osVariant"></span></div>
+               </div>
+               <div class="stack-row">
+                  <div class="label"><label>Workpool Status</label></div>
+                  <div class="field"><span id="wp-state"></span></div>
+               </div>
+               <div class="stack-row no-show">
+                  <div class="label"><label>Image Name</label></div>
+                  <div class="field"><span id="image-name"></span></div>
+               </div>
+               <div class="stack-row no-show">
+                  <div class="label"><label>Image Status</label></div>
+                  <div class="field"><span id="image-state"></span></div>
+               </div>
+            #else
+               ## This is the new workpool create flow.
+               <input type="hidden" name="cloneSupported" value="$cloneSupported">
+               <!-- Fields used for capturing new workpool -->
+               #if($cloneSupported)
+                  <div class="stack-row">
+                     <div class="label">
+                        <label for="sourceType" class="stack-required">Select workpool creation mode</label>
+                     </div>
+                     <div class="field radio">
+                        <label for="sourceType">
+                           <input name="sourceType" type="radio" id="sourceType" value="selectVM"
+                              onclick="VmTAF.wpMgr.ToggleImageForm(this, $('#vi-browser'));"/>
+                           Select an existing VM
+                        </label>
+                     </div>
+                  </div>
+               #end
+               <div class="stack-row">
+                  <div class="label"><label> </label></div>
+                  <div class="field radio">
+                     <label for="selectISO">
+                        <input name="sourceType" type="radio" id="selectISO" value="selectISO"
+                           onclick="VmTAF.wpMgr.ToggleImageForm(this, $('#vi-browser'));"/>
+                        Use ISO to create a new VM
+                     </label>
+                     </input>
+                  </div>
+               </div>
+               #if($allVMImages && $cloneSupported)
+                  <div class="stack-row">
+                     <div class="label"><label> </label></div>
+                     <div class="field radio">
+                        <label for="existingImage">
+                           <input name="sourceType" type="radio" id="existingImage" value="existingImage"
+                              onclick="VmTAF.wpMgr.ToggleImageForm(this, $('#vi-browser'));"/>
+                           Pick a VM Image previously created
+                        </label>
+                     </div>
+                  </div>
+               #end
+            #end
+            #if($allVMImages)
+               <div class="stack-row existingImage imgCreate no-show">
+                  <div class="label">
+                     <label for="idWorkpoolEditVmImageId" class="stack-required">Select an exising VM Image</label>
+                  </div>
+                  <div class="field select">
+                     <select name="vmImageId" id="idWorkpoolEditVmImageId">
+                        #foreach($option in $allVMImages)
+                           <option value="$option.id">$option.name</option>
+                        #end
+                     </select>
+                  </div>
+               </div>
+            #end
+         </div> ## workpool info
+
+         #if (!$workpoolId)
+            <div class="stack-group no-show selectISO selectVM imgCreate"> ## Guest OS
+               <div class="stack-row-head">
+                  <div class="label">
+                     <div class="icon"></div>
+                     <label>Guest Operating System</label>
+                  </div>
+               </div>
+               <div class="stack-row">
+                  <div class="label">
+                     <label for="@class">Select operating system</label>
+                  </div>
+                  <div class="field select" id="osTypeHolder"></div>
+               </div>
+               <div class="stack-row variant no-show">
+                  <div class="label">
+                     <label for="workpoolEditVariant">Variant</label>
+                  </div>
+                  <div class="field select"></div> ## Dynamically loaded.
+               </div>
+
+               <div class="stack-row licType no-show">
+                  <div class="label">
+                     <label class="stack-required">Select license type</label>
+                  </div>
+                  <div class="field radio">
+                     <label for="licenseKey">
+                        <input name="licType" type="radio" id="licenseKey" value="licenseKey"
+                           CHECKED onclick="VmTAF.wpMgr.ToggleLicenseForm(this.value);"/>
+                        License Key
+                     </label>
+                     &nbsp;&nbsp;&nbsp;
+                     <label for="kmsServer">
+                        <input name="licType" type="radio" id="kmsServer" value="kmsServer"
+                           onclick="VmTAF.wpMgr.ToggleLicenseForm(this.value);"/>
+                        KMS Server (Activation key is picked up automatically)
+                     </label>
+                  </div>
+               </div>
+               <div class="stack-row kmsServer no-show">
+                  <div class="label">
+                     <label for="idWorkpoolEditKmsServer">License Key Management Server</label>
+                  </div>
+                  <div class="field text short"> ## validate attribute is inserted dynamically.
+                     <input name="kmsServer" type="text" maxlength="100" id="idWorkpoolEditKmsServer" DISABLED
+                        placeholder="my-kms-server.company.com" subproperty="osRegistration"
+                         validate="{required:true}" onblur="this.value=jQuery.trim(this.value)">
+                  </div>
+               </div>
+               <div class="stack-row licenseKey">
+                  <div class="label">
+                     <label for="idWorkpoolEditLicenseKey" class="stack-required">License key</label>
+                  </div>
+                  <div class="field text short">
+                     <input name="licenseKey" type="text" class="lic-key" subproperty="osRegistration" id="idWorkpoolEditLicenseKey"
+                        validate="{rangelength: [29, 29], licenseKey: true, messages: {rangelength: '#springMessage("M.VALIDATION.LICENSE_LENGTH")'} }"
+                        maxlength="50" placeholder="xxxxx-xxxxx-xxxxx-xxxxx-xxxxx" onblur="this.value=jQuery.trim(this.value)">
+                  </div>
+               </div>
+               <div class="stack-row">
+                  <div class="label">
+                     <label for="idWorkpoolEditUserName" class="stack-required">Registration username</label>
+                  </div>
+                  <div class="field text short">
+                     <input name="userName" type="text" maxlength="50" subproperty="osRegistration" id="idWorkpoolEditUserName"
+                        placeholder="my name" validate="{required:false}" onblur="this.value=jQuery.trim(this.value)">
+                  </div>
+               </div>
+               <div class="stack-row">
+                  <div class="label">
+                     <label for="idWorkpoolEditOrganization" class="stack-required">Registration organization</label>
+                  </div>
+                  <div class="field text short">
+                     <input name="organization" type="text" maxlength="50"  subproperty="osRegistration"
+                        placeholder="my company name" validate="{required:false}" id="idWorkpoolEditOrganization"
+                        onblur="this.value=jQuery.trim(this.value)">
+                  </div>
+               </div>
+            </div> ## Guest OS
+
+            ## Display create fields for workpool based on sourceType.
+            <div class="stack-group no-show selectISO imgCreate"> ## locate iso
+               <div class="stack-row-head">
+                  <div class="label">
+                     <div class="icon"></div>
+                     <label>Create a virtual machine using ISO</label>
+                  </div>
+               </div>
+               #if ($isWS) ## For workstation we will be using NAT always.
+                  <input type="hidden" name="networkName" value="NAT" />
+               #else
+                  <div class="stack-row">
+                     <div class="label">
+                        <label for="net-dropdown" class="stack-required">Select a Network</label>
+                     </div>
+                     <div class="field select" id="net-dropdown">
+                           ## Placeholder for dynamic network list
+                     </div>
+                  </div>
+               #end
+               <div class="stack-row">
+                  <div class="label">
+                     <label for="idWorkpoolEditSourceIso" class="stack-required">Selected Windows ISO</label>
+                  </div>
+                  <div class="field text short">
+                     <input name="sourceIso" type="text" READONLY onclick="$('#vi-browser').dialog('open');"
+                        placeholder="click to select a windows ISO file" validate="{required:false}" id="idWorkpoolEditSourceIso">
+                     &nbsp;
+                     <a class="button" id="wp-browse-iso" href="javascript:jQuery.noop();"
+                        onclick="$('#vi-browser').dialog('open');">Browse ISO</a>
+                  </div>
+               </div>
+            </div> ## locate iso
+
+            <div class="stack-group no-show selectVM imgCreate"> ## select image
+               <div class="stack-row-head">
+                  <div class="label">
+                     <div class="icon"></div>
+                     <label>Clone an exising virtual machine</label>
+                  </div>
+               </div>
+               <div class="stack-row">
+                  <div class="label">
+                     <label for="idWorkpoolEditSelectedVmName" class="stack-required">Click to select a virtual machine</label>
+                  </div>
+                  <div class="field text short">
+                     <input name="selectedVMName" type="text" READONLY onclick="$('#vi-browser').dialog('open');"
+                        subproperty="vmSelected" placeholder="click to select a virtual machine" id="idWorkpoolEditSelectedVmName">
+                     <input name="moid" type="hidden" subproperty="vmSelected">
+                     &nbsp;
+                     <a class="button" id="wp-browse-vm" href="javascript:jQuery.noop();"
+                        onclick="$('#vi-browser').dialog('open');">Browse VM</a>
+                  </div>
+               </div>
+            </div> ## select image
+         #end
+
+         <div class="stack-footer">
+            <button
+               class="button" id="wp-save"
+               ## Use the right function call for edit vs add.
+               #if ($workpoolId)
+                  onclick="VmTAF.wpMgr.validator.OnSubmit(VmTAF.wpMgr.SubmitEditWorkpoolForm, $('#workpool-form'))">
+               #else
+                  onclick="VmTAF.wpMgr.validator.OnSubmit(VmTAF.wpMgr.SubmitNewWorkpoolForm, $('#workpool-form'))">
+               #end
+               Save
+            </button>
+            <button
+               class="button" id="wp-cancel-save"
+               onclick="VmTAF.contentNavigator.GoBack()">
+               Cancel
+            </button>
+         </div> ##stack-footer
+      </div> ##stack-editor
+   </form>
+</div>
+
+## for initializing jquery ui dialog for vm /iso browsing.
+<div id="vi-browser" class="no-show">
+      <div id="inv-tree"></div> ## Display inventory tree
+      <div class="desc"></div>  ## Description
+</div>

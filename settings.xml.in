@@ -1,0 +1,67 @@
+<settings xmlns="http://maven.apache.org/SETTINGS/1.1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.1.0 http://maven.apache.org/xsd/settings-1.1.0.xsd">
+   <localRepository></localRepository>
+   <!-- Put proxy settings in here to make it easier to add
+dependencies.  Builds should always be run in offline mode. -->
+   <proxies>
+      <proxy>
+         <active>true</active>
+         <protocol>http</protocol>
+       <!-- Your proxy host/port for http -->
+         <host>proxy.your.company.com</host>
+         <port>8080</port>
+         <nonProxyHosts>localhost|127.0.0.1</nonProxyHosts>
+      </proxy>
+      <proxy>
+         <active>true</active>
+         <protocol>https</protocol>
+       <!-- Your proxy host/port for https -->
+         <host>proxy.your.company.com</host>
+         <port>8443</port>
+         <nonProxyHosts>localhost|127.0.0.1</nonProxyHosts>
+      </proxy>
+   </proxies>
+
+   <profiles>
+      <!-- profile
+       | These external repositories contain the dependancy libraries for TAF.
+       |
+       | vijava API - TAF uses vSphere java API 2.1 which is not distributed via maven repositories.
+       |              Hence, manually download the vSphere Java API 2.1 - vijava2120100824.zip from
+       |              http://sourceforge.net/projects/vijava/files/vijava/VI%20Java%20API%202.1/
+       |              TODO: Upgrade to the newer vSphere API v5.5.
+       |-->
+      <profile>
+         <id>taf</id>
+
+         <activation>
+            <jdk>[1.6,1.7)</jdk>
+         </activation>
+
+         <repositories>
+            <repository>
+               <id>maven-repo</id>
+               <name>Maven repository</name>
+               <url>http://repo1.maven.org/maven2</url>
+            </repository>
+            <repository>
+               <id>akka-repo</id>
+               <name>Akka repository</name>
+               <url>http://repo.akka.io/releases</url>
+            </repository>
+            <repository>
+               <id>typesafe</id>
+               <name>Typesafe repository</name>
+               <url>http://repo.typesafe.com/typesafe/repo/</url>
+            </repository>
+         </repositories>
+         <pluginRepositories>
+            <pluginRepository>
+               <id>jcompressor-release-repo</id>
+               <name>jcompressor release repository</name>
+               <url>http://jcompressor.googlecode.com/svn/maven/releases</url>
+            </pluginRepository>
+         <pluginRepositories>
+      </profile>
+   </profiles>
+</settings>

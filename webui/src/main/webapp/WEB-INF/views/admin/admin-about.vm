@@ -1,0 +1,41 @@
+################################################################################
+## ThinApp Factory WebUI
+## (c) 2011 VMware, Inc. All rights reserved.
+################################################################################
+
+################################################################################
+## admin/admin-about.vm
+##
+## Shows the equivalent of a typical VMware "About" dialog box.
+################################################################################
+
+<div id="about">
+
+   <table>
+      <tr>
+         <td>Product:</td>
+         <td>$appfactory.productName</td>
+      </tr>
+
+      <tr>
+         <td>Version:</td>
+         <td>$appfactory.version</td>
+      </tr>
+
+      <tr>
+         <td>Build:</td>
+         <td>$appfactory.build</td>
+      </tr>
+
+      <tr>
+         <td>Server Name:</td>
+         <td>$serverNameNotLocal</td>
+      </tr>
+
+      <tr>
+         <td>Server Address:</td>
+         <td>$serverAddressNotLocal</td>
+      </tr>
+   </table>
+
+</div>

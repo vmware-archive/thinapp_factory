@@ -1,0 +1,34 @@
+################################################################################
+## ThinApp Factory WebUI
+## (c) 2011 VMware, Inc. All rights reserved.
+################################################################################
+
+################################################################################
+## app-build-history.vm
+##
+## This is a HTML template that provides a placeholder for displaying the
+## build request history. This tables auto updates to get the latest status.
+################################################################################
+
+##
+## Table for build request history
+## This gets populated dynamically using Ajax calls from Javascript.
+##
+<div id="app-history">
+   <div class="section-head">Capture History</div>
+   <table id="build-history-table" class="data">
+      <thead>
+         <tr>
+            <th>Status</th>
+            <th>Last Updated</th>
+            <th class="osColumn">OS</th>
+            <th>#springMessage("T.COMMON.THINAPP_VERSION")</th>
+            <th>Recipe Name</th>
+            <th>Action</th>
+         </tr>
+      </thead>
+      <tbody>
+         ## Data is loaded dynamically from TableWrapper
+      </tbody>
+   </table>
+</div>

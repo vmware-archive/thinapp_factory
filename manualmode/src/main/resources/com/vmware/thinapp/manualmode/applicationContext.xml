@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xmlns:context="http://www.springframework.org/schema/context"
+   xmlns:tx="http://www.springframework.org/schema/tx"
+   xmlns:util="http://www.springframework.org/schema/util"
+   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+      http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd
+      http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+      http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
+
+   <import resource="classpath*:workpool-context.xml" />
+
+   <bean id="manualModeProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+      <property name="locations">
+         <util:list>
+            <value>classpath:manualmodesvc.properties</value>
+            <!-- For overriding default settings. -->
+            <value>classpath:manualmodesvc-local.properties</value>
+         </util:list>
+      </property>
+      <!--manualmodesvc-local.properties may not exist so ignore nonexistent resources. -->
+      <property name="ignoreResourceNotFound" value="true"/>
+   </bean>
+
+   <bean class="java.util.concurrent.Executors" factory-method="newCachedThreadPool" />
+   <bean id="datastoreClient" class="com.vmware.thinapp.common.datastore.client.DatastoreClient">
+      <constructor-arg value="#{instanceProperties['storageUrl'] ?: 'http://localhost:5000/storage'}"/>
+   </bean>
+
+   <bean id="projectClient" class="com.vmware.thinapp.common.converter.client.ProjectClient">
+      <constructor-arg value="#{instanceProperties['projectsUrl'] ?: 'http://localhost:5000/projects'}"/>
+   </bean>
+
+   <bean class="com.vmware.thinapp.manualmode.Config">
+      <property name="licenseKey"
+         value="#{instanceProperties['thinapp.licenseKey']}" />
+      <property name="licenseUser"
+         value="#{instanceProperties['thinapp.licenseUser']}" />
+      <!-- Utility program to set proxy in Guest -->
+      <property name="setProxyFileName" value="setproxy.exe" />
+      <!-- Utility program to set ini key/values in Guest -->
+      <property name="setOptionFileName" value="setoption.exe" />
+      <!-- Utility script to backup eventlogs in Guest -->
+      <property name="backupEventlogsScriptName" value="backupeventlogs.vbs"/>
+      <!-- E.g. Directory to save download installers from a feed.  -->
+      <property name="installersDir" value="/installers/"></property>
+   </bean>
+
+   <tx:annotation-driven transaction-manager="converterTransactionManager"/>
+
+   <context:component-scan base-package="com.vmware.thinapp.manualmode" />
+   <context:component-scan base-package="com.vmware.thinapp.manualmode.server" />
+</beans>

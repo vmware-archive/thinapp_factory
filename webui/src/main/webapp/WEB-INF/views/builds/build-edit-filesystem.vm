@@ -1,0 +1,115 @@
+################################################################################
+## ThinApp Factory WebUI
+## (c) 2011 VMware, Inc. All rights reserved.
+################################################################################
+
+################################################################################
+## build-edit-filesystem.vm
+##
+## This view allows editing of file system data from build settings.
+################################################################################
+
+<div id="filesystem-direct-link">
+   ## Content added by FileSystemEditor.Populate()
+</div>
+
+<field>
+   <input type="checkbox" id="force-rescan-check"/>
+   <label for="force-rescan-check">I made file and/or directory changes.</label>
+</field>
+
+<div class="button-row">
+   <button
+      class="button"
+      onclick="
+         VmTAF.buildManager.SaveFileSystem(
+            VmTAF.buildEditor.fsEditor,
+            '$buildId',
+            $('#force-rescan-check').attr('checked'));
+         VmTAF.buildEditor.fsEditor.MarkAsUnchanged();">
+      #springMessage('T.BUILDS.SAVE_FILE_SYSTEM')
+   </button>
+   <button
+      class="button"
+      onclick="
+         VmTAF.buildManager.ResetAndReload('$buildId', 'directory', function(data) {
+            VmTAF.buildEditor.fsEditor.Populate(data.dirRoot, data.projectDir);
+            VmTAF.buildEditor.fsEditor.MarkAsUnchanged();
+         });">
+      #springMessage('T.BUILDS.RESET_FILE_SYSTEM')
+   </button>
+</div>
+
+<div id="filesystem-editor" class="filesystem-editor">
+   <form id="filesystem-form"
+         onsubmit="return false;"
+         onkeypress="return (window.event.keyCode != 13);">
+      <div class="stack-editor filesystem-folders">
+         <div class="stack-header">
+            <span>Folders</span>
+         </div>
+         <div id="filesystem-tree-holder" class="stack-group">
+            ##
+            ## File system folders will be created here. They are created
+            ## dynamically by the FileSystemEditor.
+            ##
+            <div class="ajax-loader"></div>
+         </div>
+         <div class="stack-footer">
+            <button
+               class="button extended-edit"
+               onclick="filesysEditor.CreateFolder();">
+               New Folder
+            </button>
+            <button
+               class="button extended-edit"
+               onclick="filesysEditor.DeleteFolder();">
+               Delete Folder
+            </button>
+         </div> ##stack-footer
+      </div> ##stack-editor ## .filesystem-navigator
+
+      <div class="filesystem-data">
+
+         <div class="filesystem-files stack-editor editable">
+            <div class="stack-header">
+               <span id="filesystem-files-header">Files</span>
+            </div>
+            <div class="stack-group" id="filesystem-files-holder">
+               ##
+               ## File data will be created here. It is created
+               ## dynamically by the FileSystemEditor.
+               ##
+            </div>
+            <div class="stack-footer">
+               <button
+                  class="button extended-edit"
+                  onclick="filesysEditor.AddFile('dialog-holder', VmTAF.buildManager);">
+                  Add File
+               </button>
+            </div> ##stack-footer
+         </div> ##stack-editor, filesystem-files
+
+         <div class="filesystem-attrs stack-editor editable">
+            <div class="stack-header">
+               <span id="filesystem-attrs-header">Attributes</span>
+            </div>
+            <div class="stack-group" id="filesystem-attrs-holder">
+               ##
+               ## File data will be created here. It is created
+               ## dynamically by the FileSystemEditor.
+               ##
+            </div>
+            <div class="stack-footer">
+               <button
+                  class="button extended-edit"
+                  onclick="filesysEditor.AddAttribute('dialog-holder', VmTAF.buildManager);">
+                  Add Attribute
+               </button>
+            </div> ##stack-footer
+         </div> ##stack-editor, filesystem-files
+
+      </div> ## filesystem-data
+   </form>
+</div>
+<div class="clearDiv"></div>

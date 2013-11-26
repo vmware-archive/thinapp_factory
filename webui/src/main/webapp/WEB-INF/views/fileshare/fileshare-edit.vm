@@ -1,0 +1,94 @@
+################################################################################
+## ThinApp Factory WebUI
+## (c) 2011 VMware, Inc. All rights reserved.
+################################################################################
+
+################################################################################
+## fileshare-edit.vm
+##
+## This is the view that is used for editing existing fileshares, and for creating
+## new ones. The contents of the view change depending on whether $fileShareId is
+## defined: if defined, an 'edit' view is displayed, else a 'create' view is
+## displayed. NOTE: Even when editing, no data is shown. An Ajax call to the
+## appropriate AppFactory API call must be made the fetch the fileshare data and
+## populate this form.
+################################################################################
+
+##
+## If there is a fileShareId attached to the view, then the view is being used
+## to EDIT a fileshare. So, once the form has loaded, fetch the fileshare details from
+## the server and populate the form with it.
+##
+<script type="text/javascript">
+#set($insideTab = true)
+#if ($newUI)
+addLoad(function () {
+#end
+   VmTAF.contentNavigator.AddReadyFunction(function _fileshareEditReady() {
+      VmTAF.fsMgr = new FileShareManager();
+      VmTAF.fsMgr.validator = new Validator('#fileshare-form');
+
+      #if($fileShareId)
+         VmTAF.fsMgr.GetFileshareAndPopulateForm($fileShareId);
+      #end
+
+      VmTAF.fsMgr.ToggleOptionalFields();
+      VmTAF.fsMgr.ToDataTable( $('#fileshare-import-table') );
+
+     if (window.VmTAF.newUI) {
+           // add unload handler
+           $(window).bind("beforeunload", function(e) {
+               var json = {};
+               VmTAF.fsMgr.checkDelta(VmTAF.fsMgr, json);
+               if (json.delta && json.delta.length > 0) {
+                   return "There are unsaved changes.";
+               }
+           });
+     }
+   });
+
+   VmTAF.contentNavigator.AddVerifyFunction(function _fileshareEditVerify() {
+      var json = {};
+      VmTAF.fsMgr.checkDelta(VmTAF.fsMgr, json);
+      if (json.delta && json.delta.length > 0) {
+         if (AfConfirm(
+            'Save Changes',
+            'There are unsaved changes. Are you sure you want to ignore those changes?')) {
+            return true;
+         }
+         else {
+            /* User still wants to save the changes, so stay on this page */
+            return false;
+         }
+      }
+      /* No delta changes found : OK to load next page */
+      return true;
+   });
+
+   VmTAF.contentNavigator.AddCleanupFunction(function _fileshareEditCleanup() {
+      VmTAF.fsMgr.validator = VmTAF.fsMgr.validator.Destruct();
+      VmTAF.fsMgr = VmTAF.fsMgr.Destruct();
+   });
+#if ($newUI)
+});
+#end
+</script>
+
+<div class="panel-title">
+   <div class="desc"><a href="#springUrl('/settings')">Settings</a> &gt; <a href="#springUrl('/settings#4')">$pageTitle</a> &gt;
+      #if ($fileShareId)
+         Edit Fileshare
+      #else
+         Add Fileshare
+      #end
+   </div>
+</div>
+
+#parse("include/main-top.vm")
+
+<div class='datastore-edit-content'>
+#parse("fileshare/fileshare-form.vm")
+</div>
+<div class='clearDiv'></div>
+
+#parse("include/main-bottom.vm")

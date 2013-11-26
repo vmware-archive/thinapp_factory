@@ -1,0 +1,174 @@
+  <div class="stack-editor editable">
+#if (!$isDialog)
+    <div class="stack-header">
+        <span>#if ($fileShareId) Edit #else Add #end Fileshare</span>
+    </div>
+#end
+      ##
+      ## For form is used mostly for styling. Any data that needs to be submitted to
+      ## the server is sent via an Ajax call.
+      ##
+      <form id="fileshare-form" onsubmit="return false;">
+         <div class="stack-group" id="basic-info-stack-group"> ## Add Fileshare
+            <div class="stack-row-head">
+               <div class="label">
+                  <div class="icon"></div>
+                  <label>Basic information</label>
+               </div>
+               <div class="field">
+               </div>
+            </div>
+            <div id="fileshare-specific-fields">
+               <div class="stack-row">
+                  <div class="label">
+                     <label class="stack-required" for="idFileshareFormName">Name</label>
+                  </div>
+                  <div class="field text short">
+                     ## TODO: Update 'dsName' rule once CWS supports more characters in name.
+                     <input name="name" id="idFileshareFormName" type="text" placeholder="My fileshare name"
+                        validate="{required:true}" onblur="this.value=jQuery.trim(this.value)">
+                  </div>
+               </div>
+               <div class="stack-row">
+                  <div class="label">
+                     <label class="stack-required" for="idFileShareFormServerPath">Share Location</label>
+                  </div>
+                  <div class="field text short">
+                     <input name="serverPath" id="idFileShareFormServerPath" type="text" placeholder="share.host.name.com/share/path"
+                        onblur="this.value=jQuery.trim(this.value)"
+                        validate="{required:true, fileshare:true}"
+                        #if ($fileShareId)
+                           disabled="disabled"
+                        #end
+                        >
+                  </div>
+               </div>
+            </div>
+
+            ## Only show description when editing a fileshare.
+            ## Won't it get replaced when the fileshare is scanned though?
+            #if($fileShareId)
+               <div class="stack-row">
+                  <div class="label">
+                     <label for="idFileShareFormDescription">Description</label>
+                  </div>
+                  <div class="field text short">
+                     <input name="description" id="idFileShareFormDescription" type="text" onblur="this.value=jQuery.trim(this.value)">
+                  </div>
+               </div>
+            #end
+
+            ##
+            ## Samba authentication options.
+            ## XXX make the text inputs hide/show according to checkbox state.
+            ##
+            <div class="stack-row">
+               <div class="label">
+                  <label for="idFileshareFormAuthRequired">Requires authentication</label>
+               </div>
+               <div class="field checkbox">
+                  <input name="authRequired" id="idFileshareFormAuthRequired" type="checkbox" value="true" onclick="$('#login').toggle();">
+               </div>
+            </div>
+            <div id="login">
+            <div class="stack-row">
+               <div class="label">
+                  <label for="idFileshareFormAuthUsername">Username</label>
+               </div>
+               <div class="field text short">
+                  <input name="authUsername" type="text" id="idFileshareFormAuthUsername"
+                     onblur="this.value=jQuery.trim(this.value)"
+                     validate="{required:'#authRequired:checked',messages:{required:'#springMessage('M.FILE_SHARES.REQ_USERNAME')'}}">
+               </div>
+            </div>
+            <div class="stack-row">
+               <div class="label">
+                  <label for="idFileshareFormAuthPassword">Password</label>
+               </div>
+               <div class="field text short">
+                  <input name="authPassword" type="password" id="idFileshareFormAuthPassword">
+               </div>
+            </div>
+           </div> ## end of login div
+
+            <div class="stack-row" id="ok-to-convert">
+               <div class="label">
+                  <label for="idFileshareFormOkToConvert">OK to convert</label>
+               </div>
+               <div class="field checkbox">
+                  <input name="okToConvert" id="idFileshareFormOkToConvert" type="checkbox" value="true">
+               </div>
+            </div>
+
+         </div>
+
+         #if ($fileShareId)
+            #parse("fileshare/fileshare-sync-table.vm")
+         #else
+            #parse("fileshare/fileshare-import-table.vm")
+         #end
+
+         ## If editing, put fileshare ID into a hidden input
+         #if ($fileShareId)
+            <input type="hidden" name="fileShareId" value="$fileShareId">
+         #end
+
+#if (!$isDialog)
+         ##
+         ## Buttons to save new file share and edit existing file share.
+         ## Clicking 'Cancel' is just taking the user back to file share index page.
+         ##
+         <div class="stack-footer">
+            <button
+               id="scan-btn"
+               class="button"
+               #if ($fileShareId)
+                  onclick="VmTAF.fsMgr.validator.OnSubmit( function(){ VmTAF.fsMgr.Rescan($('#fileshare-form')); } );return false;">
+                  Re-Scan
+               #else
+                  onclick="VmTAF.fsMgr.validator.OnSubmit( function(){ VmTAF.fsMgr.Scan($('#fileshare-form')); } );return false;">
+                  Scan
+               #end
+            </button>
+            <button
+               id="save-btn"
+               class="button"
+## Note: it is important to use this here, rather than in a stylesheet,
+## because in the new UI we'll make this a JQuery button, which will
+## override the display attribute.
+               style="display:none;"
+               ## Use the right function call for edit vs add.
+               #if ($fileShareId)
+                  onclick="VmTAF.fsMgr.validator.OnSubmit( function(){ VmTAF.fsMgr.SubmitEditForm($('#fileshare-form')); } )">
+               #else
+                  onclick="VmTAF.fsMgr.validator.OnSubmit( function(){ VmTAF.fsMgr.SubmitNewFileShareForm($('#fileshare-form')); } )">
+               #end
+               Save
+            </button>
+            <button
+               class="button"
+               id="fileshare-cancel-save"
+               onclick="VmTAF.contentNavigator.GoBack();">
+               Cancel
+            </button>
+         </div> ##stack-footer
+#else
+<script type="text/javascript">
+   window.fsMgr = new FileShareManager();
+#if ($fileShareId)
+  var submitHandler = fsMgr.SubmitEditForm;
+#else
+  var submitHandler = fsMgr.SubmitNewFileShareForm;
+#end
+  fsMgr.validator = new Validator('#fileshare-form', jQuery.proxy(submitHandler, fsMgr));
+#if($fileShareId)
+  fsMgr.GetFileshareAndPopulateForm($fileShareId);
+#end
+  fsMgr.ToggleOptionalFields();
+  fsMgr.ToDataTable( $('#fileshare-import-table') );
+
+  window.onTafDialogOk = function() { $('#fileshare-form').submit(); };
+</script>
+#end
+    </form>
+  </div> ##stack-editor

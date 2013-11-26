@@ -1,0 +1,151 @@
+################################################################################
+## ThinApp Factory WebUI
+## (c) 2011 VMware, Inc. All rights reserved.
+################################################################################
+
+################################################################################
+## builds-import-form.vm
+##
+## Contains the form specific template for importing projects.
+################################################################################
+
+<div class="stack-editor editable">
+
+   #if (!$isDialog)
+      <div class="stack-header">
+         <span>Add Datastore to Import Projects</span>
+      </div>
+   #end
+   
+      ##
+      ## For form is used mostly for styling. Any data that needs to be submitted to
+      ## the server is sent via an Ajax call.
+      ##
+      <form id="datastore-form" onsubmit="return false;">
+         <div class="stack-group"> ## Basic info
+            <div class="stack-row-head">
+               <div class="inline-error"/>
+               <div class="label">
+                  <div class="icon"></div>
+                  <label>Basic Info</label>
+               </div>
+            </div>
+            <div class="stack-row">
+               <div class="label">
+                  <label for="name" class="stack-required">Name</label>
+               </div>
+               <div class="field text short">
+                  <input name="name" type="text" validate="{required:true}" subproperty="datastore"
+                     #if ($datastoreId) disabled="disabled" #end onblur="this.value=jQuery.trim(this.value)">
+                  </input>
+               </div>
+            </div>
+            <div class="stack-row">
+               <div class="label">
+                  <label for="type">Type</label>
+               </div>
+               <div class="field select">
+                  <select name="type" subproperty="datastore">
+                     ## We only know CIFS right now
+                     <option value="cifs">CIFS</option>
+                  </select>
+               </div>
+            </div>
+            <div class="stack-row">
+               <div class="label">
+                  <label for="runtimeId">#springMessage("T.COMMON.THINAPP_VERSION")</label>
+               </div>
+               <div class="field select">
+                  ## Enable hz checkbox if hz group exists and runtime is hzCapable.
+                  <select name="runtimeId" id="runtimeId" validate="{required:true}"
+                        onchange="if (VmTAF.isHzCapable($(this).val()) && $(this).find('#runtimeGroupHorizon').length > 0)
+                           { $('#addHorizonHolder').slideDown(300); } else { $('#addHorizonHolder').slideUp(300); }">
+                      #selectOption($runtimeSelect.eachOptionArray, ${runtimeSelect.initialValue})
+                  </select>
+                  ## Display 'add horizon settings' checkbox only when horizon is enabled.&nbsp;
+                  ## Toggle disabled when runtime does not support horizon integration.
+                  <span>
+                     <div id="addHorizonHolder" class='#{if}(!$horizonEnabled) no-show #{end}'>
+                        <input type="checkbox" id="addHorizon" name="addHorizonIntegration"/>
+                        <label for="addHorizon">#springMessage("T.COMMON.APPLY_HORIZON")</label>
+                     </div>
+                  </span>
+               </div>
+            </div>
+         </div> ## Basic info
+
+         <div class="stack-group"> ## share
+            <div class="stack-row-head">
+               <div class="label">
+                  <div class="icon"></div>
+                  <label>Share</label>
+               </div>
+            </div>
+            <div class="stack-row">
+               <div class="label">
+                  <label for="serverShare" class="stack-required">Share Location to Project folders</label>
+               </div>
+               <div class="field text short">
+                  <input name="serverShare" type="text" placeholder="share.host.name.com/share/path"
+                        subproperty="datastore" validate="{required:true, fileshare:true}" onblur="this.value=jQuery.trim(this.value)">
+               </div>
+            </div>
+         </div> ## share
+
+         <div class="stack-group"> ## authentication
+            <div class="stack-row-head">
+               <div class="label">
+                  <div class="icon"></div>
+                  <label>Authentication</label>
+               </div>
+            </div>
+            <div class="stack-row">
+               <div class="label">
+                  <label for="username" class="stack-required">Username</label>
+               </div>
+               <div class="field text short">
+                  <input name="username" type="text" validate="{required:true}" subproperty="datastore" onblur="this.value=jQuery.trim(this.value)"></input>
+               </div>
+            </div>
+            <div class="stack-row">
+               <div class="label">
+                  <label for="password" class="stack-required">Password</label>
+               </div>
+               <div class="field text short">
+                  <input name="password" type="password" validate="{required:true}" subproperty="datastore"></input>
+               </div>
+            </div>
+         </div> ## authentication
+
+
+      </form>
+   #if ($isDialog)
+      <script type="text/javascript" charset="utf-8">
+         var buildMgr = new BuildManager();
+         var submitHandler = buildMgr.Import;
+         var validator = new Validator(
+            '#datastore-form',
+            jQuery.proxy(submitHandler, buildMgr));
+
+         window.onTafDialogOk = function() { $('#datastore-form').submit(); };
+     </script>
+   #else
+      ##
+      ## Stack editor footer.
+      ## NOTE: Not part of any form. Data is submitted from Javascript
+      ## functions invoked when 'Save' is pressed.
+      ##
+      <div class="stack-footer">
+         <button
+            class="button"
+            onclick="VmTAF.buildManager.validator.OnSubmit( function(){ VmTAF.buildManager.Import($('#datastore-form')) } )">
+            Import Projects
+         </button>
+         <button
+            class="button"
+            onclick="VmTAF.contentNavigator.GoBack()">
+            Cancel
+         </button>
+      </div> ##stack-footer
+   #end   
+</div> ##stack-editor

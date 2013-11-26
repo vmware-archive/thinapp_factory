@@ -1,0 +1,72 @@
+################################################################################
+## ThinApp Factory WebUI
+## (c) 2011 VMware, Inc. All rights reserved.
+################################################################################
+
+################################################################################
+## config-horizon-form.vm
+##
+## This file contains the HTML view for horizon configuration parameters in
+## a form. This .
+################################################################################
+
+## Data is submitted to the server via an Ajax form post.
+<div class="stack-editor editable">
+
+   ## The horizon configuration form.
+   <form id="horizonConfigForm" method="POST">
+      <div class="stack-group">
+         <div class="stack-row-head">
+            <div id="horizon-config-error-holder" class="inline-error"/>
+            <div class="label">
+               <div class="icon"></div>
+               <label>#springMessage("T.HORIZON.CONFIGURATION")</label>
+            </div>
+         </div>
+
+         <div class="stack-row trust-ssl-cert no-show">
+            <div class="label">
+               <label class="stack-required" for="horizonTrustCertConfig">#springMessage("T.HORIZON.TRUST_SSL_CERT")</label>
+            </div>
+            <div class="field checkbox">
+               <input type="checkbox" name="horizonTrustSslCert" id="horizonTrustCertConfig"
+                  value="$!{horizonConfig.horizonTrustSslCert}" />
+            </div>
+         </div>
+
+         <div class="stack-row">
+            <div class="label">
+               <label class="stack-required" for="horizonUrlConfig">#springMessage("T.HORIZON.URL")</label>
+            </div>
+            <div class="field text long">
+               <input type="text" name="horizonUrl" validate="{required:true, url: true}" id="horizonUrlConfig" 
+                  value="$!{horizonConfig.horizonUrl}" onblur="this.value=jQuery.trim(this.value)" />
+            </div>
+         </div>
+
+         <div class="stack-row">
+            <div class="label">
+               <label class="stack-required" for="horizonActivationCodeConfig">#springMessage("T.HORIZON.IDP.ACTIVATION_CODE")</label>
+            </div>
+            <div class="field text long">
+               <textarea rows="5" name="horizonActivationToken" id="horizonActivationCodeConfig"
+                  onblur="this.value=jQuery.trim(this.value)">$!{horizonConfig.horizonActivationToken}</textarea>
+            </div>
+         </div>
+      </div>
+   </form>
+</div> ## End stackeditor.
+
+<script type="text/javascript" charset="utf-8">
+   VmTAF.configManager.horizonConfigValidator = new Validator('#horizonConfigForm');
+
+   window.onTafDialogOk = function(dialog) {
+      VmTAF.configManager.horizonConfigValidator.OnSubmit(
+         function() {
+            VmTAF.dialogHolder = dialog;
+            VmTAF.configManager.SubmitHorizonConfigForm('#horizonConfigForm');
+         }
+      );
+      return true;
+   };
+</script>

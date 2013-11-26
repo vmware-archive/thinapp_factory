@@ -1,0 +1,135 @@
+################################################################################
+## ThinApp Factory WebUI
+## (c) 2011 VMware, Inc. All rights reserved.
+################################################################################
+
+################################################################################
+## dashboard-index.vm
+##
+## The dashboard view shows common system statistics and such.
+################################################################################
+
+<script type="text/javascript">
+#if ($newUI)
+addLoad(function () {
+#end
+   VmTAF.contentNavigator.AddReadyFunction(function _dashboardReady() {
+      var alertText = VmTAF.newUI ? "" : "$!showAlert";
+      VmTAF.dmgr = new DashboardManager(alertText);
+      VmTAF.dmgr.UpdateDashboard(10000);
+   });
+
+   VmTAF.contentNavigator.AddCleanupFunction(function _dashboardCleanup() {
+      VmTAF.dmgr = VmTAF.dmgr.Destruct();
+   });
+#if ($newUI)
+});
+#end
+</script>
+
+#parse("include/main-top.vm")
+
+<div class="dashboard-content">
+   <div class="dash-section">
+      <div class="dash-header">
+         <span class="text">Getting Started with $appfactory.productName </span>
+         <div class="dash-header-right">
+            #if( "$!appfactory.howToVideoUrl" != "" )
+            <a href="#" onclick="VmTAF.dmgr.ShowVideo('$appfactory.howToVideoUrl');">
+               #springMessage("M.DASHBOARD.VIDEO_LINK")
+            </a>
+            #end
+         </div>
+      </div>
+
+      <div class="dash-boxrow large">
+         <div id="workflow">
+            <map name='imap'>
+            <area href='javascript:VmTAF.dmgr.OpenView("/feeds/create")'
+                  title='#springMessage("M.DASHBOARD.TOOLTIP.FEED")'
+                  shape=RECT coords='30,120,80,170'>
+            <area href='javascript:VmTAF.dmgr.OpenView("/fileshare/create")'
+                  title='#springMessage("M.DASHBOARD.TOOLTIP.FILESHARE")'
+                  shape=RECT coords='30,190,80,230'>
+            <area href='javascript:VmTAF.dmgr.OpenView("/apps/add")'
+                  title='#springMessage("M.DASHBOARD.TOOLTIP.FILEUPLOAD")'
+                  shape=RECT coords='30,260,80,320'>
+            <area href='javascript:VmTAF.dmgr.OpenView("/apps/index")'
+                  title='#springMessage("M.DASHBOARD.TOOLTIP.SELECT_APP")'
+                  shape=RECT coords='150,180,200,250'>
+            <area href='javascript:VmTAF.dmgr.OpenView("/recipes/index")'
+                  title='#springMessage("M.DASHBOARD.TOOLTIP.SELECT_RECIPE")'
+                  shape=RECT coords='270,190,340,250'>
+            <area href='javascript:VmTAF.dmgr.OpenView("/apps/index")'
+                  title='#springMessage("M.DASHBOARD.TOOLTIP.CONVERT")'
+                  shape=RECT coords='400,190,470,250'>
+            <area href='javascript:VmTAF.dmgr.OpenView("/apps/index")'
+                  title='#springMessage("M.DASHBOARD.TOOLTIP.MANUAL_MODE")'
+                  shape=RECT coords='400,320,470,410'>
+            <area href='javascript:VmTAF.dmgr.OpenView("/builds/index?status=PUBLISHED")'
+                  title='#springMessage("M.DASHBOARD.TOOLTIP.CONFIG_PKG_SETTINGS")'
+                  shape=RECT coords='460,10,520,80'>
+            <area href='javascript:VmTAF.dmgr.OpenView("/builds/index")'
+                  title='#springMessage("M.DASHBOARD.TOOLTIP.BUILDS")'
+                  shape=RECT coords='540,190,600,250'>
+            <area href="#springUrl('/store')" target="window"
+                  title='#springMessage("M.DASHBOARD.TOOLTIP.APP_STORE")'
+                  shape=RECT coords='690,170,790,260'>
+            </map>
+            <center><img border=0 src="#imageUrl("workflow-small.jpg")" height="400" width="800" usemap="#imap"></center>
+       </div> ## workflow
+      </div>
+   </div>
+
+   <div class="dash-section">
+      <div class="dash-header">
+         <span class="text">System Data</span>
+      </div>
+
+      <div class="dash-boxrow small">
+         <div class="dash-box">
+            <div class="dash-box-header">Subscribed File Shares</div>
+            <div class="dash-box-content stat" id="fileshare-stats">
+               <div class="ajax-loader"></div>
+            </div>
+         </div>
+         <div class="dash-box">
+            <div class="dash-box-header">Subscribed Feeds</div>
+            <div class="dash-box-content stat" id="feed-stats">
+               <div class="ajax-loader"></div>
+            </div>
+         </div>
+         <div class="dash-box">
+            <div class="dash-box-header">Subscribed Applications</div>
+            <div class="dash-box-content stat" id="app-stats">
+               <div class="ajax-loader"></div>
+            </div>
+         </div>
+         <div class="dash-box">
+            <div class="dash-box-header">Running Tasks</div>
+            <div class="dash-box-content stat" id="task-stats">
+               <div class="ajax-loader"></div>
+            </div>
+         </div>
+         <div class="dash-box">
+            <div class="dash-box-header">Published Builds</div>
+            <div class="dash-box-content stat" id="build-stats">
+               <div class="ajax-loader"></div>
+            </div>
+         </div>
+         <div class="dash-box">
+            <div class="dash-box-header">
+               <a class="title-link"
+                  href="javascript:VmTAF.dmgr.OpenView('/admin/settings')"
+                  title="Manage Workpools">Workpools</a>
+            </div>
+            <div class="dash-box-content stat" id="workpool-stats">
+               <div class="ajax-loader"></div>
+            </div>
+         </div>
+      </div>
+   </div>
+
+</div> ## dashboard-content
+
+#parse("include/main-bottom.vm")

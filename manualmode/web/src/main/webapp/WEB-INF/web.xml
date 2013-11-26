@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee"
+   xmlns:xml="http://www.w3.org/XML/1998/namespace" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd ">
+
+   <!-- We have to make two separate servlets because otherwise using mvc:resources
+      will clobber existing handlers created for mapping controllers. -->
+
+   <servlet>
+      <servlet-name>manualmode</servlet-name>
+      <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+      <load-on-startup>1</load-on-startup>
+   </servlet>
+
+   <servlet>
+      <servlet-name>resources</servlet-name>
+      <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+      <load-on-startup>2</load-on-startup>
+   </servlet>
+
+   <servlet>
+      <servlet-name>workpool</servlet-name>
+      <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+      <load-on-startup>3</load-on-startup>
+   </servlet>
+
+   <listener>
+      <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+   </listener>
+
+   <servlet-mapping>
+      <servlet-name>resources</servlet-name>
+      <url-pattern>/static/*</url-pattern>
+   </servlet-mapping>
+
+   <servlet-mapping>
+      <servlet-name>manualmode</servlet-name>
+      <url-pattern>/*</url-pattern>
+   </servlet-mapping>
+
+   <servlet-mapping>
+      <servlet-name>workpool</servlet-name>
+      <url-pattern>/workpool/*</url-pattern>
+   </servlet-mapping>
+</web-app>

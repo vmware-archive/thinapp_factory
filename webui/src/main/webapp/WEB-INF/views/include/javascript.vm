@@ -1,0 +1,118 @@
+##
+## Global Model-to-Javascript conversion
+##
+
+## No Skin? --> Set default
+#if(!$appfactory.skinName)
+   #set ($appfactory.skinName = "base")
+#end
+#set($skinPath = "${contextPath}/static/css/skins/${appfactory.skinName}")
+#set($imagePath = "${skinPath}/images")
+#if(!$newUI)
+  #set ($newUI = false)
+#end
+#if(!$compressJSandCSS)
+  #set ($compressJSandCSS= false)
+#end
+
+<script type="text/javascript" charset="UTF-8">
+   ##
+   ## All global variables and functions should be added to the
+   ## 'VmTAF' object in order to avoid global namespace conflicts.
+   ##
+   ## XXX This is a work-in-progress refactoring.
+   ##
+   var VmTAF = {
+      ## Location of the webapp
+      contextPath : "${contextPath}",
+
+      ## Where the skin resources are located
+      skinName : "${appfactory.skinName}",
+      skinPath : "${skinPath}",
+      imagePath: "${imagePath}",
+
+      ## Developer mode
+      devMode : ${appfactory.devModeDeploy},
+
+      ## Default landing page
+      defaultPage : "$!defaultPage",
+
+      ## Standard icon sizes
+      iconSizeLarge : 32,
+      iconSizeSmall : 16,
+
+      ## What the marketing team call us
+      productName : "${appfactory.productName}",
+
+      ## How to wait for an appliance reboot
+      rebootWaitSeconds : 2,
+      rebootTimeoutSeconds : 120,
+
+      ## Icon to use for apps that don't have their own
+      defaultIcon : {
+         url: "${imagePath}/${appfactory.defaultIcon.url}",
+         size: "${appfactory.defaultIcon.size}"
+      },
+
+      ## Language translation
+      translationTable : {
+         #foreach( $key in $translationTable.keySet() )
+         "${key}" : "$translationTable.get($key)",
+         #end
+         "" : "."
+      },
+
+      ## Custom http error codes
+      licenseExpiredErrorCode : 420,
+
+      ## Application info meta-data input fields
+      metaNames : [ 'name', 'version', 'vendor', 'revision', 'lang' , 'installCommand' ],
+
+      ## Misc other stuff
+      ## TODO: get this from AfConstant (more clean up needed for that though)
+      variableNameRegex : "^[A-Za-z]+[A-Za-z0-9_]*$",
+
+      ## if true, render this page using new-style links, rather than
+      ## than javascript ones
+      newUI : $newUI,
+
+      ## when true, our appliance is rebooting and we won't show any timeout or other errors
+      rebooting : false,
+
+      ## The ThinApp 4.7 and higher builds are Hz enabled. This value is used accordingly.
+      isHzCapable : function(data) {
+         return (data && data >= 519532);
+      }
+   };
+</script>
+
+#parse("/include/javascript-external.vm")
+
+##
+## Initialize AppFactory objects and such here
+##
+<script type="text/javascript" charset="UTF-8">
+   VmTAF.contentNavigator = new ContentNavigator();
+
+   var LOGGING_ENABLED = ${appfactory.javaScriptLoggingEnabled};
+   #if($appfactory.javaScriptLoggingEnabled)
+      var LOG = log4javascript.getLogger("appfactory_logger");
+      var ajaxAppender = new log4javascript.AjaxAppender(location.protocol + '//' + location.host + VmTAF.contextPath + '/log/index');
+      LOG.addAppender(ajaxAppender);
+      var popUpAppender = new log4javascript.PopUpAppender();
+      LOG.addAppender(popUpAppender);
+   #else
+      var LOG = null;
+   #end
+
+   AfAddOnLoadEvent(function() {
+      $(".refresh-indicator").hide();
+      AfPleaseWaitModalInit();
+      VmTAF.contentNavigator.InitializeOnLoad();
+#if (!$newUI)
+      if (VmTAF.defaultPage) {
+         VmTAF.contentNavigator.LoadPage(VmTAF.defaultPage);
+      }
+#end
+   });
+</script>

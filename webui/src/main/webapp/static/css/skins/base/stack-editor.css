@@ -1,0 +1,271 @@
+/* ***********************************************************************
+ * VMware ThinApp Factory
+ * Copyright (c) 2009-2013 VMware, Inc. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * ***********************************************************************/
+
+
+/**
+ * note: ONLY padding and layout go here.  Colors, borders, etc are set by
+  the theme.
+ **/
+
+/*
+ * -----------------------------------------------------------------------------
+ * Stack editor: global stuff
+ * -----------------------------------------------------------------------------
+ */
+
+.stack-editor {
+   margin: 10px;
+   font-size: 1em;
+}
+
+.ui-dialog .stack-editor {
+   margin:0;
+}
+/*
+ * -----------------------------------------------------------------------------
+ * Stack editor header
+ * -----------------------------------------------------------------------------
+ */
+
+.stack-header {
+   font-weight: bold;
+   min-height: 27px;
+   padding-left: 2%;
+   padding-right: 2%;
+}
+
+.stack-header span {
+   padding: 7px 0;
+   display: block;
+   word-wrap: break-word;
+}
+
+/*
+ * -----------------------------------------------------------------------------
+ * Stack editor footer
+ * -----------------------------------------------------------------------------
+ */
+
+.stack-footer {
+   padding-left: 2%;
+   text-align: right;
+}
+
+.stack-footer .button {
+   margin: 5px 5px 5px 0;
+   display:inline-block;
+}
+
+.stack-footer .icon {
+   width: 16px;
+   height: 16px;
+   margin: 10px;
+   float: right;
+}
+
+.stack-footer .icon:hover {
+}
+
+.stack-footer .icon.disabled {
+}
+
+/*
+ * -----------------------------------------------------------------------------
+ * Stack editor: group (of rows)
+ * -----------------------------------------------------------------------------
+ */
+
+.stack-editor .stack-group {
+   padding: 10px 5px;
+   overflow: hidden;
+   text-align: left;
+}
+
+.stack-editor .stack-group .stack-row-head .label {
+   font-weight: bold;
+   text-align: left;
+   display: inline-block;
+   margin-bottom: 5px;
+}
+
+.stack-editor .stack-group .stack-row-head .label .icon {
+   display: inline-block;
+}
+
+.stack-editor .stack-group .stack-row-head .label label {
+   float:none;
+   margin-left:5px;
+   word-wrap: break-word;
+   display: inline-block;
+}
+
+
+/*
+ * -----------------------------------------------------------------------------
+ * Stack editor row
+ * -----------------------------------------------------------------------------
+ */
+
+.stack-editor .stack-row {
+   clear: both;
+}
+
+.stack-editor .label {
+   padding: 2px 0 3px 0;
+   width: 30%;
+   float: left;
+   text-align: right;
+   min-height: 15px;
+   word-wrap: break-word;
+}
+
+.stack-editor.editable .label {
+   padding-top: 4px;
+   padding-bottom: 5px;
+}
+
+.stack-editor.editable .label em {
+   padding-right: 5px;
+}
+
+/*
+ * -----------------------------------------------------------------------------
+ * Stack editor fields (any type)
+ * -----------------------------------------------------------------------------
+ */
+
+.stack-editor .stack-row .field {
+   float: right;
+   padding: 0 1%;
+   width: 68%;
+   vertical-align: middle;
+   height: 100%;
+}
+
+.stack-editor .field span {
+   padding: 3px 5px;
+   display: inline-block;
+}
+
+.stack-editor .field label {
+   padding: 3px 5px 0 5px;
+   display: inline-block;
+}
+
+.stack-editor .field input, .stack-editor .field textarea {
+   display: inline;
+   vertical-align: middle;
+   float: left;
+}
+
+.stack-editor .field select {
+   display: inline;
+   vertical-align: middle;
+   float: left;
+   max-width: 100%;
+}
+
+/* Full width fields have no label, span the entire width */
+.stack-editor .stack-row .field.full-width {
+   width: 96%;
+   padding: 2%;
+}
+
+.stack-editor .stack-row .field.full-width input {
+   width: 100%;
+}
+
+.stack-editor .stack-row .field.full-width select {
+   width: 100%;
+}
+
+/*
+ * -----------------------------------------------------------------------------
+ * Stack editor text fields
+ * -----------------------------------------------------------------------------
+ */
+
+/* Text inputs for numbers */
+.stack-editor .field.text.number input {
+   width: 5em;
+}
+
+/* Text inputs for short strings */
+.stack-editor .field.text.short input, .stack-editor .field.text.short textarea {
+   width: 50%;
+}
+
+/* Text inputs for long strings */
+.stack-editor .field.text.long input, .stack-editor .field.text.long textarea {
+   width: 90%;
+}
+
+/* Text inputs for long strings, but with space for extra icons */
+.stack-editor .field.text.almost-long input, .stack-editor .field.text.almost-long textarea {
+   width: 85%;
+}
+
+/* .field.text.full should not have a span following it  */
+.stack-editor .field.text.full input, .stack-editor .field.text.full textarea {
+   width: 100%;
+}
+
+
+/*
+ * -----------------------------------------------------------------------------
+ * Stack editor checkbox / radio fields
+ * -----------------------------------------------------------------------------
+ */
+
+.stack-editor .field.checkbox input {
+   margin-top: 4px;
+   /*border: 0;*/
+}
+.stack-editor .field.radio input {
+   margin-top: 1px;
+   float: none;
+}
+
+/*
+ * -----------------------------------------------------------------------------
+ * Stack editor jquery ui slider
+ * -----------------------------------------------------------------------------
+ */
+
+.stack-editor .field .slider {
+   margin: 5px 8px 0 8px;
+}
+
+.stack-editor .field.text.number .slider {
+   width: 70%;
+   float: left;
+}
+
+.stack-editor .field.text.short .slider {
+   width: 45%;
+   float: left;
+}
+
+.stack-required {
+   font-weight: bold;
+}
+
+.stack-required:before {
+   content: "* ";
+   font-weight: bold;
+   color:darkred;
+}

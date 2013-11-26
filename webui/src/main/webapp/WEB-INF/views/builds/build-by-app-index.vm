@@ -1,0 +1,39 @@
+################################################################################
+## ThinApp Factory WebUI
+## (c) 2011 VMware, Inc. All rights reserved.
+################################################################################
+
+################################################################################
+## build-by-app-index.vm
+##
+## This is the HTML template that holds the build page for newUI. This page
+## consists of a sidebar containing means to import projects and displays
+## builds grouped by apps.
+################################################################################
+
+<script type="text/javascript" charset="UTF-8">
+    addLoad(function () {
+      AfMakeAsyncDialog("#idDialog", "#idImportProjectButton",
+         "$contextPath/builds/import?dialog=true", '#springMessage("T.IMPORT_PROJECTS")' );
+    });
+</script>
+
+<div class="sidebar">
+   <div class="sidebar-section">
+      <div class="sidebar-head">Import</div>
+      <ul class="sidebarList">
+         <li><a class="button-link" id="idImportProjectButton">#springMessage("T.IMPORT_PROJECTS")...</a></li>
+      </ul>
+   </div>
+   <div class="sidebar-section">
+      <div class="sidebar-head">#springMessage("T.APPS.VENDORS")</div>
+      <ul id="vendorList" class="sidebarList">
+         ## Auto generated li elements.
+      </ul>
+   </div>
+</div>
+
+<div class="mainContent">
+    #parse($legacyView)
+</div>
+<div id="idDialog"></div>

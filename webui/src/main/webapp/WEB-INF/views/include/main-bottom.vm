@@ -1,0 +1,3 @@
+#if (!$insideTab)
+   </div> ## panel-content (from main-top.vm)
+#end

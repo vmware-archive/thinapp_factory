@@ -1,0 +1,194 @@
+<div class="stack-editor editable">
+   ##
+   ## feed-header exists so that the feed-url can be floated without
+   ## disrupting the button layout
+   ##
+      <div class="feed-header">
+         <div class="feed-url">
+            <a href="$appfactory.appFeedGuideUrl" target="_blank">
+               #springMessage("M.FEEDS.GUIDE_LINK")
+            </a>
+         </div>
+         <div class="stack-header">
+            <span>#if($feedId) Edit #else Add #end Feed</span>
+         </div>
+         #if ($isDialog)
+            <div class="inline-error"/>
+         #end
+      </div>
+##
+## For form is used mostly for styling. Any data that needs to be submitted to
+## the server is sent via an Ajax call.
+##
+   <form id="feed-form" onsubmit="return false;">
+      <div class="stack-group"> ## Basic info
+         <div class="stack-row-head">
+            <div class="label">
+               <div class="icon"></div>
+               <label>Basic Info</label>
+            </div>
+         </div>
+         <div id="feed-specific-fields">
+            <div class="stack-row">
+               <div class="label">
+                  <label for="idFeedFormName" class="stack-required">Feed Name</label>
+               </div>
+               <div class="field text short">
+                  <input name="name" id="idFeedFormName" type="text" validate="{required:true}" onblur="this.value=jQuery.trim(this.value)">
+               </div>
+            </div>
+            <div class="stack-row">
+               <div class="label">
+                  <label for="idFeedFormUrl" class="stack-required">Feed URL</label>
+               </div>
+               <div class="field text long">
+                  <input size="20" name="url" id="idFeedFormUrl" type="text" validate="{required:true, urlSpaceEscaped:true}">
+               </div>
+            </div>
+         </div>
+
+      ## Only show description when editing a feed.
+      ## Won't it get replaced when the feed is scanned though?
+         #if($feedId)
+            <div class="stack-row">
+               <div class="label">
+                  <label for="idFeedFormDescription">Description</label>
+               </div>
+               <div class="field text full">
+                  <input size="20" name="description" id="idFeedFormDescription" type="text" onblur="this.value=jQuery.trim(this.value)">
+               </div>
+            </div>
+         #end
+      </div> ## basic info
+
+      #if (!$newUI)
+         <div class="stack-group"> ## feed options
+            <div class="stack-row-head">
+               <div class="label">
+                  <div class="icon"></div>
+                  <label>Options</label>
+               </div>
+            </div>
+            <div class="stack-row">
+               <div class="label">
+                  <label for="okToScan">OK to scan</label>
+               </div>
+               <div class="field checkbox">
+                  <input name="okToScan" id="okToScan" type="checkbox" value="true">
+               </div>
+            </div>
+            <div class="stack-row">
+               <div class="label">
+                  <label for="okToConvert">OK to convert</label>
+               </div>
+               <div class="field checkbox">
+                  <input name="okToConvert" id="okToConvert" type="checkbox" value="true">
+               </div>
+            </div>
+         </div> ## feed options
+      #else
+         <input type="hidden" name="okToScan" value="true">
+         <input type="hidden" name="okToConvert" value="false">
+      #end
+   ##
+   ## HTTP authentication options.
+   ## XXX make the text inputs hide/show according to checkbox state.
+   ## See bug 716752
+   ##
+   ## Removing "no-show" will start displaying the authentication section.
+   ##
+      <div class="stack-group no-show"> ## authentication
+         <div class="stack-row-head">
+            <div class="label">
+               <div class="icon"></div>
+               <label>Authentication</label>
+            </div>
+         </div>
+         <div class="stack-row">
+            <div class="label">
+               <label for="authRequired">Requires authentication</label>
+            </div>
+            <div class="field checkbox">
+               <input id="authRequired" name="authRequired" type="checkbox" value="true">
+            </div>
+         </div>
+         <div class="stack-row">
+            <div class="label">
+               <label for="feedFormAuthUsername">Username</label>
+            </div>
+            <div class="field text short">
+               <input name="authUsername" id="feedFormAuthUsername" type="text" onblur="this.value=jQuery.trim(this.value)">
+            </div>
+         </div>
+         <div class="stack-row">
+            <div class="label">
+               <label for="idFeedFormAuthPassword">Password</label>
+            </div>
+            <div class="field text short">
+               <input name="authPassword" id="idFeedFormAuthPassword" type="password">
+            </div>
+         </div>
+      </div> ## authentication
+
+   ##
+   ## If editing a feed, show a list of applications that are defined in it.
+   ## (As with all the other data, this is populated once the form has loaded).
+   ##
+      #if ($feedId)
+         <div class="stack-group"> ## applications
+            <div class="stack-row-head">
+               <div class="label">
+                  <div class="icon"></div>
+                  <label>Applications</label>
+               </div>
+            </div>
+            <div class="stack-row feed-apps">
+               <table id="feed-applications-table" class="data ui-widget">
+                  <thead>
+                     <tr>
+                        <th class="ui-state-default"><input type="checkbox" class="table-row-selector"/></th>
+                        <th class="ui-state-default">Application</th>
+                        <th class="ui-state-default">Vendor</th>
+                        <th class="ui-state-default">Categories</th>
+                        <th class="ui-state-default">Locale</th>
+                        <th class="ui-state-default">Rev</th>
+                        <th class="ui-state-default">Convert Failures</th>
+                     </tr>
+                  </thead>
+                  <tbody></tbody> ## This is required for javascript to distinguish header from body.
+               </table>
+            </div>
+         </div> ## applications
+      #end
+
+   ## If editing, put feed ID into a hidden input
+      #if ($feedId)
+         <input type="hidden" name="feedId" value="$feedId">
+      #end
+   </form>
+   #if ($isDialog)
+      <script type="text/javascript" charset="UTF-8">
+         var fmgr = new FeedManager( #if($feedId) $('#feed-applications-table'), $feedId #end );
+
+         /* Populate the form if editing a feed */
+         #if ($feedId)
+            fmgr.GetFeedAndPopulateForm($feedId);
+         #end
+         var validator = new Validator('#feed-form',fmgr.SubmitFeedForm);
+         window.onTafDialogOk = function() { $('#feed-form').submit(); };
+      </script>
+   #else
+      <div class="stack-footer">
+         <button
+               class="button" id="feed-save"
+               onclick="validator.OnSubmit( fmgr.SubmitFeedForm, $('#feed-form') );">
+            Save
+         </button>
+         <button
+               class="button" id="feed-cancel-save"
+               onclick="VmTAF.contentNavigator.GoBack()">
+            Cancel
+         </button>
+      </div> ##stack-footer
+   #end
+</div> ##stack-editor

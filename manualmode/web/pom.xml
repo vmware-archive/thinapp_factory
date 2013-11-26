@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+   <modelVersion>4.0.0</modelVersion>
+   <groupId>com.vmware.thinapp</groupId>
+   <artifactId>manualmode-web</artifactId>
+   <packaging>war</packaging>
+   <version>1.0-SNAPSHOT</version>
+   <name>ThinApp Factory Converter Web Service</name>
+
+   <properties>
+      <srcroot>${basedir}/../..</srcroot>
+      <org.springframework.version>3.0.5.RELEASE</org.springframework.version>
+      <java.version>1.6</java.version>
+   </properties>
+
+   <parent>
+      <groupId>com.vmware.thinapp</groupId>
+      <artifactId>pom</artifactId>
+      <version>1.0-SNAPSHOT</version>
+      <relativePath>..</relativePath>
+   </parent>
+
+   <dependencies>
+     <!-- XXX: Explicitly define a dependence on dom4j as vijava requires it
+               but maven doesn't seem to want to include the dom4j jar in the
+               generated manualmode web war. -->
+     <dependency>
+       <groupId>dom4j</groupId>
+       <artifactId>dom4j</artifactId>
+       <version>1.6.1</version>
+     </dependency>
+     <dependency>
+	 <groupId>org.springframework</groupId>
+	 <artifactId>spring-webmvc</artifactId>
+	 <version>${org.springframework.version}</version>
+      </dependency>
+      <dependency>
+	 <groupId>javax.servlet</groupId>
+	 <artifactId>servlet-api</artifactId>
+	 <version>2.5</version>
+         <scope>provided</scope>
+      </dependency>
+      <dependency>
+	 <groupId>org.apache.velocity</groupId>
+	 <artifactId>velocity</artifactId>
+	 <version>1.7</version>
+      </dependency>
+
+      <dependency>
+	 <groupId>com.vmware.thinapp</groupId>
+	 <artifactId>manualmode</artifactId>
+	 <version>1.0-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+         <groupId>com.vmware.thinapp</groupId>
+         <artifactId>clients</artifactId>
+         <version>1.0-SNAPSHOT</version>
+      </dependency>
+   </dependencies>
+
+   <build>
+   <plugins>
+     <plugin>
+       <groupId>org.scala-tools</groupId>
+       <artifactId>maven-scala-plugin</artifactId>
+       <version>2.15.2</version>
+       <executions>
+	 <execution>
+	   <id>scala-compile-first</id>
+	   <phase>process-resources</phase>
+	   <goals>
+	     <goal>add-source</goal>
+	     <goal>compile</goal>
+	   </goals>
+	 </execution>
+	 <execution>
+	   <id>scala-test-compile</id>
+	   <phase>process-test-resources</phase>
+	   <goals>
+	     <goal>testCompile</goal>
+	   </goals>
+	 </execution>
+       </executions>
+      </plugin>
+      <plugin>
+	 <groupId>org.apache.maven.plugins</groupId>
+	 <artifactId>maven-eclipse-plugin</artifactId>
+	 <version>2.8</version>
+	 <configuration>
+	    <!-- <projectNameTemplate>[artifactId]-[version]</projectNameTemplate> -->
+	    <wtpmanifest>true</wtpmanifest>
+	    <wtpapplicationxml>true</wtpapplicationxml>
+	    <wtpversion>2.0</wtpversion>
+	    <manifest>${basedir}/src/main/resources/META-INF/MANIFEST.MF</manifest>
+	    <additionalProjectnatures>
+	       <projectnature>org.springframework.ide.eclipse.core.springnature</projectnature>
+	    </additionalProjectnatures>
+	    <classpathContainers>
+	       <classpathContainer>org.eclipse.jst.server.core.container/com.springsource.sts.ide.tomcat.runtimeTarget/SpringSource tc Server Developer Edition (Runtime) v2.1</classpathContainer>
+	    </classpathContainers>
+	 </configuration>
+      </plugin>
+   </plugins>
+   </build>
+</project>

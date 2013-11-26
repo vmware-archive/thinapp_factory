@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+   <modelVersion>4.0.0</modelVersion>
+   <groupId>com.vmware</groupId>
+   <artifactId>webui</artifactId>
+   <name>ThinApp Factory WebUI</name>
+   <packaging>war</packaging>
+   <version>1.0-SNAPSHOT</version>
+
+   <properties>
+      <!-- Common versions (@TODO extract them to a common parent file) -->
+      <org.springframework.version>3.0.6.RELEASE</org.springframework.version>
+      <spring.security.version>3.1.0.RELEASE</spring.security.version>
+      <java.version>1.6</java.version>
+      <!-- Default build target - see bottom of file -->
+      <directory>target</directory>
+      <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+      <build.nonFilteredResources>./noop</build.nonFilteredResources>
+      <!-- Display product version and build number, written to webui.properties -->
+      <build.productVersion>0.3.4</build.productVersion>
+      <build.number>00000</build.number>
+      <build.devModeFlag>false</build.devModeFlag>
+   </properties>
+
+   <dependencies>
+      <!-- TAF common library -->
+      <dependency>
+         <groupId>com.vmware.thinapp</groupId>
+         <artifactId>clients</artifactId>
+         <version>1.0-SNAPSHOT</version>
+      </dependency>
+
+      <!-- Spring Context -->
+      <dependency>
+         <groupId>org.springframework</groupId>
+         <artifactId>spring-context</artifactId>
+         <version>${org.springframework.version}</version>
+         <exclusions>
+            <exclusion>
+               <groupId>commons-logging</groupId>
+               <artifactId>commons-logging</artifactId>
+            </exclusion>
+         </exclusions>
+      </dependency>
+
+      <!-- Spring WebMVC -->
+      <dependency>
+         <groupId>org.springframework</groupId>
+         <artifactId>spring-webmvc</artifactId>
+         <version>${org.springframework.version}</version>
+      </dependency>
+
+      <!-- Spring Support -->
+      <dependency>
+         <groupId>org.springframework</groupId>
+         <artifactId>spring-support</artifactId>
+         <version>2.0.8</version>
+      </dependency>
+
+      <!-- Spring TX -->
+      <dependency>
+         <groupId>org.springframework</groupId>
+         <artifactId>spring-tx</artifactId>
+         <version>${org.springframework.version}</version>
+      </dependency>
+
+      <!-- Spring ORM -->
+      <dependency>
+         <groupId>org.springframework</groupId>
+         <artifactId>spring-orm</artifactId>
+         <version>${org.springframework.version}</version>
+      </dependency>
+
+      <!-- Spring Test -->
+      <dependency>
+         <groupId>org.springframework</groupId>
+         <artifactId>spring-test</artifactId>
+         <version>${org.springframework.version}</version>
+      </dependency>
+
+      <!-- Spring Security -->
+      <dependency>
+         <groupId>org.springframework.security</groupId>
+         <artifactId>spring-security-core</artifactId>
+         <version>${spring.security.version}</version>
+      </dependency>
+      <dependency>
+         <groupId>org.springframework.security</groupId>
+         <artifactId>spring-security-config</artifactId>
+         <version>${spring.security.version}</version>
+      </dependency>
+      <dependency>
+         <groupId>org.springframework.security</groupId>
+         <artifactId>spring-security-web</artifactId>
+         <version>${spring.security.version}</version>
+      </dependency>
+      <dependency>
+         <groupId>org.springframework.security</groupId>
+         <artifactId>spring-security-crypto</artifactId>
+         <version>${spring.security.version}</version>
+       </dependency>
+
+      <!-- Apache commons (Spring dependency) -->
+      <dependency>
+         <groupId>commons-io</groupId>
+         <artifactId>commons-io</artifactId>
+         <version>1.3.2</version>
+         <optional>false</optional>
+      </dependency>
+      <dependency>
+         <groupId>commons-fileupload</groupId>
+         <artifactId>commons-fileupload</artifactId>
+         <version>1.2.2</version>
+         <optional>false</optional>
+      </dependency>
+
+      <!-- Apache commons (Velocity Tools dependency) -->
+      <dependency>
+         <groupId>commons-collections</groupId>
+         <artifactId>commons-collections</artifactId>
+         <version>3.2</version>
+         <optional>false</optional>
+      </dependency>
+      <dependency>
+         <groupId>commons-beanutils</groupId>
+         <artifactId>commons-beanutils</artifactId>
+         <version>1.8.3</version>
+         <optional>false</optional>
+      </dependency>
+      <dependency>
+         <groupId>commons-digester</groupId>
+         <artifactId>commons-digester</artifactId>
+         <version>1.6</version>
+         <optional>false</optional>
+      </dependency>
+      <dependency>
+        <groupId>commons-codec</groupId>
+        <artifactId>commons-codec</artifactId>
+        <version>1.4</version>
+         <optional>false</optional>
+     </dependency>
+
+      <!-- URL Rewrite -->
+      <dependency>
+         <groupId>org.tuckey</groupId>
+         <artifactId>urlrewritefilter</artifactId>
+         <version>3.1.0</version>
+         <scope>runtime</scope>
+      </dependency>
+
+      <!-- Servlet -->
+      <dependency>
+         <groupId>javax.servlet</groupId>
+         <artifactId>servlet-api</artifactId>
+         <version>2.5</version>
+         <scope>provided</scope>
+      </dependency>
+
+      <!-- Test -->
+      <dependency>
+         <groupId>junit</groupId>
+         <artifactId>junit</artifactId>
+         <version>4.8.1</version>
+         <scope>test</scope>
+      </dependency>
+
+      <!-- Velocity -->
+      <dependency>
+         <groupId>org.apache.velocity</groupId>
+         <artifactId>velocity</artifactId>
+         <version>1.6.3</version>
+      </dependency>
+
+      <!-- Velocity Tools -->
+      <dependency>
+         <groupId>org.apache.velocity</groupId>
+         <artifactId>velocity-tools</artifactId>
+         <version>2.0</version>
+      </dependency>
+
+      <!-- javax.validation -->
+      <dependency>
+         <groupId>javax.validation</groupId>
+         <artifactId>validation-api</artifactId>
+         <version>1.0.0.GA</version>
+      </dependency>
+
+      <!-- Hibernate -->
+      <dependency>
+         <groupId>org.hibernate</groupId>
+         <artifactId>hibernate-core</artifactId>
+         <version>3.6.0.Final</version>
+      </dependency>
+      <dependency>
+         <groupId>org.hibernate</groupId>
+         <artifactId>hibernate-validator</artifactId>
+         <version>4.0.2.GA</version>
+      </dependency>
+      <dependency>
+         <groupId>javassist</groupId>
+         <artifactId>javassist</artifactId>
+         <version>3.8.0.GA</version>
+      </dependency>
+      <dependency>
+         <groupId>cglib</groupId>
+         <artifactId>cglib-nodep</artifactId>
+         <version>2.2</version>
+      </dependency>
+
+      <!-- Logging -->
+      <dependency>
+         <groupId>org.slf4j</groupId>
+         <artifactId>jcl-over-slf4j</artifactId>
+         <version>1.6.1</version>
+         <scope>runtime</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.slf4j</groupId>
+         <artifactId>slf4j-api</artifactId>
+         <version>1.6.1</version>
+      </dependency>
+      <dependency>
+         <groupId>org.slf4j</groupId>
+         <artifactId>slf4j-log4j12</artifactId>
+         <version>1.6.1</version>
+         <scope>runtime</scope>
+      </dependency>
+      <dependency>
+         <groupId>log4j</groupId>
+         <artifactId>log4j</artifactId>
+         <version>1.2.16</version>
+         <scope>runtime</scope>
+      </dependency>
+
+      <!-- Jackson -->
+      <dependency>
+         <groupId>org.codehaus.jackson</groupId>
+         <artifactId>jackson-core-lgpl</artifactId>
+         <version>1.6.1</version>
+      </dependency>
+      <dependency>
+         <groupId>org.codehaus.jackson</groupId>
+         <artifactId>jackson-mapper-lgpl</artifactId>
+         <version>1.6.1</version>
+      </dependency>
+      <dependency>
+         <groupId>postgresql</groupId>
+         <artifactId>postgresql</artifactId>
+         <version>9.0-801.jdbc4</version>
+         <scope>runtime</scope>
+      </dependency>
+
+      <!-- jCIFS Client -->
+      <dependency>
+         <groupId>jcifs</groupId>
+         <artifactId>jcifs</artifactId>
+         <version>1.3.17</version>
+      </dependency>
+
+       <!-- google guava -->
+       <dependency>
+          <groupId>com.google.guava</groupId>
+          <artifactId>guava</artifactId>
+          <version>11.0.1</version>
+       </dependency>
+
+       <!-- @Nullable annotation -->
+       <dependency>
+         <groupId>com.google.code.findbugs</groupId>
+         <artifactId>jsr305</artifactId>
+         <version>1.3.9</version>
+       </dependency>
+
+      <!-- COMET library for async task list updates -->
+      <dependency>
+         <groupId>org.atmosphere</groupId>
+         <artifactId>atmosphere-spring</artifactId>
+         <version>0.8.2</version>
+      </dependency>
+   </dependencies>
+
+   <build>
+      <resources>
+         <resource>
+            <filtering>false</filtering>
+            <directory>${build.nonFilteredResources}</directory>
+         </resource>
+         <resource>
+            <filtering>false</filtering>
+            <directory>src/main/resources</directory>
+	    <excludes>
+               <!-- Exclude because it's included in the filtering section -->
+               <exclude>webui.properties</exclude>
+            </excludes>
+         </resource>
+         <resource>
+            <filtering>true</filtering>
+            <directory>src/main/resources</directory>
+            <includes>
+               <include>webui.properties</include>
+            </includes>
+         </resource>
+      </resources>
+      <plugins>
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>2.3.2</version>
+            <configuration>
+               <source>${java.version}</source>
+               <target>${java.version}</target>
+            </configuration>
+         </plugin>
+          <plugin>
+              <groupId>jcompressor</groupId>
+              <artifactId>jcompressor-maven</artifactId>
+              <version>1.0.2</version>
+              <configuration>
+                  <projects>
+                      <!-- used for most pages -->
+                      <projectConfig>${basedir}/src/main/jcompressor-config.xml</projectConfig>
+                      <!-- includes all the above files, but also the YUI.  Used on the
+                           project editor.  When adding a dep, add it to both places.
+                           This set of CSS files is selected when $yuiSupport is set to true
+                           by the controller. -->
+                      <projectConfig>${basedir}/src/main/jcompressor-config-yui.xml</projectConfig>
+                  </projects>
+              </configuration>
+              <executions>
+                  <execution>
+                      <phase>prepare-package</phase>
+                      <goals>
+                          <goal>build</goal>
+                      </goals>
+                  </execution>
+              </executions>
+          </plugin>
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <version>2.11</version>
+            <configuration>
+               <excludes>
+                  <parallel>methods</parallel>
+                  <threadCount>10</threadCount>
+                  <exclude>com/vmware/test/integration/**</exclude>
+               </excludes>
+            </configuration>
+         </plugin>
+      </plugins>
+
+      <!-- Allow makefile to customize build output location -->
+      <directory>${directory}</directory>
+      <outputDirectory>${directory}/classes</outputDirectory>
+      <testOutputDirectory>${directory}/test-classes</testOutputDirectory>
+   </build>
+</project>

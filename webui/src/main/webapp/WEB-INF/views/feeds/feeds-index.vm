@@ -1,0 +1,99 @@
+################################################################################
+## ThinApp Factory WebUI
+## (c) 2011 VMware, Inc. All rights reserved.
+################################################################################
+
+################################################################################
+## feeds-index.vm
+##
+## This file contains the HTML view for showing a list of feeds.
+## No data is shown in the view by default: An ajax call is made to the server
+## to download feed data and populate the table dynamically.
+################################################################################
+
+<script type="text/javascript">
+#if ($newUI)
+#set($insideTab=true)
+addLoad(function () {
+#end
+   window.fmgr = null;
+
+   VmTAF.contentNavigator.AddReadyFunction(function _feedsReady() {
+      window.fmgr = new FeedManager($("#feeds-table"));
+      window.fmgr.UpdateFeeds(5000);
+   });
+
+   VmTAF.contentNavigator.AddCleanupFunction(function _feedsCleanup() {
+      window.fmgr = window.fmgr.Destruct();
+   });
+#if ($newUI)
+});
+#end
+</script>
+
+#parse("include/main-top.vm")
+
+## Note: the form is mainly used for style, it is not used to POST data
+## to the server.
+<form class="primary" onsubmit="return false;">
+   ##
+   ## Buttons for interacting with feeds.
+   ##
+   <div class="button-row">
+      <button class="button single-button"
+         id="feed-add"
+         onclick="VmTAF.contentNavigator.LoadPage('/feeds/create');">
+         Add Feed
+      </button>
+      <button class="button"
+         id="feed-delete"
+         onclick="fmgr.DeleteSelectedFeeds();">
+         Delete
+      </button>
+      <button class="button"
+         id="feed-reset"
+         onclick="fmgr.ResetSelectedFeeds();">
+         Reset
+      </button>
+      <button class="button"
+         id="feed-scan"
+         onclick="fmgr.ScanSelectedFeeds();">
+         Scan Now
+      </button>
+
+#if(!$newUI)
+      <div class="feed-url">
+         <a href="$appfactory.appFeedGuideUrl" target="_blank">
+            #springMessage("M.FEEDS.GUIDE_LINK")
+         </a>
+      </div>
+#end
+   </div>
+
+   ##
+   ## Table for feeds
+   ## This gets populated dynamically using Ajax calls from Javascript.
+   ##
+   <table id="feeds-table" class="data">
+      <thead>
+         <tr>
+            <th width="20"><input type="checkbox" class="table-row-selector"/></th>
+            <th>Name</th>
+            <th width="70">Applications</th>
+            <th>Description</th>
+            <th width="80">Last Scanned</th>
+            <th width="80">Last Converted</th>
+            <th width="70">Status</th>
+         </tr>
+      </thead>
+      <tbody>
+         ## Populated dynamically by BuildManager
+      </tbody>
+   </table>
+
+</form>
+
+## Empty div needed to create the 'New Feed' dialog
+<div id="dialog-holder" class="yui-skin-sam"/>
+
+#parse("include/main-bottom.vm")

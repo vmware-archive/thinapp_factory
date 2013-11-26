@@ -1,0 +1,60 @@
+################################################################################
+## ThinApp Factory WebUI
+## (c) 2011 VMware, Inc. All rights reserved.
+################################################################################
+
+################################################################################
+## internal.vm
+##
+## A default common error page that displays details of an internal failure.
+## Ex: Database connectivity error.
+################################################################################
+
+<html>
+
+<head>
+   #parse("include/head.vm")
+</head>
+
+<body id="body">
+
+   <div class="error-page">
+
+      <div class="error-title">
+         #if($title)$title#else An error has occurred#end</h1>
+      </div>
+
+      <div class="error-explanation">
+         #if($explanation)
+            $!explanation
+         #else
+            The following error has occured:
+         #end
+      </div>
+
+      <div class="error-signature">
+         $ex.Class.Name : <strong>$!ex.Message</strong>
+      </div>
+
+      <div class="error-instructions">
+         Please report this to the ThinApp Factory system administrator.
+         with a description of what you were doing, and a copy of the following
+         stack trace:
+      </div>
+   
+      <div class="error-stacktrace">
+         <ol>
+         #foreach ($e in $ex.StackTrace)
+            #set ($str = $e.toString())
+            <li>
+            #if ($str.startsWith("com.vmware")) <strong> #end
+            $str
+            #if ($str.startsWith("com.vmware")) </strong> #end
+            </li>
+         #end
+         </ol>
+      </div>
+   </div> <!-- error-page -->
+
+</body>
+</html>

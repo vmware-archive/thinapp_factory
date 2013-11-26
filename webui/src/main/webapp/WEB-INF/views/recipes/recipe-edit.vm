@@ -1,0 +1,132 @@
+################################################################################
+## ThinApp Factory WebUI
+## (c) 2011 VMware, Inc. All rights reserved.
+################################################################################
+
+################################################################################
+## recipe-edit.vm
+##
+## The container for each of the recipe edit tabs.
+################################################################################
+
+## Pass the right prefix for recipe creation.
+#set($recipeDescPrefix = "#if($loadRecipeId)Edit#{else}Create#{end}")
+#parse("recipes/recipe-app-top.vm")
+#set ($appId = "#if($app)${app.id}#{else}null#{end}")
+
+<script type="text/javascript" charset="UTF-8">
+#if ($newUI)
+addLoad(function () {
+#end
+   // Put all phases into an array
+   VmTAF.recipePhases = [];
+   #foreach($ph in $phases)
+      VmTAF.recipePhases.push('$ph');
+   #end
+
+   VmTAF.contentNavigator.AddReadyFunction(function _recipeEditReady() {
+      // Create all the tabs
+      $('#recipe-tabs').tabs({
+          show: function() { $(this).show(); }
+      });
+
+      // Create a RecipeManager
+      VmTAF.recipeManager = new RecipeManager(
+            '$!appId','$!recipeId','$esc.javascript($selectionData)',
+            $('#basic'), $('#recipe-basic-change-marker'),
+            $('#variables'), $('#recipe-vars-change-marker'),
+            $('#files'), $('#recipe-files-change-marker'),
+            $('#steps'), $('#recipe-steps-change-marker'));
+      VmTAF.recipeManager.GetRecipeAndPopulateEditor('$!loadRecipeId');
+   });
+
+     if (window.VmTAF.newUI) {
+           // add unload handler
+           $(window).bind("beforeunload", function(e) {
+               if (VmTAF.recipeManager.HasChanges()) {
+                   return "There are unsaved changes.";
+               }
+           });
+     }
+
+   /*
+    * Override the load function so that we can cancel navigation away
+    * from this page is there are unsaved edits that should not be lost.
+    */
+   VmTAF.contentNavigator.SetLoadFunction(function(nav, load, content, message) {
+      if (!VmTAF.recipeManager.HasChanges()) {
+         load(nav, content, message);
+         return;
+      }
+
+      AfShowMessageDialog({
+         title: "Unsaved Changes",
+         message: "There are unsaved changes. You can choose to save them " +
+                  "now, discard them, or cancel and remain on this page.",
+         buttons: [ "Save", "Discard", "Cancel" ],
+         callback: function(answer) {
+            switch(answer) {
+               case 0:
+                  // Save: ok to leave page
+                  VmTAF.recipeManager.SaveRecipe();
+                  load(nav, content, message);
+                  break;
+               case 1:
+                  // Discard: do not save, ok to leave page
+                  load(nav, content, message);
+               case 2:
+                  // Do not save, do not leave page
+                  okToLeave = false;
+                  break;
+            }
+            return true;
+         }});
+   });
+
+   VmTAF.contentNavigator.AddCleanupFunction(function _recipeEditCleanup() {
+      VmTAF.recipeManager = VmTAF.recipeManager.Destruct();
+      delete VmTAF.recipePhases;
+   });
+#if ($newUI)
+});
+#end
+</script>
+
+<div class="taf-horiz-tabs" id="recipe-tabs">
+   <ul>
+      <li><a href="#basic">
+         General
+         <span class="change-marker no-show" id="recipe-basic-change-marker">*</span>
+      </a></li>
+
+      <li><a href="#variables">
+         Variables
+         <span class="change-marker no-show" id="recipe-vars-change-marker">*</span>
+      </a></li>
+
+      <li><a href="#files">
+         Files
+         <span class="change-marker no-show" id="recipe-files-change-marker">*</span>
+      </a></li>
+
+      <li><a href="#steps">
+         Steps
+         <span class="change-marker no-show" id="recipe-steps-change-marker">*</span>
+      </a></li>
+   </ul>
+
+   <div id="basic" class="pad-all">
+      #parse("recipes/recipe-edit-basic.vm")
+   </div>
+   <div id="variables" class="pad-all">
+      #parse("recipes/recipe-edit-vars.vm")
+   </div>
+   <div id="files" class="pad-all">
+      #parse("recipes/recipe-edit-files.vm")
+   </div>
+   <div id="steps" class="pad-all">
+      #parse("recipes/recipe-edit-steps.vm")
+   </div>
+</div>
+
+#parse("recipes/recipe-app-bottom.vm")

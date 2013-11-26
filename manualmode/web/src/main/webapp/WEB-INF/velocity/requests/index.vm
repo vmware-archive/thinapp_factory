@@ -1,0 +1,83 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Pragma" content="no-cache">
+<title>Manual mode</title>
+<script type="text/javascript" src="#springUrl("/static/jquery-1.5.1.js")"></script>
+<!-- vmrc.js taken from bora/apps/vmplayer/npplugin/test/test.js -->
+<script type="text/javascript" src="#springUrl("/static/vmrc.js")"></script>
+<script type="text/javascript" src="#springUrl("/static/mks.js")"></script>
+<script type="text/javascript" src="#springUrl("/static/log4javascript.js")"></script>
+<script type="text/javascript" src="#springUrl("/static/util.js")"></script>
+<script type="text/javascript">
+   $(init);
+
+   function init() {
+      window.log = log4javascript.getDefaultLogger();
+
+      vmrcInit();
+      var e = $("#mksVersion")[0];
+
+      try {
+         e.innerHTML = mks.getVersion();
+      } catch (TypeError) {
+         e.innerHTML = 'Unknown';
+      }
+
+      // Turn off event alert popups.
+      disableOnConnectionStateChange();
+      disableOnSizeChange();
+      disableOnWindowStateChange();
+      disableOnGrabStateChange();
+      disableOnMessage();
+      disableOnDeviceConnectionStateChange();
+      disableOnPhysicalClientDevicesChange();
+
+      // TODO: IE attaches event handlers differently.
+      // 		mks.attachEvent("onSizeChange", function(width, height) {
+      // 			mks.width = width;
+      // 			mks.height = height;
+      // 		});
+
+      // Firefox
+      mks.onSizeChange = function(width, height) {
+         mks.style.width = String(width) + "px";
+         mks.style.height = String(height) + "px";
+      };
+
+      window.m = new Mks();
+      window.m.startup();
+   }
+</script>
+</head>
+<body>
+   <div>
+      Status: <span id="status"></span>
+      <span><input onclick="m.cancel()" id="cancel" type="button" disabled="true" value="Cancel"/><input id="next" type="button" value="Next" disabled="true"/></span>
+   </div>
+   <div style="float: left">
+      <object id="vmrc" type="application/x-vmware-remote-console-2011">
+      </object>
+   </div>
+   <div style="float: right">
+      <div>
+         MKS version:
+         <div id="mksVersion"></div>
+      </div>
+      <div>
+         Proxy info: ${proxyHost}:${proxyPort}
+      </div>
+      <label for="inputUri">Input Source</input>
+      <input id="inputUri" type="text" value="datastore://internal/testing"/><br/>
+      <label for="outputDatastore">Output datastore</label>
+      <input id="outputDatastore" value="internal"/><br/>
+      <label for="commandLine">Command line</label>
+      <input id="commandLine"/><br/>
+      <p>
+         <input id="acquire" type="button" onclick="window.m.acquire()"
+            value="Acquire" disabled="disabled">
+      </p>
+   </div>
+</body>
+</html>

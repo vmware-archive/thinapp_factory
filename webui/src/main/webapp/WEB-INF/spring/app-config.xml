@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="
+      http://www.springframework.org/schema/beans   http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+      http://www.springframework.org/schema/task   http://www.springframework.org/schema/task/spring-task-3.0.xsd
+      http://www.springframework.org/schema/util   http://www.springframework.org/schema/util/spring-util-3.0.xsd
+      http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+      http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
+
+   <!--
+      Scans within the base package of the application for @Components to
+      configure as beans
+   -->
+   <context:component-scan base-package="com.vmware.appfactory" />
+
+   <!-- Configures support for @Controllers -->
+   <mvc:annotation-driven />
+
+   <task:scheduler id="scheduler" pool-size="10" />
+
+   <task:executor id="executor" pool-size="10" />
+
+   <!--  Allow annotation-defined task scheduling -->
+   <task:annotation-driven executor="executor"
+                           scheduler="scheduler" />
+
+   <!--
+      Use a generic property holder to store all the configuration stuff we might want to change.
+      This saves us having to hunt all over for the parameters to tweak when we change the
+      data source.
+   -->
+   <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+      <property name="locations">
+         <list>
+            <!--  Sequence of these files matter. Properties defined in later files will
+                  overwrite those loaded previously
+            -->
+            <!-- Webapp properties defined in web WAR file -->
+            <value>classpath:webui.properties</value>
+            <!-- General properties set by the TAF appliance -->
+            <value>classpath:appfactory.properties</value>
+            <!-- Property file with the version of the TAF Appliance -->
+            <value>classpath:appliance-version.properties</value>
+            <!-- Webapp properties local to developer builds only -->
+            <value>classpath:webui-local.properties</value>
+         </list>
+      </property>
+      <property name="ignoreResourceNotFound" value="true" />
+   </bean>
+
+   <bean id="conversionsQueue" class="com.vmware.appfactory.taskqueue.tasks.TaskQueueImpl">
+      <constructor-arg name="name" value="conversions" />
+      <constructor-arg name="expectedTasksPerId" value="1"/>
+      <constructor-arg name="maxPoolSizeSupplier" ref="maxConversionsSupplier" />
+      <constructor-arg name="maxFinishedSizeSupplier">
+         <bean class="com.vmware.appfactory.taskqueue.tasks.ConfigRegistrySupplier">
+            <constructor-arg name="keyName" value="taskq.max_finished_count" />
+         </bean>
+      </constructor-arg>
+   </bean>
+
+   <bean id="scanningQueue" class="com.vmware.appfactory.taskqueue.tasks.TaskQueueImpl">
+      <constructor-arg name="name" value="scanning" />
+      <constructor-arg name="expectedTasksPerId" value="100"/>
+      <constructor-arg name="maxPoolSizeSupplier" ref="maxScanSupplier" />
+      <constructor-arg name="maxFinishedSizeSupplier">
+         <bean class="com.vmware.appfactory.taskqueue.tasks.ConfigRegistrySupplier">
+            <constructor-arg name="keyName" value="taskq.max_finished_scans" />
+         </bean>
+      </constructor-arg>
+   </bean>
+
+   <bean id="maxConversionsSupplier" class="com.vmware.appfactory.taskqueue.tasks.MaxConversionsSupplier"/>
+   <bean id="maxScanSupplier" class="com.vmware.appfactory.taskqueue.tasks.MaxScanSupplier"/>
+
+   <!-- Map containing osType and the corresponding KMS Activation license keys.
+        The values for these are loaded from bean: propertyConfigurer
+   -->
+   <util:map id="kmsActivationKeyMap">
+      <entry key="WinVistaOsType" value="${webui.kms.activation.key.winvista}"/>
+      <entry key="Win7OsType" value="${webui.kms.activation.key.windows7}"/>
+      <entry key="Win8OsType" value="${webui.kms.activation.key.windows8}"/>
+   </util:map>
+
+   <!-- Bean for updating stuff -->
+   <bean id="backgroundProcessor" class="com.vmware.appfactory.common.runner.BackgroundProcessor" />
+
+   <!-- Schedule the 'backgroundProcessor' bean to run as a Task -->
+   <bean id="backgroundProcessorTask"
+         class="org.springframework.scheduling.concurrent.ScheduledExecutorTask">
+      <property name="runnable" ref="backgroundProcessor" />
+      <property name="delay" value="1000" /> <!-- wait 1 second before executing -->
+      <property name="period" value="0" /> <!-- do not repeat automatically (task will reschedule itself) -->
+   </bean>
+
+   <!-- The LicenseStatus bean calculates the trial expiration date. -->
+   <bean id="licenseStatus" class="com.vmware.appfactory.common.runner.LicenseStatus">
+      <property name="numDaysToShowWarningBeforeExpired" value="10" />
+   </bean>
+
+   <!-- Define 'licenseStatusSchedulerTask' as a runnable task and set its period. -->
+   <bean id="licenseStatusTask"
+         class="org.springframework.scheduling.concurrent.ScheduledExecutorTask">
+      <property name="runnable" ref="licenseStatus" />
+      <property name="period" value="5000" /><!-- Execute the task every 5 seconds -->
+   </bean>
+
+   <!-- The LicenseStatus bean calculates the trial expiration date. -->
+   <bean id="wpTracker" class="com.vmware.appfactory.common.runner.WorkpoolTracker" />
+
+   <!-- Define 'wpTrackerTask' as a runnable task and set its period. -->
+   <bean id="wpTrackerTask"
+         class="org.springframework.scheduling.concurrent.ScheduledExecutorTask">
+      <property name="runnable" ref="wpTracker" />
+      <property name="period" value="5000" /><!-- Execute the task every 5 seconds -->
+   </bean>
+
+   <!-- Tracks the free disk space on available datastores. -->
+   <bean id="dsTracker" class="com.vmware.appfactory.common.runner.DatastoreTracker" />
+
+   <!-- Define 'wpTrackerTask' as a runnable task and set its period. -->
+   <bean id="dsTrackerTask"
+         class="org.springframework.scheduling.concurrent.ScheduledExecutorTask">
+      <property name="runnable" ref="dsTracker" />
+      <property name="period" value="300000" /><!-- Execute the task every 5 minutes -->
+      <property name="delay" value="100" /><!-- Execute the task shortly after app start (100ms) -->
+   </bean>
+
+   <!-- Factory to create all the scheduled tasks -->
+   <bean
+         class="org.springframework.scheduling.concurrent.ScheduledExecutorFactoryBean">
+      <property name="scheduledExecutorTasks">
+         <list>
+            <ref bean="backgroundProcessorTask" />
+            <ref bean="licenseStatusTask" />
+            <ref bean="wpTrackerTask" />
+            <ref bean="dsTrackerTask" />
+         </list>
+      </property>
+   </bean>
+
+   <!-- Create the AfConfigRegistry instance and set defaults from an external file -->
+   <bean class="com.vmware.appfactory.config.ConfigRegistry" id="config">
+      <property name="defaults" value="config"/>
+   </bean>
+
+   <!--
+      CIFS fileshare to AppFactory application feed converter bean.
+   -->
+   <bean id="cifsToAppsFeedConverter" class="com.vmware.appfactory.fileshare.CifsToFeedConverterImpl">
+      <!--
+        A list of supported file extensions by the converter.
+        Must be a valid FileType enum value
+      -->
+      <property name="supportedFileExtensions">
+         <list>
+            <value>exe</value>
+            <value>msi</value>
+            <value>iso</value>
+         </list>
+      </property>
+      <property name="feedVersion" value="3" />
+   </bean>
+
+   <!--
+      CIFS fileshare to AppFactory recipe feed converter bean.
+   -->
+   <bean id="cifsToRecipesFeedConverter" class="com.vmware.appfactory.fileshare.CifsToRecipesConverterImpl"/>
+
+   <!--
+      Tell Spring the name of our translation resource bundles.
+      These are located in the /resources folder (e.g. /resource/messages_de.properties)
+    -->
+   <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+      <property name="basename">
+         <value>messages</value>
+      </property>
+   </bean>
+
+
+   <!-- Default to not caching anything, but allow caching in two conditions:
+       1. certian static pages (i..e. the /newui/* main tab pages)
+          These may be cached for a long itme.
+       2. certain API calls (for the installers and packages lists)
+          These need to be cacheable for a very few seconds (2-5, as long
+          as it would take a browser to render the page).  This is used
+          so the client can pre-cache the contents of the API call to get
+          DataTable data before the javascript to perform that API call has
+          been run, parsed, or even executed.  The API call is made at the
+          top of the page, and when it runs several seconds later in javascript,
+          the result will be served out of the in-memory cache on the browser.
+     -->
+   <mvc:interceptors>
+      <bean id="webContentInterceptor" class="com.vmware.appfactory.common.AfWebHandlerInterceptor">
+         <property name="cacheSeconds" value="0"/>
+         <property name="useExpiresHeader" value="true"/>
+         <property name="useCacheControlHeader" value="true"/>
+         <property name="useCacheControlNoStore" value="true"/>
+         <property name="cacheMappings">
+            <props>
+               <prop key="/static/*">31536000</prop>
+               <prop key="/newui/*">300</prop>
+               <prop key="/installers">300</prop>
+               <prop key="/tasks">300</prop>
+               <prop key="/projects">300</prop>
+               <prop key="/settings">300</prop>
+               <prop key="/builds">300</prop>
+               <prop key="/builds/index">300</prop>
+            </props>
+         </property>
+         <!--<property name="useCacheControlNoStore" value="false"/>-->
+      </bean>
+      <bean id="newUiInterceptor" class="com.vmware.appfactory.common.NewUiInterceptor">
+         <!-- When newUI is set to true, this will remap the title of the given
+              view page.
+              The new value is the name of the key in "messages.properties", which
+              will be looked up by the I18N class and the value of the lookup set
+              into the $pageTitle velocity variable.
+              The $pageTitle that was previously set, if any, will be placed in
+              the $legacyPageTitle variable.
+         -->
+         <property name="titleMapping">
+            <map>
+               <entry key="apps/apps-index"         value="T.COMMON.TAB_INSTALLERS" />
+               <entry key="builds/builds-by-app"    value="T.COMMON.TAB_PROJECTS" />
+               <entry key="builds/builds-index"     value="T.COMMON.TAB_PROJECTS" />
+            </map>
+         </property>
+         <property name="viewMapping">
+            <map>
+               <entry key="home/home"               value="redirect:dashboard" />
+               <entry key="apps/apps-index"         value="apps/app-index-new" />
+               <entry key="tasks/tasks-index"       value="tasks/tasks-index-new" />
+               <entry key="builds/builds-by-app"    value="builds/build-by-app-index" />
+               <entry key="builds/builds-index"     value="builds/builds-all" />
+               <entry key="settings/settings-index" value="settings/settings-index-new" />
+               <entry key="dashboard/dashboard-index" value="dashboard/dashboard-new" />
+            </map>
+         </property>
+      </bean>
+   </mvc:interceptors>
+
+   <bean id="velocityConfig" class="org.springframework.web.servlet.view.velocity.VelocityConfigurer">
+      <property name="resourceLoaderPath" value="/WEB-INF/views/" />
+      <property name="velocityProperties">
+         <props>
+            <prop key="velocimacro.library">taf_global_macros.vm</prop>
+            <prop key="directive.foreach.counter.initial.value">0</prop>
+            <prop key="directive.foreach.counter.name">velocityCount</prop>
+         </props>
+      </property>
+   </bean>
+
+   <bean id="viewResolver" class="com.vmware.appfactory.common.VelocityMultipleLayoutAndToolsViewResolver">
+      <property name="cache" value="true" />
+      <property name="prefix" value="" />
+      <property name="suffix" value=".vm" />
+      <property name="exposeSpringMacroHelpers" value="true"/>
+      <property name="contentType" value="text/html; charset=utf-8"/>
+      <property name="toolboxConfigLocation" value="WEB-INF/config/velocity-toolbox.xml"/>
+      <property name="layoutMap">
+         <map>
+            <entry key="builds/build-regkey-edit"    value="templates/dialog.vm" />
+            <entry key="workpool/workpool-index"     value="templates/dialog.vm" />
+            <entry key="datastores/datastores-index" value="templates/dialog.vm" />
+            <entry key="config/config-index"         value="templates/dialog.vm" />
+            <entry key="fileshare/fileshare-index"   value="templates/dialog.vm" />
+            <entry key="feeds/feeds-index"           value="templates/dialog.vm" />
+            <entry key="admin/admin-index"           value="templates/dialog.vm" />
+            <entry key="admin/admin-about"           value="templates/dialog.vm" />
+
+            <entry key="store/*"                     value="templates/legacy.vm" />
+            <entry key="admin/login"                 value="templates/legacy.vm" />
+            <entry key="admin/admin-eula"            value="templates/legacy.vm" />
+
+            <entry key="apps/manualmode"             value="templates/legacy.vm" />
+
+            <entry key="*-form"    value="templates/dialog.vm" />
+
+            <!-- please place all new layoutMap entried ABOVE this line
+
+         If you place it below the key="*" entry, your mapping
+         will never be processed, becuase the wildcard expression
+         matches every view! -->
+            <entry key="*" value="templates/layout.vm" />
+         </map>
+      </property>
+      <property name="legacyLayout" value="templates/legacy.vm" />
+   </bean>
+
+   <!-- Configure the multipart resolver used for file uploads -->
+   <bean id="multipartResolver"
+         class="com.vmware.appfactory.file.upload.CustomMultipartResolverWithProgress">
+      <property name="maxUploadSize" value="#{1024.0 * 1024.0 * 8192.0}" /> <!-- 1GB(8589934592-bytes) #{1024.0 * 1024.0 * 8192.0} -->
+      <!-- Increasing maxInMemorySize makes uploads faster, & eats JVM memory -->
+      <property name="maxInMemorySize" value="#{1024.0 * 8192.0}" /> <!-- 1MB(8388608-bytes) #{1024 * 8192} -->
+   </bean>
+
+   <bean id="atmosphereResourceArgumentResolver" class="com.vmware.appfactory.common.AtmosphereResourceArgumentResolver"/>
+
+   <!-- TODO: remove this next line when we move to spring 3.1+.  See the javadoc in AtmosphereResourceBeanPostProcessor -->
+   <bean id="atmosphereResourceBeanPostProcessor" class="com.vmware.appfactory.common.AtmosphereResourceBeanPostProcessor"/>
+</beans>

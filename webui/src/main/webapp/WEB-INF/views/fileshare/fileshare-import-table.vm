@@ -1,0 +1,36 @@
+################################################################################
+## ThinApp Factory WebUI
+## (c) 2011 VMware, Inc. All rights reserved.
+################################################################################
+
+################################################################################
+## fileshare-import-table.vm
+##
+################################################################################
+
+<div class="stack-group no-show" id="edit-meta-data-stack-group"> ## Edit Meta-data
+
+   <div class="stack-row-head">
+      <div class="label">
+         <div class="icon"></div>
+         <label>Edit Application Info</label>
+      </div>
+   </div>
+
+   <div class='fileshare-import-table'>
+      <table id="fileshare-import-table" class="data">
+         <thead>
+            <tr>
+               <th width="60px"><input type="checkbox" class="table-row-selector"/> Skip Import</th>
+               <th width="50px">Install Command</th>
+               <th width="50px"><em>*</em> Name</th>
+               <th width="50px"><em>*</em> Version</th>
+               <th>Vendor</th>
+               <th>Revision</th>
+               <th>Language</th>
+            </tr>
+         </thead>
+      </table>
+   </div>
+
+</div>

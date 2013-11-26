@@ -1,0 +1,82 @@
+################################################################################
+## ThinApp Factory WebUI
+## (c) 2011 VMware, Inc. All rights reserved.
+################################################################################
+
+################################################################################
+## settings-index.vm
+##
+## XXX
+################################################################################
+
+#parse("include/main-top.vm")
+#set($insideTab = true)
+
+<div class="taf-horiz-tabs" id="settings-tabs">
+   <ul>
+      <li><a href="#workpools">
+         #springMessage('T.WORKPOOL')
+      </a></li>
+      <li><a href="#datastores">
+         #springMessage('T.STORAGE')
+      </a></li>
+      <li><a href="#config">
+         #springMessage('T.CONFIG')
+      </a></li>
+      <li><a href="#admin">
+         #springMessage('T.ADMIN')
+      </a></li>
+#if($newUI)
+      <li><a href="#fileshares">
+         #springMessage('T.FILE_SHARES')
+      </a></li>
+      <li><a href="#feeds">
+         #springMessage('T.FEEDS')
+      </a></li>
+#end
+
+   </ul>
+   <div id="workpools" class="pad-all">
+      #parse("workpool/workpool-index.vm")
+   </div>
+   <div id="datastores" class="pad-all">
+      #parse("datastores/datastores-index.vm")
+   </div>
+   <div id="config" class="pad-all">
+      #parse("config/config-index.vm")
+   </div>
+   <div id="admin" class="pad-all">
+      #parse("admin/admin-index.vm")
+   </div>
+#if($newUI)
+   <div id="fileshares" class="pad-all">
+     #parse("fileshare/fileshare-index.vm")
+   </div>
+   <div id="feeds" class="pad-all">
+      #parse("feeds/feeds-index.vm")
+   </div>
+#end
+</div>
+
+<script type="text/javascript" charset="UTF-8">
+#if ($newUI)
+addLoad(function () {
+#end
+   VmTAF.contentNavigator.AddReadyFunction(function _settingsReady() {
+      // Loading jquery ui tab and configuring it.
+      $('#settings-tabs').tabs({
+         cache: true,
+         selected: VmTAF.settingsTabIndex || 0,
+         show: function(event, ui) {
+            var tabs = $('#settings-tabs').tabs();
+            VmTAF.settingsTabIndex = tabs.tabs('option', 'selected');
+            $(this).show();
+         }
+      });
+   });
+#if ($newUI)
+});
+#end
+</script>
+
+#parse("include/main-bottom.vm")

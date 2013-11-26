@@ -1,0 +1,50 @@
+################################################################################
+## ThinApp Factory WebUI
+## (c) 2011 VMware, Inc. All rights reserved.
+################################################################################
+
+################################################################################
+## config-index.vm
+##
+## This file contains the HTML view for showing configuration parameters in
+## a form. Unlike other views, this actually uses data in the model to create
+## the view, rather than being an empty view which gets populated via Ajax.
+################################################################################
+
+<script type="text/javascript">
+#set($insideTab=true)
+addLoad(function () {
+   VmTAF.configManager = null;
+
+   VmTAF.contentNavigator.AddReadyFunction(function _configReady() {
+      VmTAF.configManager = new ConfigManager();
+      VmTAF.configManager.CreateEditor($('#config-content'));
+   });
+
+   VmTAF.contentNavigator.AddCleanupFunction(function _configCleanup() {
+      VmTAF.configManager = VmTAF.configManager.Destruct();
+   });
+
+   AfMakeAsyncDialog(
+      "#idDialog",
+      "#idHorizonConfigLink",
+      "$contextPath/config/horizon",
+      "Configure Horizon Integration",
+      { OK: { text: 'Validate & Save' } }
+   );
+});
+</script>
+
+#parse("include/main-top.vm")
+
+<div id="config-content">
+   ## Created by ConfigManager
+</div>
+
+## This div acts as a place holder to initiate the horizon configuration screen.
+<div class="underline-dots no-show" id="idHorizonConfigLink"></div>
+<div id="idDialog"></div>
+
+<div class='clearDiv'></div>
+
+#parse("include/main-bottom.vm")

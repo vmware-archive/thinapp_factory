@@ -1,0 +1,69 @@
+################################################################################
+## ThinApp Factory WebUI
+## (c) 2011 VMware, Inc. All rights reserved.
+################################################################################
+
+################################################################################
+## app-info.vm
+##
+## This is a HTML reusable template for displaying the app specific info
+## offering flexibility while building apps.
+################################################################################
+
+## This section will display only if the $app is set.
+#if($app)
+
+<script id="appInfoIconTemplate" type="text/x-jquery-tmpl">
+   <img class="app-icon" src="{{=iconUrl}}" width="{{=iconSize}}" height="{{=iconSize}}" alt="(icon)"/>
+</script>
+
+   <div class="small-widget">
+      <!-- Will be rendered by JS code -->
+      <div class="row" id="appInfoIcon">
+      </div>
+      <div class="row">
+         <label>
+            #if($allowEdit)
+               <button onclick="VmTAF.appMgr.PrepareDataAndNavigate('/apps/edit/${app.id}');">
+                  Edit Details</button>
+            #end
+         </label>
+      </div>
+      <div class="row">
+         <label>Description</label>
+         <div class="field">$!{app.description.content}</div>
+      </div>
+      <div class="row">
+         <label>Version</label>
+         <div class="field">$!{app.version}</div>
+      </div>
+      <div class="row">
+         <label>Vendor</label>
+         <div class="field">$!{app.vendor}</div>
+      </div>
+      #if (${app.locale} && ${app.locale} != "")
+         <div class="row">
+            <label>Language</label>
+            <div class="field">$!{app.locale}</div>
+         </div>
+      #end
+      #if (${app.installerRevision} && ${app.installerRevision} != "")
+         <div class="row">
+            <label>Revision</label>
+            <div class="field">$!{app.installerRevision}</div>
+         </div>
+      #end
+      <div class="row">
+         <label>Data Source</label>
+         <div class="field">
+            <span class="data-source-icon data-source-type-$!{app.dataSourceType}"></span>
+            $!{app.dataSourceName}
+         </div>
+      </div>
+      <div class="row">
+         <label>Last Updated</label>
+         <div class="field">$dateTool.format("yyyy-MM-dd", ${app.lastRemoteUpdate})</div>
+      </div>
+   </div>
+   <div class="clearDiv"></div>
+#end

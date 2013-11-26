@@ -1,0 +1,169 @@
+################################################################################
+## ThinApp Factory WebUI
+## (c) 2011 VMware, Inc. All rights reserved.
+################################################################################
+
+################################################################################
+## datastore-edit.vm
+##
+## Page used for editing existing datastores and creating new datastores.
+################################################################################
+
+##
+## If there is a datastoreId attached to the view, then the view is being used
+## to EDIT a datastore. So, once the form has loaded, fetch the datastore
+## details from the server and populate the form with it.
+##
+<script type="text/javascript">
+#if ($newUI)
+#set($insideTab = true)
+addLoad(function () {
+#end
+   VmTAF.contentNavigator.AddReadyFunction(function _datastoresEditReady() {
+      VmTAF.dsMgr = new DatastoreManager();
+      #if ($datastoreId)
+         VmTAF.dsMgr.GetDatastoreAndPopulateEditForm('$datastoreId');
+      #end
+      VmTAF.dsMgr.validator = new Validator('#datastore-form');
+   });
+
+   VmTAF.contentNavigator.AddCleanupFunction(function _datastoresEditCleanup() {
+      VmTAF.dsMgr = VmTAF.dsMgr.Destruct();
+      VmTAF.dsMgr.validator = VmTAF.dsMgr.validator.Destruct();
+   });
+#if ($newUI)
+});
+#end
+</script>
+
+<div class="panel-title">
+   <div class="desc"><a href="#springUrl('/settings')">Settings</a> &gt; <a href="#springUrl('/settings#1')">$pageTitle</a> &gt;
+      #if ($datastoreId)
+         Edit Datastore
+      #else
+         Add Datastore
+      #end
+   </div>
+</div>
+
+#parse("include/main-top.vm")
+
+<div class='datastore-edit-content'>
+   <div class="stack-editor editable">
+      <div class="stack-header">
+         <span>#if($datastoreId) Edit #else Add #end Datastore</span>
+      </div>
+      ##
+      ## For form is used mostly for styling. Any data that needs to be submitted to
+      ## the server is sent via an Ajax call.
+      ##
+      <form id="datastore-form" onsubmit="return false;">
+
+         <div class="stack-group"> ## Basic info
+            <div class="stack-row-head">
+               <div class="label">
+                  <div class="icon"></div>
+                  <label>Basic Info</label>
+               </div>
+            </div>
+            <div class="stack-row">
+               <div class="label">
+                  <label for="name" class="stack-required">Name</label>
+               </div>
+               <div class="field text short">
+                  <input name="name" type="text" validate="{required:true}"
+                     onblur="this.value=jQuery.trim(this.value)"
+                     #if ($datastoreId)
+                        disabled="disabled"
+                     #end
+                     ></input>
+               </div>
+            </div>
+            <div class="stack-row">
+               <div class="label">
+                  <label for="type">Type</label>
+               </div>
+               <div class="field select">
+                  <select name="type">
+                     ## We only know CIFS right now
+                     <option value="cifs">CIFS</option>
+                  </select>
+               </div>
+            </div>
+         </div> ## Basic info
+
+         <div class="stack-group"> ## share
+            <div class="stack-row-head">
+               <div class="label">
+                  <div class="icon"></div>
+                  <label>Share</label>
+               </div>
+            </div>
+            <div class="stack-row">
+               <div class="label">
+                  <label for="serverShare" class="stack-required">Share Location</label>
+               </div>
+               <div class="field text short">
+                  <input name="serverShare" type="text" placeholder="share.host.name.com/share/path"
+                        validate="{required:true, fileshare:true}"
+                        onblur="this.value=jQuery.trim(this.value)"
+                        #if ($datastoreId)
+                           disabled="disabled"
+                        #end
+                        ></input>
+               </div>
+            </div>
+         </div> ## share
+
+         <div class="stack-group"> ## authentication
+            <div class="stack-row-head">
+               <div class="label">
+                  <div class="icon"></div>
+                  <label>Authentication</label>
+               </div>
+            </div>
+            <div class="stack-row">
+               <div class="label">
+                  <label for="username" class="stack-required">Username</label>
+               </div>
+               <div class="field text short">
+                  <input name="username" type="text" validate="{required:true}" onblur="this.value=jQuery.trim(this.value)"></input>
+               </div>
+            </div>
+            <div class="stack-row">
+               <div class="label">
+                  <label for="password" class="stack-required">Password</label>
+               </div>
+               <div class="field text short">
+                  <input name="password" type="password" validate="{required:true}"></input>
+               </div>
+            </div>
+         </div> ## authentication
+
+         ## If editing, put datastore name into a hidden input
+         #if ($datastoreId)
+            <input type="hidden" name="datastoreId" value="$datastoreId"></input>
+         #end
+      </form>
+      <div class="stack-footer">
+         <button
+            class="button"
+            ## Use the right function call for edit vs add.
+            #if ($datastoreId)
+               onclick="VmTAF.dsMgr.validator.OnSubmit( function(){ VmTAF.dsMgr.SubmitEditForm($('#datastore-form')) } )">
+            #else
+               onclick="VmTAF.dsMgr.validator.OnSubmit( function(){ VmTAF.dsMgr.SubmitNewDatastoreForm($('#datastore-form')) } )">
+            #end
+            Save
+         </button>
+         <button
+            class="button"
+            id="datastore-cancel-save"
+            onclick="VmTAF.contentNavigator.GoBack()">
+            Cancel
+         </button>
+      </div> ##stack-footer
+   </div> ##stack-editor
+</div>
+
+#parse("include/main-bottom.vm")

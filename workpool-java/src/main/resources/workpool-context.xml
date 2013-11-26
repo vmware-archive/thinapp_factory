@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+   xmlns:context="http://www.springframework.org/schema/context"
+   xmlns:task="http://www.springframework.org/schema/task"
+   xmlns:akka="http://akka.io/schema/akka"
+   xsi:schemaLocation="http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.0.xsd
+      http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+      http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd
+      http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+   <util:properties id="instanceProperties" location="classpath:manualmode.properties" />
+   <!-- For database credentials. -->
+   <util:properties id="databaseProperties" location="classpath:appfactory.properties" />
+   <task:scheduler id="scheduler" pool-size="5" />
+   <bean class="com.vmware.thinapp.workpool.CloseableServiceInstance">
+      <constructor-arg index="0"
+         value="https://#{instanceProperties['vc.host']}/sdk" />
+      <constructor-arg index="1"
+         value="#{instanceProperties['vc.username']}" />
+      <constructor-arg index="2"
+         value="#{instanceProperties['vc.password']}" />
+      <constructor-arg index="3"
+         value="#{instanceProperties['vc.ignoreCertificate']}" />
+   </bean>
+
+   <!--Couldn't figure out how to load this in the @Configuration loader because of processing dependencies.-->
+   <util:properties id="workpoolProperties" location="classpath:workpool.properties" />
+
+   <bean id="validator"
+      class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"/>
+
+   <task:annotation-driven scheduler="scheduler" />
+   <context:component-scan base-package="com.vmware.thinapp.vi" />
+   <context:component-scan base-package="com.vmware.thinapp.workpool" />
+
+</beans>

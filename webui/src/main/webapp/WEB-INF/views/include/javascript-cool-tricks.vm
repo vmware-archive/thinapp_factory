@@ -1,0 +1,346 @@
+## required model variables:
+##  the standard ones set in as set in AbstractUiController::getBaseModel
+##   - contextPath
+##   - appfactory
+##   - defaultPage (optional)
+##   - translationTable
+##
+## one set in NewUiInterceptor:
+##   - compressJSandCSS
+##      when true, load the compressed/unified JS file from the url
+##      given in $compressedJs.  Otherwise, parse
+##         /include/javascript-external.vm
+##      to load all the individual js files for debugging.
+##
+## two set in layout.vm:
+##   - imagePath      location of our image urls, based on the current skin
+##   - compressedJs   URL of the compressed / unified JS file to load
+##
+##
+## This file aims to do two things:
+##   1. defer parsing of the unified javascript for as long as possible
+##   2. present an opportunity for the browser to render the page
+##      before the javascript parsing happens
+##   3. save and restore the notification area upon navigation.
+##
+##  More details on each are included below as they happen.
+##
+## It is intended that this file be included at the VERY END
+## of layout.vm, right before the </body> closing tag.
+##
+<script type="text/javascript">
+//<![CDATA[
+## This first <script> block will be run (hopefully) before the
+## browser renders the page for the first time.  It should contain
+## a bare minimum of code, only focusing on what needs to appear
+## in the initial render.  At this point, no javascript libraries
+## have been loaded, so everything must be "raw" javascript.
+##
+"use strict";
+## This block handles goal #3 above: restoring the notification area
+## from the previous page.  The idea here is that, right before the
+## previous page unloaded, it stored the contents of the notification
+## section (the persistent progress bar and any error alerts) into a
+## short-lived cookie.  When this page starts up, we want to yank
+## this html out of the cookie and shove it into our DOM before the
+## page is rendered, making it appear as if the content never
+## left the screen.
+##
+var tafCookie = document.cookie || "";
+function restoreFromCookie(name) {
+  var i,
+      html = null,
+      cookies = tafCookie.split("; "), // the space here is important!
+      matchTerm = [name,"="].join('');
+
+  for (i=0;i<cookies.length;++i) {
+    if (0 === cookies[i].indexOf(matchTerm)) {
+      html = window.decodeURIComponent(cookies[i].substr(matchTerm.length));
+      break;
+    }
+  }
+  if (!html) {
+    return;
+  }
+
+  var div = document.getElementById(name);
+  if (div) {
+     div.innerHTML = html;
+  } else {
+     div = document.createElement("div");
+     div.innerHTML = html;
+     document.getElementById(name).appendChild(div);
+  }
+}
+## restore any saved html from cookies of the given name into
+## div elements with IDs of the same name:
+##  (e.g. the cookie named "foo-holder", if present, will contain
+##   html that gets inserted inside of the #foo-holder <div>,
+##   which is presumed to exist already in the document body.
+##
+  restoreFromCookie("action-alert-holder");
+  restoreFromCookie("task-progress-holder");
+  restoreFromCookie("recent-event");
+</script>
+## Note: ending the previous script tag and starting a new one here
+## is really important.  It's at this point the page will be likely
+## rendered for the first time by the browser.  Anything drawn after
+## this point will appear to "flicker".
+##
+<script type="text/javascript">
+  "use strict";
+## now we're on to bootstraping the rest of the TAF libraries.
+## We need to do this in stages.
+##
+## First, we're writing a minimal set of the global variables that
+## the TAF library uses.  It would be great if we could just set them
+## all at once, but we can't for two reasons:
+##   1. the TAF javascript libraries won't parse unless these
+##      variables are set
+##   2. some variables need to be set to TAF javascript objects (!)
+##      This means that we can't properly set the global variables
+##      until the TAF javascript libraries are loaded
+##   3. This is a catch-22.  We break it by defining some of the
+##      global variables here, and others later.
+##
+##  tl;dr: we only set the global variables here which are needed
+##   to load the TAF libraries.  We set the rest later.
+  var VmTAF = {
+##    // Location of the webapp
+      contextPath : "${contextPath}",
+##
+##    // Where the skin resources are located
+      skinName : "${appfactory.skinName}",
+      imagePath: "#cssUrl('images')",
+##
+##    // Developer mode
+      devMode : ${appfactory.devModeDeploy},
+##
+##    // Default landing page
+      defaultPage : "$!defaultPage",
+##
+##    // Standard icon sizes
+      iconSizeLarge : 32,
+      iconSizeSmall : 16,
+##
+##    // What the marketing team call us
+      productName : "${appfactory.productName}",
+##
+##    // How to wait for an appliance reboot
+      rebootWaitSeconds : 2,
+      rebootTimeoutSeconds : 120,
+##
+##    // Icon to use for apps that don't have their own
+      defaultIcon : {
+         url: "${imagePath}/${appfactory.defaultIcon.url}",
+         size: "${appfactory.defaultIcon.size}"
+      },
+##
+##    // Custom http error codes
+      licenseExpiredErrorCode : 420,
+##
+##    // Application info meta-data input fields
+      metaNames : [ 'name', 'version', 'vendor', 'revision', 'lang' , 'installCommand' ],
+##
+##    // Misc other stuff
+##    // TODO: get this from AfConstant (more clean up needed for that though)
+      variableNameRegex : "^[A-Za-z]+[A-Za-z0-9_]*$",
+##
+##    // Render this page using new-style links, rather than javascript ones
+      newUI : true,
+
+##    when true, our appliance is rebooting and we won't
+##    show any timeout or other errors
+      rebooting : false,
+
+##    when true, the user has navigated away from the current
+##    page or closed the browser window.  In this case, don't
+##    show AJAX errors.
+      unloading : false,
+
+##    Note: we need to set this before loading other TAF javascripts.
+##    E.g. jQuery validator (Validator.js) uses AfTranslate() to bind error messages for the custom methods.
+      translationTable: {
+         #foreach( $key in $translationTable.keySet() )
+            "${key}" : "$translationTable.get($key)",
+         #end
+         "" : "."
+      },
+
+##    The ThinApp 4.7 and higher builds are Hz enabled. This value is used accordingly.
+      isHzCapable : function(data) {
+         return (data && data >= 519532);
+      },
+
+##    Note: we will set this later, but it needs to exist in
+##    a prototype form now.  Just write what we need.
+      contentNavigator: {
+        AddReadyFunction: function(fn) {
+          $(document).ready(fn);
+        },
+        AddCleanupFunction: function() {
+          // noop
+        },
+        LoadPage: function(url) {
+          document.location.href = url;
+        },
+        GoBack: function() {
+          history.go(-1);
+        }
+      }
+    };
+  var LOGGING_ENABLED = null;
+  var LOG = null;
+
+## Now that a minimal set of globals are set, we're ready to load
+## our TAF + 3rd-party libraries.  But how?
+##
+## As mentioned at the top, goals #1 and #2 are to delay this
+## javascript load as long as possible.
+##
+## If we just load the libraries from an inline <script src=""> tag
+## here, the browser will block page loading until the script runs.
+## It needs to do this in case the script contains a "document.write"
+## tag, adds readystate or onload handlers, or stuff like that.
+## This means the whole page render will be deferred, slowing down
+## the user's page load experience.
+##
+## Instead, what we want to do is let the page render, load the js
+## libraries in the background, and then add appropriate handlers
+## to the page.
+##
+## The cost of this is that the normal page load events will have
+## already fired, so we need to make up for that.
+##
+## delayLoadJs() is a technique for performing all this which works
+## well across all browsers.  It will load the given JS file in the
+## "background" and invoke the callback after the load is complete.
+##
+  function delayLoadJs( url, onloadCallback ) {
+    var js = document.createElement("script");
+    js.src = url;
+    js.onload = onloadCallback;
+    if (navigator.appName == 'Microsoft Internet Explorer') {
+       var ua = navigator.userAgent;
+       var re  = new RegExp("MSIE ([0-9]{1,}[\.0-9]{0,})");
+       if (re.exec(ua) != null) {
+          var rv = parseFloat( RegExp.$1 );
+          if (rv < 9.0 ) {
+## this is needed for IE8 and earlier only.
+## if we enable it for IE9, the onloadCallback()
+## will be executed twice.
+             js.onreadystatechange = function() {
+                if ("loaded" == this.readyState || "complete" == this.readyState) {
+                   onloadCallback();
+                }
+             };
+          }
+       }
+    }
+    document.getElementsByTagName("head")[0].appendChild(js);
+  }
+
+## When 3rd-party and TAF javascript have loaded, we can call this
+## method.  We need to do two things here:
+##
+## 1. finish initializing the VmTAF global variable with parts
+##    that we couldn't or didn't want to initialize earlier
+##
+## 2. invoke any page-specific initialization functions
+##
+  var onScriptLoad = function () {
+   VmTAF.contentNavigator = new ContentNavigator();
+   VmTAF.notification = new NotificationManager($('#events-table'));
+   $(window).bind('resize', function () {
+      /* Rebuild the notification table header column width on resize. This is needed when sScrollY is set */
+      VmTAF.notification.tableWrapper.dataTable.fnAdjustColumnSizing();
+   });
+
+   LOGGING_ENABLED = ${appfactory.javaScriptLoggingEnabled};
+   #if($appfactory.javaScriptLoggingEnabled)
+      LOG = log4javascript.getLogger("appfactory_logger");
+      LOG.addAppender(
+            new log4javascript.AjaxAppender(location.protocol + '//' + location.host + VmTAF.contextPath + '/log/index')
+      );
+      var browserConsoleAppender = new log4javascript.BrowserConsoleAppender();
+## use a simple layout here because the default one will truncate our message
+## on Firefox (the truncated messages aren't useful)
+      browserConsoleAppender.setLayout(new log4javascript.SimpleLayout());
+      LOG.addAppender(browserConsoleAppender);
+   #end
+##
+## all of TAF's globals should now be initialized properly
+##
+##
+## Remember goal #3 above, about saving the notification HTML
+## into a cookie, so that we can restore it on the next page load
+## before the page renders (and before any of the AJAX code to
+## fill it in properly is even loaded)?
+##
+## This is where the cookie is set.  We add a handler so that
+## just before the page is unloaded, we take any html in those
+## notification DIVs and save them into cookies.  We give them a
+## really short lifespan (5 seconds), which will hopefully always
+## be more than our page load time, but not long enough so that
+## the information will be meaningfully out-of-date by the time
+## it's used.
+    function saveHtml(name,expireMs) {
+      var el = $(['#',name].join('')),
+          value = el ? el.html() : null,
+          exdate = new Date();
+      if (!value) {
+## delete the cookie by giving it an expiration date in the past
+        value = 'deleted';
+        exdate = new Date(0);
+      }
+      exdate.setTime(exdate.getTime() + expireMs);
+      document.cookie=name + "=" + window.encodeURIComponent(value) + "; expires="+exdate.toUTCString() + ";path=/";
+    }
+
+    $(window).unload(function() {
+      saveHtml("action-alert-holder", 5000);
+      saveHtml("task-progress-holder", 5000);
+      saveHtml("recent-event", 5000);
+    });
+
+## proceed with the TAF library initialization sequence
+##
+    AfPleaseWaitModalInit();
+
+    AfInitStackEditor($('#main'));
+
+## if the page provided a custom onload hander, invoke it.
+##
+    if (typeof(window.tafOnLoad)=='function') {
+      window.tafOnLoad();
+    }
+  };
+
+## if we're in a normal page load, use the delayLoadJs magic
+## to follow through on everything we set up above, as planned.
+##
+## BUT if we're in a development debug mode (as indicated by
+## compressJSandCSS being false), don't do what we threatened to above.
+## instead handle this more bluntly.
+##
+#if ($!compressJSandCSS)
+   delayLoadJs( "$compressedJs", onScriptLoad );
+#end
+//]]>
+</script>
+##
+## we're in dev mode, so do two things:
+## 1. instead of the unified JS file, load each raw JS file
+##    separately
+## 2. load the JS synchronously, instead of doing all the weird
+##    delay-load magic above.  It should all work the same way
+##    from the point of view of the javascript author, but this
+##    is simpler to implement here.
+##
+#if (!$!compressJSandCSS)
+  #parse("/include/javascript-external.vm")
+<script type="text/javascript">
+   onScriptLoad();
+  $('#switcher').themeswitcher({loadTheme:"Redmond"});
+</script>
+#end

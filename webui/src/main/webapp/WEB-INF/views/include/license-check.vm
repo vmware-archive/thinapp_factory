@@ -1,0 +1,33 @@
+################################################################################
+## ThinApp Factory WebUI
+## (c) 2011 VMware, Inc. All rights reserved.
+################################################################################
+
+################################################################################
+## license-check.vm
+##
+## Page fragment that should appear at the top of every page when TAF license
+## has expired. This needs to be included into every page of webui.
+################################################################################
+
+#if($appfactory.isExpired)
+   <div class='license-msg'>
+      <marquee behavior="scroll" direction="right">
+      $String.format($springMacroRequestContext.getMessage("M.TRIAL.EXPIRED"),
+            $appfactory.productName)
+      </marquee>
+   </div>
+#elseif ($appfactory.numDaysToExpiration <= $appfactory.numDaysToShowWarningBeforeExpired)
+   <div class='license-msg'>
+      <marquee behavior="scroll" direction="right">
+      #if ($appfactory.numDaysToExpiration == 1)
+         $String.format($springMacroRequestContext.getMessage("M.TRIAL.ONE_DAY_LEFT"),
+            $appfactory.productName)
+      #else
+         $String.format($springMacroRequestContext.getMessage("M.TRIAL.MULTIPLE_DAYS_LEFT"),
+            $appfactory.productName, $appfactory.numDaysToExpiration)
+      #end
+      </marquee>
+   </div>
+#end
+

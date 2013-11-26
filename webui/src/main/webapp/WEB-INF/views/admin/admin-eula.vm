@@ -1,0 +1,74 @@
+################################################################################
+## ThinApp Factory WebUI
+## (c) 2011 VMware, Inc. All rights reserved.
+################################################################################
+
+################################################################################
+## admin/admin-about.vm
+##
+## Shows the equivalent of a typical VMware "About" dialog box.
+################################################################################
+
+<head>
+#if (!$pageTitle)
+   #set($pageTitle = "Welcome to ThinApp Factory")
+#end
+   #parse("include/head.vm")
+
+   <script type="text/javascript">
+      VmTAF.admManager = new AdminManager();
+   </script>
+</head>
+
+<body id="body">
+
+<div id="page">
+   <div id="page-header">
+      <div class='head-left'>
+         <span class='name'>$pageTitle</span>
+         <span class='light-gradient'>&nbsp;</span>
+      </div>
+      <div class='head-right'>
+         <span class='dark-gradient'>&nbsp;</span>
+         <span class='right-nav'>&nbsp;</span>
+      </div>
+   </div> ## #page-header
+
+   <div class="page-body-wrapper">
+      <div id="page-body">
+         <div class="panel">
+            <div class="panel-title">
+               $appfactory.productName End User License Agreement
+            </div>
+
+            <div class="eula" style="padding: 5px;">
+               #parse("admin/eula.html")
+
+               <form class="primary" onsubmit="return false;">
+                  #if($eulaAccepted)
+                     <div>
+                        <label>This agreement has already been accepted.</label>
+                     </div>
+                     <div class="button-row">
+                        <button class="button" onclick="VmTAF.contentNavigator.LoadPage('/');">Continue</button>
+                     </div>
+                  #else
+                     <div>
+                        <input id="eula-accepted" type="checkbox"></input>
+                        <label for="eula-accepted">I have read and accept this agreement</label>
+                     </div>
+                     <div class="button-row">
+                        <button class="button" onclick="VmTAF.admManager.AcceptEula();">I Accept</button>
+                        <button class="button" onclick="history.go(-1);">I Do Not Accept</button>
+                     </div>
+                  #end
+               </form>
+            </div> ##eula
+
+         </div> ## panel
+      </div> ## page-body
+   </div> ## page-body-wrapper
+</div> ## page
+
+</body>
+</html>

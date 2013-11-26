@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jcompressor>
+    <project>
+        <title>ThinApp Factory</title>
+
+        <properties>
+            <includes.directory>${projectBaseDirectory}/src/main/webapp/static</includes.directory>
+
+            <js.directory>${includes.directory}/js</js.directory>
+            <css.directory>${includes.directory}/css</css.directory>
+        </properties>
+
+        <configuration>
+            <!-- TODO: include -${projectVersion} in these filenames -->
+            <scriptOutput>${js.directory}/all.js</scriptOutput>
+            <styleOutput>${css.directory}/skins/base/all.css</styleOutput>
+            <yuiOptions>
+               <!--
+                    <charset>utf-8</charset>
+                    <nomunge />
+                    <preserve-semi />
+                   <disable-optimizations />
+               //-->
+               <!-- firefox 10 gets REALLY SLOW (~10 sec per page) when firebug is open
+                    and the compressed JS file has long lines.  Work around that. -->
+                   <line-break>50</line-break>
+           </yuiOptions>
+        </configuration>
+
+        <files>
+            <scripts>
+                <!--##-->
+                <!--## Third-party Javascript-->
+                <!--##-->
+                <script>${js.directory}/3rd/json2.js</script>
+                <script>${js.directory}/3rd/jquery-1.7.1.min.js</script>
+                <script>${js.directory}/3rd/jquery-ui-1.8.16.custom.min.js</script>
+                <script>${js.directory}/3rd/jquery.dataTables.min.js</script>
+                <script>${js.directory}/3rd/jquery.blockUI-modified.js</script>
+                <script>${js.directory}/3rd/jquery.validate.min.js</script>
+                <script>${js.directory}/3rd/jquery.metadata.js</script>
+                <script>${js.directory}/3rd/jquery.tools.min.js</script>
+                <script>${js.directory}/3rd/jquery.form.js</script>
+                <script>${js.directory}/3rd/jquery.timeago.js</script>
+                <script>${js.directory}/3rd/jquery.atmosphere.js</script>
+                <script>${js.directory}/3rd/jsrender.js</script>
+
+
+                <!--##-->
+                <!--## ThinApp Factory Javascript-->
+                <!--##-->
+                <script>${js.directory}/afutils.js</script>
+                <script>${js.directory}/afwait.js</script>
+                <script>${js.directory}/ContentNavigator.js</script>
+                <script>${js.directory}/StackEditor.js</script>
+                <script>${js.directory}/AbstractManager.js</script>
+                <script>${js.directory}/TableWrapper.js</script>
+                <script>${js.directory}/DashboardManager.js</script>
+                <script>${js.directory}/DataSourceManager.js</script>
+                <script>${js.directory}/WorkpoolManager.js</script>
+                <script>${js.directory}/VmImageManager.js</script>
+                <script>${js.directory}/DatastoreManager.js</script>
+                <script>${js.directory}/FeedManager.js</script>
+                <script>${js.directory}/AppsManager.js</script>
+                <script>${js.directory}/BuildManager.js</script>
+                <script>${js.directory}/BuildEditor.js</script>
+                <script>${js.directory}/AbstractSettingsEditor.js</script>
+                <script>${js.directory}/FileShareManager.js</script>
+                <script>${js.directory}/IniEditor.js</script>
+                <script>${js.directory}/RegistryEditor.js</script>
+                <script>${js.directory}/FileSystemEditor.js</script>
+                <script>${js.directory}/ConfigManager.js</script>
+                <script>${js.directory}/AdminManager.js</script>
+                <script>${js.directory}/RecipeManager.js</script>
+                <script>${js.directory}/RecipeBasicEditor.js</script>
+                <script>${js.directory}/RecipeVarEditor.js</script>
+                <script>${js.directory}/RecipeFileEditor.js</script>
+                <script>${js.directory}/RecipeStepEditor.js</script>
+                <script>${js.directory}/Validator.js</script>
+                <script>${js.directory}/NotificationManager.js</script>
+                <script>${js.directory}/TaskList.js</script>
+
+            </scripts>
+            <styles>
+                <style>${css.directory}/skins/jquery/base/jquery.ui.core.css</style>
+                <style>${css.directory}/skins/jquery/base/jquery.ui.resizable.css</style>
+                <style>${css.directory}/skins/jquery/base/jquery.ui.selectable.css</style>
+                <style>${css.directory}/skins/jquery/base/jquery.ui.accordion.css</style>
+                <style>${css.directory}/skins/jquery/base/jquery.ui.autocomplete.css</style>
+                <style>${css.directory}/skins/jquery/base/jquery.ui.button.css</style>
+                <style>${css.directory}/skins/jquery/base/jquery.ui.dialog.css</style>
+                <style>${css.directory}/skins/jquery/base/jquery.ui.slider.css</style>
+                <style>${css.directory}/skins/jquery/base/jquery.ui.tabs.css</style>
+                <style>${css.directory}/skins/jquery/base/jquery.ui.datepicker.css</style>
+                <style>${css.directory}/skins/jquery/base/jquery.ui.progressbar.css</style>
+
+                <style>${css.directory}/newui/default.css</style>
+
+                <style>${css.directory}/skins/base/template.css</style>
+                <style>${css.directory}/skins/base/content.css</style>
+                <style>${css.directory}/skins/base/tree.css</style>
+                <style>${css.directory}/skins/base/dialog.css</style>
+                <style>${css.directory}/skins/base/application.css</style>
+                <style>${css.directory}/skins/base/store.css</style>
+                <style>${css.directory}/skins/base/stack-editor.css</style>
+                <style>${css.directory}/skins/base/sidebar.css</style>
+                <style>${css.directory}/skins/base/task-list.css</style>
+                <style>${css.directory}/skins/base/login.css</style>
+
+                <style>${css.directory}/skins/base/datatable/data_table_jqueryui_fix.css</style>
+
+                <style>${css.directory}/skins/jquery/redmond/jquery-ui-1.8.16.custom.css</style>
+            </styles>
+        </files>
+    </project>
+</jcompressor>

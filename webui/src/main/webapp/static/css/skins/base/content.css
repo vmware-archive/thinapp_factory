@@ -1,0 +1,608 @@
+/* ***********************************************************************
+ * VMware ThinApp Factory
+ * Copyright (c) 2009-2013 VMware, Inc. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * ***********************************************************************/
+
+
+
+/*
+ * -----------------------------------------------------------------------------
+ * Dashboard
+ * -----------------------------------------------------------------------------
+ */
+
+.dashboard-content .dash-section {
+   margin: 15px;
+   padding: 0;
+   border: 5px solid #DFE1E5;
+   -webkit-border-radius: 5px 5px 0 0;
+   -moz-border-radius: 5px 5px 0 0;
+   border-radius: 5px 5px 0 0;
+}
+
+.dashboard-content .dash-header {
+   font-weight: bold;
+   background: #aaa;
+   padding: 2px 0 5px 5px;
+   color: #333;
+   border-bottom: 1px solid #97BCDC;
+   background: #DFE1E5;
+   background: -moz-linear-gradient(top, #DFE1E5 0%, #B9BBBF 100%);
+   background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#DFE1E5), color-stop(100%,#B9BBBF));
+   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#DFE1E5', endColorstr='#B9BBBF',GradientType=0 );
+   background: -o-linear-gradient(top, #DFE1E5 0%,#B9BBBF 100%);
+}
+
+.dashboard-content .dash-header-right {
+   float: right;
+   padding-right: 10px;
+}
+
+.dash-header .x {
+   float: right;
+   padding-right: 5px;
+}
+
+.dashboard-content .dash-boxrow {
+   overflow: hidden;
+}
+
+.dashboard-content .dash-boxrow.large .dash-box {
+   height: 13em;
+}
+
+.dashboard-content .dash-boxrow.small .dash-box {
+   height: 8em;
+}
+
+.dashboard-content .dash-boxrow.tiny .dash-box {
+   height: 6.5em;
+   width: 95%;
+}
+
+.dashboard-content .dash-box {
+   margin: 10px;
+   border: 2px solid #97BCDC;
+   float: left;
+   height: 80%;
+   overflow: hidden;
+   width: 14%;
+   padding: 2px;
+}
+
+.dashboard-content .dash-box-header {
+   color: #2b5480;
+   padding: 5px;
+   text-align: center;
+   font-weight: bold;
+   margin-left: 20px;
+   margin-right: 20px;
+   height: 2.5em;
+}
+
+.dashboard-content .dash-box-content {
+   color: #333;
+   margin: 5px;
+}
+
+.dashboard-content .dash-box-content.text {
+   text-align: center;
+}
+
+.dashboard-content .dash-box-content.stat {
+   color: #4F99C9;
+   font-size: 2em;
+   text-align: center;
+   padding-top: 15px;
+}
+
+.dashboard-content .dash-box-content .progress-container {
+   height: 20px;
+}
+
+.dashboard-content .dash-box-content .progress-bar {
+   height: 20px;
+}
+
+.dashboard-content .dash-box-content .progress-text {
+   font-size: 1.2em;
+}
+
+
+/*
+ * -----------------------------------------------------------------------------
+ * Feed List
+ * -----------------------------------------------------------------------------
+ */
+.feed-url {
+    float:right;
+    padding-top:6px;
+}
+
+/*
+ * -----------------------------------------------------------------------------
+ * Feed Editor
+ * -----------------------------------------------------------------------------
+ */
+
+.feed-header {
+   overflow: hidden;
+}
+
+.feed-edit-content {
+   padding: 10px 10px 0 0;
+}
+
+.feed-edit-content .feed-url {
+    padding-right: 10px;
+    padding-top: 7px;
+}
+
+.feed-edit-content .stack-editor {
+   width: 98%;
+}
+
+.feed-edit-content fieldset {
+	margin: 0 0 10px 10px;
+}
+
+.feed-edit-content .stack-row.feed-apps {
+	margin: 1%;
+/* 	width: 98%; */
+/* 	max-height: 450px; */
+/* 	overflow-y: scroll; */
+}
+
+
+/*
+ * -----------------------------------------------------------------------------
+ * Build Form
+ * -----------------------------------------------------------------------------
+ */
+
+.build-form-content {
+   padding: 10px 10px 0 0;
+}
+
+.needs-rebuild {
+   background-color: #E1F2FF;
+}
+
+/*
+ * -----------------------------------------------------------------------------
+ * Datastores
+ * -----------------------------------------------------------------------------
+ */
+
+.datastore-edit-content {
+   padding: 10px 10px 0 0;
+}
+
+.datastore-edit-content .stack-editor {
+   width: 98%;
+}
+
+
+/*
+ * -----------------------------------------------------------------------------
+ * Sources List
+ * -----------------------------------------------------------------------------
+ */
+.sources-url {
+    float:right;
+    padding-top:6px;
+}
+
+
+/*
+ * -----------------------------------------------------------------------------
+ * Workpool
+ * -----------------------------------------------------------------------------
+ */
+.ui-dialog-content {
+  text-align: left;
+}
+
+#vi-browser #inv-tree {
+   float: left;
+   width: 450px;
+}
+
+#vi-browser .desc {
+   width: 170px;
+   float: right;
+}
+
+.lic-key {
+   text-transform: uppercase;
+   font-family: monospace;
+}
+
+#wp-delete-dialog .dataTables_wrapper .top,
+#wp-delete-dialog .dataTables_wrapper .bottom,
+#img-delete-dialog .dataTables_wrapper .top,
+#img-delete-dialog .dataTables_wrapper .bottom {
+   display: none;
+}
+
+#wp-delete-dialog .dataTables_wrapper,
+#img-delete-dialog .dataTables_wrapper {
+   min-height: 60px;
+}
+
+#wp-delete-dialog .desc, #img-delete-dialog .desc {
+   margin: 8px;
+}
+
+#wp-delete-dialog .desc input, #img-delete-dialog .desc input {
+   margin: 2px 6px 0 0;
+   float: left;
+}
+
+/*
+ * -----------------------------------------------------------------------------
+ * Configuration
+ * -----------------------------------------------------------------------------
+ */
+
+#config-content {
+   padding: 10px 10px 0 0;
+}
+
+#config-content .stack-editor {
+   width: 98%;
+}
+
+
+/*
+ * -----------------------------------------------------------------------------
+ * Administration
+ * -----------------------------------------------------------------------------
+ */
+
+.admin-content {
+   padding: 10px;
+}
+
+
+/*
+ * -----------------------------------------------------------------------------
+ * Build Settings Editor - Common for Ini, Registry, filesystem.
+ * -----------------------------------------------------------------------------
+ */
+
+.registry-editor, .filesystem-editor, .packageini-editor {
+   margin-top: 10px;
+}
+
+.packageini-editor .stack-editor, .registry-editor .stack-editor, .filesystem-editor .stack-editor {
+   margin: 0;
+}
+
+.ui-widget .packageini-editor .stack-editor,
+.ui-widget .registry-editor .stack-editor,
+.ui-widget .filesystem-editor .stack-editor {
+   font-size: 0.9em;
+}
+
+.ui-widget .registry-editor .stack-editor .stack-header,
+.ui-widget .filesystem-editor .stack-editor .stack-header,
+.ui-widget .packageini-editor .stack-editor .stack-header {
+   font-size: 1em;
+}
+
+.packageini-editor .ini-sections, .filesystem-editor .filesystem-folders, .registry-editor .registry-keys {
+   width: 310px;
+   float: left;
+}
+
+.packageini-editor .ini-data, .filesystem-editor .filesystem-data, .registry-editor .registry-values {
+   margin-left: 325px;
+}
+
+.filesystem-editor .filesystem-folders, .registry-editor .registry-keys {
+   overflow: hidden;
+}
+
+
+.registry-values.stack-editor .stack-row-head .label, .registry-values.stack-editor .stack-row .label,
+.filesystem-files.stack-editor .stack-row .label, .filesystem-files.stack-editor .stack-row .label {
+   width: 50%;
+}
+
+.registry-values.stack-editor .stack-row .field, .filesystem-files.stack-editor .stack-row .field {
+   width: 48%;
+}
+
+/* Convert a span into a link for deleting something */
+.delete-icon {
+   display: inline-block;
+   cursor: pointer;
+   margin: 3px 0 0 4px;
+   width: 16px;
+   height: 16px;
+   background: url(jquery-ui/images/ui-icons_cd0a0a_256x240.png) -32px -192px no-repeat;
+   padding: 0 !important;
+}
+
+/* Convert a span into a link for moving something up */
+.move-up-icon {
+   cursor: pointer;
+   margin-left: 4px;
+   width: 16px;
+   height: 16px;
+   background: url(jquery-ui/images/ui-icons_f9bd01_256x240.png) -96px -192px no-repeat;
+   padding: 0 !important;
+}
+
+/* Convert a span into a link for moving something down */
+.move-down-icon {
+   cursor: pointer;
+   margin-left: 4px;
+   width: 16px;
+   height: 16px;
+   background: url(jquery-ui/images/ui-icons_f9bd01_256x240.png) -64px -192px no-repeat;
+   padding: 0 !important;
+}
+
+/*
+ * -----------------------------------------------------------------------------
+ * Build Settings Editor - INI Editor
+ * -----------------------------------------------------------------------------
+ */
+
+.packageini-editor .ini-sections select {
+   width: 100%;
+}
+
+/*
+ * -----------------------------------------------------------------------------
+ * Build Settings Editor - Directory Editor
+ * -----------------------------------------------------------------------------
+ */
+
+#filesystem-direct-link a {
+   color: #3377AA;
+}
+
+/* Stack editor for file system files */
+.filesystem-editor .filesystem-files {
+   margin-bottom: 10px;
+}
+
+.filesystem-files.stack-editor .stack-row .field.text.long input {
+   width:80%;
+}
+
+#filesystem-tree-holder {
+   padding: 2px 5px !important;
+}
+
+/*
+ * -----------------------------------------------------------------------------
+ * Build Settings Editor - Registry Editor
+ * -----------------------------------------------------------------------------
+ */
+
+#registry-tree-holder {
+	padding: 2px 5px !important;
+}
+
+/*
+ * -----------------------------------------------------------------------------
+ * About
+ * -----------------------------------------------------------------------------
+ */
+
+#about {
+   padding: 10px;
+   margin: auto;
+   width: 50%;
+}
+
+#about table {
+}
+
+#about td {
+   padding: 5px;
+}
+
+#about tr td:first-child {
+   text-align: right;
+   font-weight: bold;
+}
+
+#about tr td:last-child {
+   padding-left: 10px;
+}
+
+#about div {
+   margin-top: 20px;
+}
+
+/*
+ * -----------------------------------------------------------------------------
+ * Horizontal tabs
+ * -----------------------------------------------------------------------------
+ */
+
+.horizontal-tabs {
+   padding: 0;
+   border: 0;
+   position: inherit;
+}
+
+/*
+ * -----------------------------------------------------------------------------
+ * Applications & Recipe with Apps
+ * -----------------------------------------------------------------------------
+ */
+/** The following apply to the single app display page. **/
+.app-detail-main, .recipe-app-main {
+   width: 100%;
+}
+.app-detail-main .app-left, .recipe-app-main .app-left {
+    position:absolute;
+   padding-top: 20px;
+   width: 190px;
+   margin: 5px 10px;
+}
+.app-detail-main .app-page, .recipe-app-main .recipe-main {
+   margin-left: 200px;
+}
+.recipe-app-main .recipe-main {
+   padding: 28px 10px 0 10px;
+}
+.app-recipe {
+    padding-right:10px;
+}
+.app-recipe .stack-editor {
+    margin:0;
+}
+.app-left .app-icon {
+   width: 100%;
+}
+.app-left img.app-icon {
+   float: right;
+   width: 32px;
+   height: 32px;
+/*    position:relative; */
+}
+.app-left label {
+    font-weight: bold;
+}
+.app-left .row {
+    padding-top: 10px;
+}
+.app-top .app-center {
+   margin-right: 270px;
+   margin-top: 5px;
+   word-wrap: break-word;
+}
+.app-page .build-pick-holder {
+   float: right;
+   width: 250px;
+   margin: 5px 15px 5px 5px;
+}
+#build-wp-rt-ds-picker {
+    padding:10px;
+    box-shadow: 0 0 2px 2px #888;
+}
+.app-center .desc, .recipe-main .desc {
+   padding: 5px;
+   font-size: 24px;
+   font-weight: bold;
+}
+.app-center #new-version {
+   border: 1px solid #F7DA7C;
+   background-color: #FFF2D0;
+   margin: 3px 50px;
+   padding: 5px;
+   border-radius: 5px;
+   -webkit-border-radius: 5px;
+   -moz-border-radius: 5px;
+   text-align: center;
+}
+#new-version .icon {
+   background: url(jquery-ui/images/ui-icons_f9bd01_256x240.png) 0 -144px no-repeat;
+   width: 16px;
+   height: 16px;
+   display: inline-block;
+   vertical-align: middle;
+   float: left;
+}
+#new-version span {
+   display: inline-block;
+}
+.app-center #app-recipe {
+   width: 100%;
+   margin-top: 10px;
+   border-bottom: 1px solid #AAA;
+}
+
+.app-page #app-history, .app-page #app-version {
+   margin: 10px;
+   padding-bottom: 5px;
+}
+#app-history .dataTables_wrapper {
+   min-height: 160px !important;
+}
+#app-version span {
+   padding-left: 10px;
+}
+.app-page .section-head {
+   font-size: 16px;
+   font-weight: bold;
+   border-top: 2px solid #666;
+   padding: 4px 0 10px 0;
+}
+
+/*
+ * -----------------------------------------------------------------------------
+ * Recipe Page
+ * -----------------------------------------------------------------------------
+ */
+.recipe-main .dataTables_filter {
+   width: 30%;
+}
+
+/*
+ * -----------------------------------------------------------------------------
+ * Manual mode
+ * -----------------------------------------------------------------------------
+ */
+/* Note no-show class causes security errors, and hence the round about */
+.hide-input-file-form {
+   height: 3px !important;
+   overflow: hidden;
+   opacity: 0.1;
+   position: absolute;
+   top: 100px;
+   left: 250px;
+   z-index: -1;
+}
+
+.hide-input-file-form form {
+   position: relative;
+}
+
+.manualmode-content {
+   width: 70%;
+   display: inline;
+}
+
+.manualmode-content-right {
+   display: inline;
+   float: right;
+   padding-bottom: 3px;
+}
+
+.manualmode.progress-step {
+   padding-top: 2px;
+   padding-bottom: 4px;
+}
+
+.manualmode.progress-step span {
+   width: 20%;
+}
+
+/*
+ * -----------------------------------------------------------------------------
+ * Settings Page
+ * -----------------------------------------------------------------------------
+ */
+#settigs-tabs {
+   margin: 0 10px;
+}

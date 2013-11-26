@@ -1,0 +1,36 @@
+################################################################################
+## ThinApp Factory WebUI
+## (c) 2011 VMware, Inc. All rights reserved.
+################################################################################
+
+################################################################################
+## notify-bar.vm
+##
+## The notifictaion bar used to display notifications related to taf.
+## Note: This section is cached in a cookie and then written back to avoid
+## flicker.
+################################################################################
+
+<div id="notification" class="notification">
+   ## The bit you see when the table is hidden
+   <div id="notification-status" class="status-bar">
+      <div id="notification-show"></div>
+      <div id="recent-event"></div>
+   </div>
+
+   ## The bit you see when the table is visible
+   <div id="notification-tab" class="no-show">
+      <div id="notification-hide"></div>
+      <table id="events-table" class="data">
+         <thead>
+            <tr>
+               <th style="width:65%;">Alert</th>
+               <th style="width:15%;">From</th>
+               <th style="width:20%;">When</th>
+            </tr>
+         </thead>
+         <tbody id="notify-content">
+         </tbody>
+      </table>
+   </div> ## notification-tab
+</div> ## notification

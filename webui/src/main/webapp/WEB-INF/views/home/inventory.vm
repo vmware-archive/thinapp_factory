@@ -1,0 +1,34 @@
+################################################################################
+## ThinApp Factory WebUI
+## (c) 2011 VMware, Inc. All rights reserved.
+################################################################################
+
+################################################################################
+## inventory.vm
+##
+## Page fragment that holds the inventory tree. Appears to the left of main
+## content.
+################################################################################
+
+<script
+   type="text/javascript"
+   src="#jsUrl("/InventoryManager.js")">
+</script>
+
+<script type="text/javascript">
+#if ($newUI)
+addLoad(function () {
+#end
+   var invMgr = new InventoryManager();
+
+   AfAddOnLoadEvent(function() {
+      invMgr.PopulateInventoryTree($("#inventory"), 5000);
+   });
+#if ($newUI)
+});
+#end
+</script>
+
+<div id="inventory">
+   <div class="ajax-loader"></div>
+</div>

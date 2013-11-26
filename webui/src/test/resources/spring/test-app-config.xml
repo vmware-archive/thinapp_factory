@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:util="http://www.springframework.org/schema/util"
+   xsi:schemaLocation="
+		http://www.springframework.org/schema/beans	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/task	http://www.springframework.org/schema/task/spring-task-3.0.xsd
+		http://www.springframework.org/schema/util   http://www.springframework.org/schema/util/spring-util-3.0.xsd
+      http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+   <!-- Exit16 CIFS share to App Factory format JSON feed converter bean  -->
+   <bean id="cifsToAppsFeedConverter" class="com.vmware.appfactory.fileshare.CifsToFeedConverterImpl">
+      <!-- a directory name that all generated JSON files
+      will be stored under web context real path, as well as all the JSON feeds will be accessible via
+      http://<app_factory_web_ui_url>/<feedDir>/*.json
+       -->
+      <!-- a list of supported file extensions by the converter -->
+      <constructor-arg index="0" type="java.lang.String" value=".*.(EXE|MSI)$" />
+
+      <!-- App factory feed format version number -->
+      <property name="feedVersion" value="3" />
+      <!-- a directory depth to be scanned by the CIFS crawler. -->
+      <!-- e.g. <SMB_URL>\Vendor\Product\Version\i10n\Release\some-app.msi -->
+      <!--      <SMB_URL>\[ 1   ]\[  2  ]\[  3  ]\[ 4]\[  5  ]\[ 6 ]       -->
+      <property name="dirLayout" value="vendor/name/version/locale/revision" />
+   </bean>
+
+   <!-- Manual Mode Simulator Config -->
+   <bean id="manualModeServiceImplStub" class="com.vmware.appfactory.manualmode.ManualModeServiceImplStub">
+      <property name="dcName" value="ThinApp Prime WDC"/>
+      <property name="dcMoid" value="datacenter-2"/>
+
+      <property name="vcHost" value="vc.your.company.com"/>
+      <property name="vcUsername" value="vc-user"/>
+      <property name="vcPassword" value="vc-password"/>
+
+      <property name="vmGuestUsername" value="guest-user"/>
+      <property name="vmGuestPassword" value="guest-password"/>
+      <property name="vmVmxPath" value="[LUN1] appfactory Instance/appfactory Instance.vmx"/>
+   </bean>
+
+</beans>

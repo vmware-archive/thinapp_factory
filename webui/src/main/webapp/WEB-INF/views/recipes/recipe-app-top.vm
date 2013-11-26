@@ -1,0 +1,30 @@
+################################################################################
+## ThinApp Factory WebUI
+## (c) 2011 VMware, Inc. All rights reserved.
+################################################################################
+
+################################################################################
+## recipe-app-top.vm
+##
+## This section conditionally displays an app info section if the app
+## is available and is in relationship to the recipe.
+################################################################################
+
+## Main section defining the recipe page containing the app info section.
+#if ($app && $newUI)
+   #set($insideTab = true) ## Do not display the title here, coz its below.
+   #set($appLink = "/apps/detail/${app.id}?recipeId=$!recipeId&selectionData=$esc.html($!selectionData)")
+#end
+#parse("include/main-top.vm")
+
+#if ($app)
+   <div class="recipe-app-main">
+      <div class="app-left">
+         #set($allowEdit = false) ## Edit is allowed in the app detail page.
+         #parse("apps/app-info.vm")
+      </div>
+
+      <div class="recipe-main">
+         <div class="desc"><a href="#springUrl($appLink)">${app.name} ${app.version}</a> &gt; $!{recipeDescPrefix} Recipe</div>
+      ## Closing divs for these will be in recipe-app-bottom.vm
+#end

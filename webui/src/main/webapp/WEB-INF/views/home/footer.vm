@@ -1,0 +1,20 @@
+################################################################################
+## ThinApp Factory WebUI
+## (c) 2011 VMware, Inc. All rights reserved.
+################################################################################
+
+################################################################################
+## footer.vm
+##
+## Page fragment that should appear at the bottom of every page. This includes
+## the version number, etc.
+################################################################################
+
+<a href="#" onclick="VmTAF.contentNavigator.LoadPage('/admin/about');">
+   <div class="footer-appname">
+      $appfactory.productName
+   </div>
+   <div class="footer-appversion">
+      $appfactory.version
+   </div>
+</a>

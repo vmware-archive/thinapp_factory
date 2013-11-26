@@ -1,0 +1,110 @@
+/*
+ * -----------------------------------------------------------------------------
+ * ThinApp Factory WebUI
+ * (c) 2011 VMware, Inc. All rights reserved.
+ *
+ * Style to override "data_table.css"
+ * Instead of editing the data_table.css file that ships with dataTable, use
+ * this file to override any style that needs fixing or changing.
+ * -----------------------------------------------------------------------------
+ */
+ 
+/*
+ * -----------------------------------------------------------------------------
+ * Change location of all images
+ * -----------------------------------------------------------------------------
+ */
+ 
+.paginate_disabled_previous {
+   background-image: url('images/back_disabled.jpg');
+}
+
+.paginate_enabled_previous {
+   background-image: url('images/back_enabled.jpg');
+}
+
+.paginate_disabled_next {
+   background-image: url('images/forward_disabled.jpg');
+}
+
+.paginate_enabled_next {
+   background-image: url('images/forward_enabled.jpg');
+}
+
+.sorting_asc {
+   background: url('images/sort_asc.png') no-repeat center right;
+}
+
+.sorting_desc {
+   background: url('images/sort_desc.png') no-repeat center right;
+}
+
+.sorting {
+   background: url('images/sort_both.png') no-repeat center right;
+}
+
+.sorting_asc_disabled {
+   background: url('images/sort_asc_disabled.png') no-repeat center right;
+}
+
+.sorting_desc_disabled {
+   background: url('images/sort_desc_disabled.png') no-repeat center right;
+}
+
+
+/*
+ * -----------------------------------------------------------------------------
+ * Remove the nasty pink background color from sorted columns
+ * -----------------------------------------------------------------------------
+ */
+
+tr.odd td.sorting_1 {
+   background-color:inherit;
+}
+
+tr.odd td.sorting_2 {
+   background-color: inherit;
+}
+
+tr.odd td.sorting_3 {
+   background-color: inherit;
+}
+
+tr.even td.sorting_1 {
+   background-color: inherit;
+}
+
+tr.even td.sorting_2 {
+   background-color: inherit;
+}
+
+tr.even td.sorting_3 {
+   background-color: inherit;
+}
+
+/*
+ * -----------------------------------------------------------------------------
+ * Fix general layout issues that show up mainly under Firefox
+ * -----------------------------------------------------------------------------
+ */
+ 
+ .dataTables_wrapper {
+   clear: none;
+}
+
+.top, .bottom {
+   padding: 5px;
+   height: 20px;
+}
+
+.dataTables_info {
+   width: 50%;
+}
+
+.dataTables_length {
+   text-align: right;
+}
+
+.dataTables_empty {
+   padding: 10px !important;
+}

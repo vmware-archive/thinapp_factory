@@ -1,0 +1,78 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+################################################################################
+## ThinApp Factory WebUI
+## (c) 2011 VMware, Inc. All rights reserved.
+################################################################################
+
+################################################################################
+## home.vm
+##
+## The equivalent of "index.html" for AppFactory.
+## This is NOT used for the application store.
+################################################################################
+
+<html>
+
+<head>
+   #set($defaultPage = ${appfactory.defaultView})
+   #set($defaultTitle = ${appfactory.defaultViewTitle})
+   #parse("include/head.vm")
+</head>
+
+<body>
+   <div id="page">
+
+      <div id="page-header">
+         #parse("home/header.vm")
+      </div>
+
+      <div class="page-body-wrapper">
+         <div id="page-body">
+
+            ## Inventory always on the left.
+            <div class="panel panel-left" id="inventory-panel">
+               <div class="panel-title">
+               Inventory
+               </div>
+               <div class="panel-content">
+                  #parse("home/inventory.vm")
+               </div>
+            </div>
+
+            ## Main panel always on the right.
+            <div class="panel panel-right" id="main-panel">
+            </div>
+
+            <div class="clearDiv"></div>
+
+            ## Bottom notification bar
+            #parse("include/notify-bar.vm")
+
+         </div> ##page-body
+      </div> ##page-body-wrapper
+
+      <div id="page-footer">
+         #parse("home/footer.vm")
+      </div>
+
+      ## Contains dialog / dynamic notification content holder divs.
+      <div class="af-dialog">
+         <div id="modal-overlay"></div>
+         <div id="af-confirm"></div>
+         <div id="notify-holder"></div>
+         <div id="progress-holder">
+            <div id="action-alert-holder" class="no-show"></div>
+            <div id="task-progress-holder" class="no-show"></div>
+         </div>
+      </div>
+
+   </div> ##page
+</body>
+
+<script type="text/javascript" charset="UTF-8">
+   // Create NotificationManager here, not in head.vm, since pages like
+   // the EULA don't have the events table
+   VmTAF.notification = new NotificationManager($('#events-table'));
+</script>
+
+</html>

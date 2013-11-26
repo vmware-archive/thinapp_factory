@@ -1,0 +1,95 @@
+################################################################################
+## ThinApp Factory WebUI
+## (c) 2011 VMware, Inc. All rights reserved.
+################################################################################
+
+################################################################################
+## recipe-index.vm
+##
+## Shows a list of all recipes.
+################################################################################
+
+<script type="text/javascript" charset="UTF-8">
+#if ($newUI)
+addLoad(function () {
+#end
+   // Put all phases into an array
+   VmTAF.recipePhases = [];
+   #foreach($ph in $phases)
+      VmTAF.recipePhases.push('$ph');
+   #end
+
+   VmTAF.contentNavigator.AddReadyFunction(function _recipesReady() {
+      VmTAF.recipeManager = new RecipeManager('$!appId','$!recipeId','$esc.javascript($selectionData)');
+      VmTAF.recipeManager.UpdateRecipes($('#recipe-table'), 5000);
+      VmTAF.recipeManager.RenderIcon(${icons});
+   });
+
+   VmTAF.contentNavigator.AddCleanupFunction(function _recipesCleanup() {
+      VmTAF.recipeManager = VmTAF.recipeManager.Destruct();
+   });
+#if ($newUI)
+});
+#end
+</script>
+
+## Optionally display app info to the left and related title.
+#set($recipeDescPrefix = "Choose")
+#parse("recipes/recipe-app-top.vm")
+
+<form class="primary" onsubmit="return false;">
+   <div class="button-row">
+      ## Create a new recipe
+      <button
+         class="button single-button"
+         onclick="VmTAF.recipeManager.newRecipe();">
+         Add New Recipe
+      </button>
+      ## Pick a recipes for the app
+      #if ($app)
+         <button
+            class="button"
+            onClick="VmTAF.recipeManager.SelectRecipeForApp();">
+            Pick Recipe
+         </button>
+      #end
+      ## Delete selected recipes
+      <button
+         class="button"
+         onClick="VmTAF.recipeManager.DeleteSelected();">
+         Delete
+      </button>
+      ## Export selected recipes
+      <button
+         class="button"
+         onClick="VmTAF.recipeManager.ExportSelected();">
+         Export
+      </button>
+      ## Clone selected recipes
+      <button
+         class="button"
+         onClick="VmTAF.recipeManager.CloneSelected();">
+         Clone
+      </button>
+   </div>
+
+   <table id="recipe-table" class="data">
+      <thead>
+         <tr>
+            <th><input type="checkbox" class="table-row-selector"/></th>
+            <th width="25%">Name</th>
+            <th width="25%">Description</th>
+            <th>Vars</th>
+            <th>Files</th>
+            <th>Cmds</th>
+            <th>Source</th>
+         </tr>
+      </thead>
+      <tbody>
+         ## Data added dynamically
+      </tbody>
+   </table>
+</form>
+
+## End the app info display section.
+#parse("recipes/recipe-app-bottom.vm")

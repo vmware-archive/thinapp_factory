@@ -1,0 +1,100 @@
+################################################################################
+## ThinApp Factory WebUI
+## (c) 2011 VMware, Inc. All rights reserved.
+################################################################################
+
+################################################################################
+## app-recipe.vm
+##
+## This is a HTML reusable template for displaying the recipe info per app.
+################################################################################
+
+<div class="stack-editor editable">
+   <div class="stack-header">
+      <span>Installation Recipe &nbsp;&nbsp;
+         #if($recipe && !${recipe.readOnly})
+            <button
+               onclick="VmTAF.appMgr.PrepareDataAndNavigate('/recipes/edit/${recipe.id}?appId=${app.id}');">
+               Edit</button>
+         #end
+         #if($otherRecipeCount > 0)
+            <button
+               onclick="VmTAF.appMgr.PrepareDataAndNavigate('/recipes/index?appId=${app.id}');">
+               Pick recipe ($otherRecipeCount)</button>
+         #end
+         #if($recipe)
+            <button
+               onclick="VmTAF.appMgr.PrepareDataAndNavigate('/apps/detail/${app.id}', true);">
+               Remove </button>
+         #end
+         <button
+            onclick="VmTAF.appMgr.PrepareDataAndNavigate('/recipes/create?appId=${app.id}');">
+            New</button>
+      </span>
+   </div>
+
+   #if($recipe)
+      <div class="stack-group">  ## Selected recipe info displayed
+         <div class="stack-row">
+            <div class="label"><label>Name</label></div>
+            <div class="field"><span>$!{recipe.name}</span></div>
+         </div>
+      </div>
+      <div class="stack-group">
+         <div class="stack-row-head">
+            <div class="label"><label>Commands</label></div>
+         </div>
+         #foreach($key in $recipe.steps.keySet())
+            #set($recipeStep = $recipe.steps.get($key))
+            #if ($recipeStep && !$recipeStep.commands.isEmpty())
+               <div class="stack-row">
+                  <div class="label"><label>$key</label></div>
+                  <div class="field">
+                     #foreach($cmd in $recipeStep.commands)
+                        #if($velocityCount > 0) <br/> #end
+                        <span class="bold">${cmd.label}:</span>
+                        <span>${cmd.command}</span>
+                     #end
+                  </div>
+               </div>
+            #end
+         #end
+      </div>
+      <div class="stack-group">
+         <div class="stack-row-head">
+            <div class="label"><label>Files</label></div>
+         </div>
+         #foreach($item in $recipe.files)
+            <div class="stack-row">
+               <div class="label"><label>$!{item.name}</label></div>
+               <div class="field uri-field">
+                  <span class="underline-dots" title="$!{item.uRI}">$!{item.path}</span>
+               </div>
+            </div>
+         #end
+      </div>
+      <div class="stack-group">
+         <div class="stack-row">
+            <div class="label"><label>Variables</label></div>
+            <div class="field">
+               #foreach($item in ${recipe.variables})
+                  #if($velocityCount > 0) <br/> #end
+                  <span>${item.name}</span>
+               #end
+            </div>
+         </div>
+      </div>
+      <div class="stack-group">
+         <div class="stack-row">
+            <div class="label"><label>Notes</label></div>
+            <div class="field"><span>$!{recipe.description.content}</span></div>
+         </div>
+      </div>
+   #else
+   <div class="stack-group">  ## Selected recipe info displayed
+      <div class="stack-row">
+         <div class="field"><span>No recipe applied.</span></div>
+      </div>
+   </div>
+   #end
+</div>

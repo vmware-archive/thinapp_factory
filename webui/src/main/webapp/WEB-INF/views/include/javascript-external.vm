@@ -1,0 +1,76 @@
+## Load log4javascript if JavaScript logging is enabled.
+#if($appfactory.javaScriptLoggingEnabled)
+<script type="text/javascript" src="#jsUrl("/3rd/stacktrace-min-0.3.js")"></script>
+<script type="text/javascript" src="#jsUrl("/3rd/log4javascript.js")" charset="utf-8"></script>
+#end
+
+#if (!$compressJSandCSS)
+
+#if ($yuiSupport || !$newUI)
+##
+## YUI Javascript
+##
+<script type="text/javascript" src="#jsUrl("/3rd/yui/yahoo-dom-event.js")" ></script>
+<script type="text/javascript" src="#jsUrl("/3rd/yui/animation-min.js")"></script>
+<script type="text/javascript" src="#jsUrl("/3rd/yui/calendar-min.js")" ></script>
+<script type="text/javascript" src="#jsUrl("/3rd/yui/json-min.js")" ></script>
+<script type="text/javascript" src="#jsUrl("/3rd/yui/dragdrop-min.js")"></script>
+<script type="text/javascript" src="#jsUrl("/3rd/yui/container-min.js")"></script>
+<script type="text/javascript" src="#jsUrl("/3rd/yui/treeview-min.js")"></script>
+#end
+
+##
+## Third-party Javascript
+##
+<script type="text/javascript" src="#jsUrl("/3rd/json2.js")" charset="utf-8"></script>
+<script type="text/javascript" src="#jsUrl("/3rd/jquery-1.7.1.js")" charset="utf-8"></script>
+<script type="text/javascript" src="#jsUrl("/3rd/jquery-ui-1.8.16.custom.min.js")" charset="utf-8"></script>
+<script type="text/javascript" src="#jsUrl("/3rd/jquery.dataTables.js")" charset="utf-8"></script>
+<script type="text/javascript" src="#jsUrl("/3rd/jquery.blockUI-modified.js")" charset="utf-8"></script>
+<script type="text/javascript" src="#jsUrl("/3rd/jquery.validate.min.js")" charset="ISO-8859-1"></script>
+<script type="text/javascript" src="#jsUrl("/3rd/jquery.metadata.js")" charset="utf-8"></script>
+<script type="text/javascript" src="#jsUrl("/3rd/jquery.tools.min.js")" charset="utf-8"></script>
+<script type="text/javascript" src="#jsUrl("/3rd/jquery.form.js")" charset="utf-8"></script>
+<script type="text/javascript" src="#jsUrl("/3rd/jquery.timeago.js")" charset="utf-8"></script>
+<script type="text/javascript" src="#jsUrl("/3rd/jquery.atmosphere.js")" charset="utf-8"></script>
+<script type="text/javascript" src="#jsUrl("/3rd/jsrender.js")" charset="utf-8"></script>
+<script type="text/javascript" src="#jsUrl("/3rd/themeswitchertool-MODIFIED.js")" charset="utf-8"></script>
+
+##
+## ThinApp Factory Javascript
+##
+<script type="text/javascript" src="#jsUrl("/afutils.js")" charset="utf-8"></script>
+<script type="text/javascript" src="#jsUrl("/afwait.js")" charset="utf-8"></script>
+<script type="text/javascript" src="#jsUrl("/ContentNavigator.js")" charset="utf-8"></script>
+<script type="text/javascript" src="#jsUrl("/StackEditor.js")" charset="utf-8"></script>
+<script type="text/javascript" src="#jsUrl("/AbstractManager.js")" charset="utf-8"></script>
+<script type="text/javascript" src="#jsUrl("/TableWrapper.js")" charset="utf-8"></script>
+<script type="text/javascript" src="#jsUrl("/DashboardManager.js")"></script>
+<script type="text/javascript" src="#jsUrl("/TaskManager.js")"></script>
+<script type="text/javascript" src="#jsUrl("/DataSourceManager.js")"></script>
+<script type="text/javascript" src="#jsUrl("/WorkpoolManager.js")"></script>
+<script type="text/javascript" src="#jsUrl("/VmImageManager.js")"></script>
+<script type="text/javascript" src="#jsUrl("/DatastoreManager.js")"></script>
+<script type="text/javascript" src="#jsUrl("/FeedManager.js")"></script>
+<script type="text/javascript" src="#jsUrl("/AppsManager.js")"></script>
+<script type="text/javascript" src="#jsUrl("/BuildManager.js")"></script>
+<script type="text/javascript" src="#jsUrl("/BuildEditor.js")"></script>
+<script type="text/javascript" src="#jsUrl("/AbstractSettingsEditor.js")"></script>
+<script type="text/javascript" src="#jsUrl("/FileShareManager.js")"></script>
+<script type="text/javascript" src="#jsUrl("/IniEditor.js")"></script>
+<script type="text/javascript" src="#jsUrl("/RegistryEditor.js")"></script>
+<script type="text/javascript" src="#jsUrl("/FileSystemEditor.js")"></script>
+<script type="text/javascript" src="#jsUrl("/ConfigManager.js")"></script>
+<script type="text/javascript" src="#jsUrl("/AdminManager.js")"></script>
+<script type="text/javascript" src="#jsUrl("/RecipeManager.js")"></script>
+<script type="text/javascript" src="#jsUrl("/RecipeBasicEditor.js")"></script>
+<script type="text/javascript" src="#jsUrl("/RecipeVarEditor.js")"></script>
+<script type="text/javascript" src="#jsUrl("/RecipeFileEditor.js")"></script>
+<script type="text/javascript" src="#jsUrl("/RecipeStepEditor.js")"></script>
+<script type="text/javascript" src="#jsUrl("/Validator.js")"></script>
+<script type="text/javascript" src="#jsUrl("/NotificationManager.js")"></script>
+<script type="text/javascript" src="#jsUrl("/TaskList.js")"></script>
+#else
+## only the minified javascript file
+<script type="text/javascript" src="#jsUrl("/all-yui.js")"></script>
+#end

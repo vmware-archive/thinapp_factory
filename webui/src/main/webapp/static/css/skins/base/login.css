@@ -1,0 +1,98 @@
+/* ***********************************************************************
+ * VMware ThinApp Factory
+ * Copyright (c) 2009-2013 VMware, Inc. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * ***********************************************************************/
+
+
+P, TH, TD, DIV, SELECT, INPUT[type="text"], INPUT[type="password"], INPUT[type="file"], TEXTAREA, BUTTON {
+   font-family: "Helvetica Neue",Helvetica,"Nimbus Sans L",Arial,"Liberation Sans",sans-serif;
+}
+
+.login-screen {
+   background-color: #25587E;
+   background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0,#3090C7),color-stop(1,#2B5480));
+   background-image: -moz-linear-gradient(center top , #3090C7, #2B5480);
+   filter:progid:DXImageTransform.Microsoft.gradient(startColorStr='#3090C7',EndColorStr='#2B5480');
+   -ms-filter:"progid:DXImageTransform.Microsoft.gradient(startColorStr='#3090C7',EndColorStr='#2B5480')";
+   font-size: 11px;
+   height: 100%;
+   left: 0;
+   position: absolute;
+   top: 0;
+   width: 100%;
+}
+
+.login-screen .form, .login-screen A:link, .login-screen A:visited {
+   color: white;
+}
+
+.login-screen .center {
+   background-color: #25587E;
+   background-image: -webkit-gradient(radial,50% 0,0,50% 0,390,from(#3090C7),to(#2B5480));
+   background-image: -moz-radial-gradient(50% 0 , circle farthest-corner, #3090C7 0pt, #2B5480 100%);
+   filter:progid:DXImageTransform.Microsoft.gradient(startColorStr='#3090C7',EndColorStr='#2B5480');
+   -ms-filter:"progid:DXImageTransform.Microsoft.gradient(startColorStr='#3090C7',EndColorStr='#2B5480')";
+   border-radius: 15px 15px 15px 15px;
+   box-shadow: 0 0 10px #000000;
+   left: 50%;
+   overflow: visible;
+   position: absolute;
+   top: 50%;
+   z-index: 11;
+   margin-left: -250px;
+   margin-top: -150px;
+   min-height: 300px;
+   width: 500px;
+}
+
+.login-screen .logo {
+   background-image: url("images/vmware-logo-white.png");
+   background-repeat: no-repeat;
+   height: 57px;
+   margin: 20px 0 0 20px;
+   width: 80px;
+}
+
+.product-name {
+   height: 48px;
+   width: 300px;
+}
+
+.login-screen .decor {
+   background-image: url("images/vmwarePeel.png");
+   background-repeat: no-repeat;
+   border-top-right-radius: 15px;
+   height: 102px;
+   overflow: hidden;
+   position: absolute;
+   right: 0;
+   top: 0;
+   width: 103px;
+}
+
+#error-panel {
+   margin: 10px 26%;
+   padding: 5px;
+   background-color: #FF9;
+   -moz-border-radius: 10px;
+   -webkit-border-radius: 10px;
+   border-width: 0;
+   border-radius: 10px;
+   -moz-box-shadow: 0 0 10px #FF9;
+   -webkit-box-shadow: 0 0 10px #FF9;
+   box-shadow: 0 0 10px #FF9;
+   position: relative;
+   left: auto;
+}

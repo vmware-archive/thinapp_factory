@@ -1,0 +1,505 @@
+################################################################################
+## ThinApp Factory WebUI
+## (c) 2011 VMware, Inc. All rights reserved.
+################################################################################
+
+################################################################################
+## tasks-index-new.vm
+##
+## Shows a list of tasks. An optional model parameter $metaStatus can be used
+## to filter the view to those types of tasks only.
+################################################################################
+
+## example capture message
+## ---------------
+## type: "metastatus_change",
+## timestamp: 1325850673141,
+## source:{
+##    projectId: null,
+##    lastError: null,
+##    lastCommand: null,
+##    lastRunningState: null,
+##    captureRequest: {
+##       displayName: ".NET (3.5 SP1)",
+##       recipeId: 5006,  // or null
+##       "recipe":{"name":"geberak","readOnly":false,
+##                "description":{"content":"","contentType":"text/plain"},
+##                "files":[{"name":"installer","path":null,"description":"","uri":"http://www.google.co/","hash":null,"id":5006,"modified":0,"created":0,"createdElapsed":"--","modifiedElapsed":"--"}],
+##                "steps":{
+##                   "precapture":{"commands":[],"id":5007,"modified":0,"created":0,"createdElapsed":"--","modifiedElapsed":"--"},
+##                   "preinstall":{"commands":[],"id":5011,"modified":0,"created":0,"createdElapsed":"--","modifiedElapsed":"--"},
+##                   "postinstall":{"commands":[],"id":5008,"modified":0,"created":0,"createdElapsed":"--","modifiedElapsed":"--"},
+##                   "install":{"commands":[{"command":"blah.exe","label":"blahcmd","id":5010,"modified":0,"created":0,"createdElapsed":"--","modifiedElapsed":"--"}],"id":5009,"modified":0,"created":0,"createdElapsed":"--","modifiedElapsed":"--"},
+##                   "prebuild":{"commands":[],"id":5012,"modified":0,"created":0,"createdElapsed":"--","modifiedElapsed":"--"}
+##                },
+##                "dataSourceName":"","dataSourceType":null,"appKeys":[],
+##                "variables":[
+##                   {"name":"NewVariable","pattern":"","required":false,"id":5013,"modified":0,"created":0,"createdElapsed":"--","modifiedElapsed":"--"},
+##                   {"name":"NewVariable1","pattern":"","required":false,"id":5014,"modified":0,"created":0,"createdElapsed":"--","modifiedElapsed":"--"}
+##                ],"id":48,"modified":1325863516551,"created":1323752521600,"createdElapsed":"24 days 10 hours ago","modifiedElapsed":"25 secs ago"},
+##       recipeVariableValues: {
+##          "NewVariable":"zzTop",
+##          "NewVariable1":"123"
+##       }
+##       applicationId: 4601,
+##       buildName: ".NET-#14",
+##       runtime:{
+##          version:"4.6.2",
+##          build:456451,
+##          path:"/wherever/4.6.2",
+##          id:456451
+##       },
+##       runtimeId: 456451,
+##       workpoolId: 2,
+##       datastoreId: 1,
+##       workpool:{
+##          "@class":"LinkedWorkpool",
+##          vmImage:{
+##             name:"VmImage #1",
+##             id:1,
+##             state:"available",
+##             percent:100,
+##             vmSource:{
+##                "@class":"VmPattern",
+##                id:null,
+##                sourceIso:null,
+##                networkName:"",
+##                osInfo:{
+##                   variant:"Enterprise",
+##                   osType:"windows7"
+##                },
+##                osRegistration: {
+##                   organization:"VMware Inc.",
+##                   userName:"vmware",
+##                   licenseKey:"WIN70-XXXXX-XXXXX-XXXXX-XXXXX",
+##                   kmsServer:"kms-server-host.domain.com"}
+##                },
+##                failState:false,
+##                lastError:"",
+##                deletable:true
+##          },
+##          name:"Workpool with image #1",
+##          id:2,
+##          state:"available",
+##          maximum:5,
+##          lastError:"",
+##          deletable:true,
+##          instances:[]
+##       }
+##    },
+##    datastore:{
+##       _class:"com.vmware.appfactory.datastore.DsDatastoreCifs",
+##       type:"cifs",
+##       smbUrl:"smb://0.0.0.0/packages",
+##       writable:true,
+##       modifiable:false,
+##       name:"internal",
+##       id:1,
+##       size:21474836480,
+##       port:0,
+##       server:"0.0.0.0",
+##       used:0,
+##       status:"online",
+##       mountAtBoot:false,
+##       share:"packages",
+##       leases:0
+##    },
+##    buildRequestId: null
+##    converterId: 0,
+##    id: 2,
+##    type: "CONVERSION",
+##    description: "Conversion of .NET (3.5 SP1)",
+##    status: "newtask",
+##    progress:-1,
+##    finished:-1,
+##    recordId:4601,
+##    statusLink:null,
+##    queueStatus:"RUNNING",
+##    queued:1325850666655,
+##    started:1325850669317,
+##    aborted:false
+## }
+##
+## example rebuild message
+## -----------------------
+## {"type":"added","timestamp":1326415955288,
+##  "source":{
+##    "id":366,
+##    "type":"REBUILD",
+##    "description":"Rebuild of project for 7-Zip (9.20) [7-Zip-#0]",
+##    "status":"COMPLETE",
+##    "progress":-1,
+##    "finished":1326415543766,
+##    "recordId":402,
+##    "statusLink":null,
+##    "queueStatus":"FINISHED",
+##    "queued":1326415520586,
+##    "started":1326415520593,
+##    "aborted":false,
+##    "changes":[{"property":"queueStatus","value":"FINISHED"},
+##               {"property":"finished","value":1326415543766}]
+##    }
+## }
+##
+## Import project task message response
+## ------------------------------------
+## {"type":"added","timestamp":1326415955288,
+##  "source":{
+##    "id":366,
+##    "type":"IMPORT_PROJECTS",
+##    "numFound":3,
+##    "numImported":1,
+##    "description":"Rebuild of project for 7-Zip (9.20) [7-Zip-#0]",
+##    "status":"COMPLETE",
+##    "progress":-1,
+##    "finished":1326415543766,
+##    "recordId":402,
+##    "statusLink":null,
+##    "queueStatus":"FINISHED",
+##    "queued":1326415520586,
+##    "started":1326415520593,
+##    "aborted":false,
+##    "changes":[{"property":"queueStatus","value":"FINISHED"},
+##               {"property":"finished","value":1326415543766}]
+##    }
+## }
+
+<script id="logLinkTemplate" type="text/x-jquery-tmpl">
+{{\#if projectId}}
+<a href="$contextPath/api/admin/logs/projects/{{=projectId}}" target="_blank">view log<span class="ui-icon ui-icon-newwin" style="display:inline-block;"></span></a>
+{{else}}
+Logs unavailable
+{{/end}}
+</script>
+<script id="startedTemplate" type="text/x-jquery-tmpl">
+{{=$ctx.timeago(source,"started")!}}
+</script>
+
+## Project Import Errors list template
+<script id="errorsTemplate" type="text/x-jquery-tmpl">
+<ul>
+   {{#each source.errors}}
+   <li>{{=$data}}</li>
+   {{/each}}
+</ul>
+</script>
+
+<script id="taskTemplate" type="text/x-jquery-tmpl">
+   <li class="taskItem task-sortable ui-widget" id="taskId{{=source.id}}">
+      <div class="ui-state-default ui-corner-all" id="taskHolder{{=source.id}}">
+         <div class="taskDragArea">
+            <span class="taskDragHandle" id="taskDragHandle{{=source.id}}">
+               <span class="taskDragHandleGripper ui-icon ui-icon-grip-dotted-vertical"></span>
+            </span>
+            <div class="taskErrorIcon" id="taskErrorIcon{{=source.id}}">
+               <div class="ui-icon ui-icon-alert"></div>
+            </div>
+         </div>
+
+         <div class="taskContent ui-widget-content ui-corner-top ui-corner-bottom" id="idTaskContent{{=source.id}}">
+            <div class="taskButtonList" onclick="window.event.cancelBubble = true;">
+               <div class="taskSmallButtonGroup" id="idMoveButtons{{=source.id}}">
+                  <div class="taskMoveToTop" id="idMoveToTop{{=source.id}}" title="Move to Top"></div>
+                  <div class="taskMoveToBottom" id="idMoveToBottom{{=source.id}}" title="Move to Bottom"></div>
+               </div>
+               <div id="idRunningButtons{{=source.id}}" class="runningButtons">
+                  <div id="idCancel{{=source.id}}" class="taskBigButton"></div>
+                  <div id="idManualModeStart{{=source.id}}" class="manualModeButton" style="display:none;"></div>
+                  <div id="idUnstall{{=source.id}}" class="taskBigButton" style="display:none;"></div>
+               </div>
+               <div id="idCompleteButtons{{=source.id}}" style="display:none;">
+                  <div id="idClean{{=source.id}}" class="taskBigButton"></div>
+                  {{\#if makesSingleProject }}
+                  <div id="idSuccessfulCaptureButtons{{=source.id}}" class="completionButtons" style="display:none;">
+                     <div id="idEdit{{=source.id}}" class="taskBigButton"></div>
+## TODO: add this back when download feature is available
+##                     <div id="idDownload{{=source.id}}" class="taskBigButton"></div>
+                  </div>
+                  {{/end}}
+                  <div id="idFailedCaptureButtons{{=source.id}}" class="completionButtons"  style="display:none;">
+                     <div id="idRetry{{=source.id}}" class="taskBigButton"></div>
+                  </div>
+               </div>
+            </div>
+            <div class="taskIcon">
+               <img src="{{=iconUrl}}" width="{{=iconSize}}" height="{{=iconSize}}" alt="(icon)"/>
+            </div>
+            <div class="taskInfoButton">
+               <div class="ui-icon ui-icon-info" id="idTaskInfo{{=source.id}}"></div>
+            </div>
+            <div class="taskNameAndDescription">
+               <div class="taskName">
+                  {{\#if source.captureRequest}}
+                  {{=source.captureRequest.displayName}}
+                  {{else}}
+                  {{=source.description}}
+                  {{/end}}
+               </div>
+               <div class="taskDescription" id="taskDescription{{=source.id}}">
+               </div>
+            </div>
+            <div class="taskProgressAndDescription" id="idTaskProgressAndDescription{{=source.id}}">
+               <div class="taskProgress">
+                  <div id="taskProgressBar{{=source.id}}"></div>
+               </div>
+               <span class="taskIsStalled" id="taskIsStalled{{=source.id}}" style="display:none;">
+                     Stalled:
+               </span>
+               <div class="taskProgressDescription" id="taskProgressDescription{{=source.id}}">
+                  {{=source.status}}
+               </div>
+               <span class="taskProgressPct" id="taskProgressPct{{=source.id}}">
+               </span>
+            </div>
+            <div class="taskCompletionMsg">
+               <span id="taskCompletionMsg{{=source.id}}"></span>
+            </div>
+            <div class="lastError">
+               <span class="taskLastCommand" id="taskLastCommand{{=source.id}}" style="display:none;">Last Command:<span id="taskLastCommandMsg{{=source.id}}"></span></span>
+               <span class="taskLastError" id="taskLastError{{=source.id}}" style="display:none;">Error:<span id="taskLastErrorMsg{{=source.id}}"></span></span>
+            </div>
+         </div>
+      </div>
+      <div class="taskDetails ui-widget-content ui-corner-bottom" id="idTaskDetails{{=source.id}}" style="display:none;">
+         <div class="taskScreen"></div>
+         {{\#if source.type == 'IMPORT_PROJECTS'}}
+         <table class="taskDetailsTable wideTaskDetailsTable">
+            <colgroup>
+               <col class="taskDetailsKey" />
+               <col class="taskDetailsValue"  />
+            </colgroup>
+            <tr>
+               <th>
+                  Type
+               </th>
+               <td>
+                  {{=$ctx.translate('T.TASKS.TYPE.',source,"type") }}
+               </td>
+            </tr>
+            <tr>
+               <th>
+                  Started
+               </th>
+               <td id="started{{=source.id}}">
+               </td>
+            </tr>
+            <tr>
+               <th>
+                  Found
+               </th>
+               <td id="numFound{{=source.id}}">
+                  ## undef 0 is a workaround for bug - https://github.com/BorisMoore/jsrender/issues/31
+                  {{=source.numFound undef 0}} projects
+               </td>
+            </tr>
+            <tr>
+               <th>
+                  Imported
+               </th>
+               <td id="numImported{{=source.id}}">
+                  {{=source.numImported undef 0}} projects
+               </td>
+            </tr>
+            {{\#if source.errors}}
+            <tr>
+               <th>
+                  Errors
+               </th>
+               <td id="errors{{=source.id}}">
+                  <ul>
+                     {{#each source.errors}}
+                     <li>{{=$data}}</li>
+                     {{/each}}
+                  </ul>
+               </td>
+            </tr>
+            {{/end}} ## source.errors-if
+         </table>
+         {{else}}
+         <table class="taskDetailsTable">
+            <colgroup>
+               <col class="taskDetailsKey" />
+               <col class="taskDetailsValue"  />
+            </colgroup>
+            {{\#if source.captureRequest}}
+            <tr>
+               <th>
+                  OS
+               </th>
+               <td>
+                  {{=$ctx.translateOsType(source,"captureRequest.workpool.osType") }}
+               </td>
+            </tr>
+            <tr>
+               <th>
+                  ThinApp Version
+               </th>
+               <td>
+                  {{=source.captureRequest.runtime.version}}
+               </td>
+            </tr>
+            <tr>
+               <th>
+                  Log
+               </th>
+               <td id="downloadLogs{{=source.id}}">
+                  Logs unavailable
+               </td>
+            </tr>
+            {{/end}}
+            <tr>
+               <th>
+                  Type
+               </th>
+               <td>
+                  {{=$ctx.translate('T.TASKS.TYPE.',source,"type") }}
+               </td>
+            </tr>
+            <tr>
+               <th>
+                  Started
+               </th>
+               <td id="started{{=source.id}}">
+               </td>
+            </tr>
+         </table>
+         {{/end}}
+         {{\#if source.captureRequest}}
+         <table class="taskDetailsTable">
+            <colgroup>
+               <col class="taskDetailsKey" />
+               <col class="taskDetailsValue"  />
+            </colgroup>
+            <tr>
+               <th>
+                  Recipe Name
+               </th>
+               <td>
+                  {{\#if source.captureRequest.recipe}}
+                     {{= source.captureRequest.recipe.name }}
+                  {{else}}
+                     No Recipe
+                  {{/end}}
+               </td>
+            </tr>
+            <tr>
+               <th>
+                  Files
+               </th>
+               <td>
+                  {{\#if source.captureRequest.recipe}}
+                     {{\#if source.captureRequest.recipe.files}}
+                        {{\#if source.captureRequest.recipe.files.length > 0}}
+                           {{#each source.captureRequest.recipe.files}}
+                              <div class="recipeItem">
+                                 <div class="recipeTitle">{{=$data.name}}:</div>
+                                 <div class="recipeValue">
+                                    {{* result += AfShortUri($data.uri);}}
+                                 </div>
+                              </div>
+                           {{/each}}
+                        {{else}}
+                           None
+                        {{/end}}
+                     {{else}}
+                        N/A
+                     {{/end}}
+                  {{else}}
+                     N/A
+                  {{/end}}
+               </td>
+            </tr>
+            <tr>
+               <th>
+                  Commands
+               </th>
+               <td>
+                  {{\#if source.captureRequest.recipe}}
+                     {{\#if source.captureRequest.recipe.steps}}
+                        {{\#if source.captureRequest.recipe.steps.precapture}}
+                           {{#each source.captureRequest.recipe.steps.precapture.commands}}
+                              <div class="recipeItem">
+                                 <div class="recipeTitle">{{=$data.label}}:</div>
+                                 <div class="recipeValue">{{=$data.command}}</div>
+                              </div>
+                           {{/each}}
+                        {{/end}}
+                        {{\#if source.captureRequest.recipe.steps.preinstall}}
+                           {{#each source.captureRequest.recipe.steps.preinstall.commands}}
+                              <div class="recipeItem">
+                                 <div class="recipeTitle">{{=$data.label}}:</div>
+                                 <div class="recipeValue">{{=$data.command}}</div>
+                              </div>
+                           {{/each}}
+                        {{/end}}
+                        {{\#if source.captureRequest.recipe.steps.install}}
+                           {{#each source.captureRequest.recipe.steps.install.commands}}
+                              <div class="recipeItem">
+                                 <div class="recipeTitle">{{=$data.label}}:</div>
+                                 <div class="recipeValue">{{=$data.command}}</div>
+                              </div>
+                           {{/each}}
+                        {{/end}}
+                        {{\#if source.captureRequest.recipe.steps.postinstall}}
+                           {{#each source.captureRequest.recipe.steps.postinstall.commands}}
+                              <div class="recipeItem">
+                                 <div class="recipeTitle">{{=$data.label}}:</div>
+                                 <div class="recipeValue">{{=$data.command}}</div>
+                              </div>
+                           {{/each}}
+                        {{/end}}
+                        {{\#if source.captureRequest.recipe.steps.prebuild}}
+                           {{#each source.captureRequest.recipe.steps.prebuild.commands}}
+                              <div class="recipeItem">
+                                 <div class="recipeTitle">{{=$data.label}}:</div>
+                                 <div class="recipeValue">{{=$data.command}}</div>
+                              </div>
+                           {{/each}}
+                        {{/end}}
+                     {{else}}
+                        N/A
+                     {{/end}}
+                  {{else}}
+                     N/A
+                  {{/end}}
+               </td>
+            </tr>
+         </table>
+         {{/end}}
+         <br style="clear:both">
+      </div>
+   </li>
+</script>
+
+<form
+      class="primary"
+      onsubmit="return false;">
+
+   <div class="button-row-new">
+      <div id="idCleanupAll" class="button-new"></div>
+      <div id="idCancelAll" class="button-new"></div>
+   </div>
+
+   <div class="panel-title">
+      $pageTitle
+   </div>
+   <div class="panel-content">
+      <div class="task-tab-holder">
+
+         <div id="task-tabs">
+            <div class="task-list" id="allTasks">
+               <ul id="sortable"></ul>
+               <div id="tasksLoading" class="loadingTasks">Loading tasks.  Please wait.</div>
+               <div id="noTasks" class="noTasks" style="display:none;">No tasks in progress.</div>
+            </div>
+         </div>
+      </div>
+   </div>
+
+</form>
+
+<script type="text/javascript">
+   window.addLoad(function() {
+      new TaskList();
+   });
+</script>

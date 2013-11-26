@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<toolbox>
+    <!-- http://velocity.apache.org/tools/devel/generic/EscapeTool.html -->
+
+    <tool>
+        <key>esc</key>
+        <scope>application</scope>
+        <class>org.apache.velocity.tools.generic.EscapeTool</class>
+    </tool>
+    <tool>
+        <key>dateTool</key>
+        <scope>application</scope>
+        <class>org.apache.velocity.tools.generic.DateTool</class>
+    </tool>
+    <tool>
+        <key>numberTool</key>
+        <scope>application</scope>
+        <class>org.apache.velocity.tools.generic.MathTool</class>
+    </tool>
+    <tool>
+        <key>displayTool</key>
+        <scope>application</scope>
+        <class>org.apache.velocity.tools.generic.DisplayTool</class>
+    </tool>
+    <tool>
+        <key>linkTool</key>
+        <scope>application</scope>
+        <class>org.apache.velocity.tools.generic.LinkTool</class>
+    </tool>
+</toolbox>

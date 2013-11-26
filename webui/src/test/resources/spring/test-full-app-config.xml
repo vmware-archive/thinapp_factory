@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+   xmlns:task="http://www.springframework.org/schema/task"
+   xmlns:util="http://www.springframework.org/schema/util"
+   xsi:schemaLocation="
+      http://www.springframework.org/schema/beans   http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+      http://www.springframework.org/schema/task   http://www.springframework.org/schema/task/spring-task-3.0.xsd
+      http://www.springframework.org/schema/util   http://www.springframework.org/schema/util/spring-util-3.0.xsd
+      http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+   <!--
+      Scans within the base package of the application for @Components to
+      configure as beans
+   -->
+   <context:component-scan base-package="com.vmware.appfactory" />
+
+   <task:scheduler id="scheduler" pool-size="10" />
+
+   <task:executor id="executor" pool-size="10" />
+
+   <!--  Allow annotation-defined task scheduling -->
+   <task:annotation-driven executor="executor"
+      scheduler="scheduler" />
+
+
+   <!--
+      Use a generic property holder to store all the configuration stuff we might want to change.
+      This saves us having to hunt all over for the parameters to tweak when we change the
+      data source.
+   -->
+   <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+      <property name="locations">
+         <list>
+            <!--  Sequence of these files matter. Properties defined in later files will
+                  overwrite those loaded previously
+            -->
+            <!-- Webapp properties defined in web WAR file -->
+            <value>classpath:webui.properties</value>
+            <!-- General properties set by the TAF appliance -->
+            <value>classpath:appfactory.properties</value>
+            <!-- Property file with the version of the TAF Appliance -->
+            <value>classpath:appliance-version.properties</value>
+            <!-- Webapp properties local to developer builds only -->
+            <value>classpath:webui-local.properties</value>
+         </list>
+      </property>
+      <property name="ignoreResourceNotFound" value="true" />
+   </bean>
+
+   <!-- Map containing osType and the corresponding KMS Activation license keys.
+        The values for these are loaded from bean: propertyConfigurer
+   -->
+   <util:map id="kmsActivationKeyMap">
+      <entry key="winvista" value="${webui.kms.activation.key.winvista}"/>
+      <entry key="windows7" value="${webui.kms.activation.key.windows7}"/>
+      <entry key="windows8" value="${webui.kms.activation.key.windows8}"/>
+   </util:map>
+
+   <!-- Bean for updating stuff -->
+   <bean id="backgroundProcessor" class="com.vmware.appfactory.common.BackgroundProcessor" />
+
+   <!-- Schedule the 'backgroundProcessor' bean to run as a Task -->
+   <bean id="backgroundProcessorTask"
+      class="org.springframework.scheduling.concurrent.ScheduledExecutorTask">
+      <property name="runnable" ref="backgroundProcessor" />
+      <property name="delay" value="1000" /> <!-- wait 1 second before executing -->
+      <property name="period" value="0" /> <!-- do not repeat automatically (task will reschedule itself) -->
+   </bean>
+
+   <!-- The LicenseStatus bean calculates the trial expiration date. -->
+   <bean id="licenseStatus" class="com.vmware.appfactory.common.LicenseStatus">
+      <property name="numDaysToShowWarningBeforeExpired" value="10" />
+   </bean>
+
+   <!-- Define 'licenseStatusSchedulerTask' as a runnable task and set its period. -->
+   <bean id="licenseStatusTask"
+      class="org.springframework.scheduling.concurrent.ScheduledExecutorTask">
+      <property name="runnable" ref="licenseStatus" />
+      <property name="period" value="5000" /><!-- Execute the task every 5 seconds -->
+   </bean>
+
+   <!-- Factory to create all the scheduled tasks -->
+   <bean
+      class="org.springframework.scheduling.concurrent.ScheduledExecutorFactoryBean">
+      <property name="scheduledExecutorTasks">
+         <list>
+            <ref bean="backgroundProcessorTask" />
+<!--             <ref bean="licenseStatusTask" /> -->
+         </list>
+      </property>
+   </bean>
+
+   <!-- Create the AfConfigRegistry instance and set defaults from an external file -->
+   <bean class="com.vmware.appfactory.config.ConfigRegistry">
+      <property name="defaults" value="config"/>
+   </bean>
+
+   <!--
+      CIFS fileshare to AppFactory application feed converter bean.
+   -->
+   <bean id="cifsToAppsFeedConverter" class="com.vmware.appfactory.fileshare.CifsToFeedConverterImpl">
+      <!--
+        A list of supported file extensions by the converter.
+        Must be a valid FileType enum value
+      -->
+      <property name="supportedFileExtensions">
+         <list>
+            <value>exe</value>
+            <value>msi</value>
+            <value>iso</value>
+         </list>
+      </property>
+      <property name="feedVersion" value="3" />
+   </bean>
+
+   <!--
+      CIFS fileshare to AppFactory recipe feed converter bean.
+   -->
+   <bean id="cifsToRecipesFeedConverter" class="com.vmware.appfactory.fileshare.CifsToRecipesConverterImpl"/>
+
+   <!--
+      Tell Spring the name of our translation resource bundles.
+      These are located in the /resources folder (e.g. /resource/messages_de.properties)
+    -->
+   <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+      <property name="basename">
+         <value>messages</value>
+      </property>
+   </bean>
+</beans>

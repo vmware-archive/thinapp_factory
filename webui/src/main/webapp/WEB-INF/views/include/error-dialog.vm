@@ -1,0 +1,108 @@
+## Used to render a detailed error message when an ajax call to
+## the server fails
+
+## The error dialog will be created in this element
+##
+<div id="idAjaxError" class="no-show"></div>
+
+
+## jsrender template for the dialog contents
+<script id="ajaxErrorTemplate" type="text/x-jquery-tmpl">
+## arguments to this template render, and relevant fields thereof
+##
+## jqxhr: [Object]
+##    abort: function ( statusText ) {
+##    always: function () {
+##    complete: function () {
+##    done: function () {
+##    error: function () {
+##    fail: function () {
+##    getAllResponseHeaders: function () {
+##    getResponseHeader: function ( key ) {
+##    isRejected: function () {
+##    isResolved: function () {
+##    overrideMimeType: function ( type ) {
+##    pipe: function ( fnDone, fnFail, fnProgress ) {
+##    progress: function () {
+##    promise: function ( obj ) {
+##    readyState: 0
+##    responseText: ""
+##    setRequestHeader: function ( name, value ) {
+##    state: function () {
+##    status: 0
+##    statusCode: function ( map ) {
+##    statusText: "error"
+##    success: function () {
+##    then: function ( doneCallbacks, failCallbacks, progressCallbacks ) {
+##
+## settings [Object]
+##    accepts: Object
+##    async: true
+##    beforeSend: function () {
+##    cache: true
+##    complete: function (jqXHR /*, textStatus*/) {
+##    contentType: "application/x-www-form-urlencoded"
+##    contents: Object
+##    converters: Object
+##    crossDomain: true
+##    dataTypes: Array[1]
+##    error: function _errorIntercept(jqXHR, textStatus, errorThrown) {
+##    flatOptions: Object
+##    global: true
+##    hasContent: false
+##    ifModified: true
+##    isLocal: false
+##    jsonp: "callback"
+##    jsonpCallback: function () {
+##    method: "GET"
+##    processData: true
+##    responseFields: Object
+##    success: function (data, textStatus, jqXHR) {
+##    timeout: 5000
+##    type: "GET"
+##    url: "http://192.168.8.32/api/admin/stats-BROKEN"
+##    xhr: function createStandardXHR() {
+##
+## disconnected: true
+##
+{{\#if disconnected}}
+<h2>#springMessage("T.COMMON.CONNECTION_FAILED")</h2>
+
+Please check your network connection and try again.
+{{else}}
+<h2>#springMessage("T.COMMON.SERVER_ERROR")</h2>
+
+This is an internal error.  Please make note of the information below when seeking support for this issue.
+{{/end}}
+
+<br>
+<h4>
+   <div id="idErrorDetailsExpand">
+      <span class="ui-icon ui-icon-triangle-1-e"></span>
+      <span class="ui-icon ui-icon-triangle-1-s" style="display:none;"></span>
+      &nbsp;Details
+   </div>
+</h4>
+<textarea id="idErrorDetails" class="no-show">
+{{\#if settings}}
+Request
+{{=settings.method}} {{=settings.url}}
+{{/end}}
+
+Status
+{{=jqxhr.status)}} {{=jqxhr.statusText}}
+
+Response
+{{=jqxhr.responseText}}
+</textarea>
+</script>
+
+## jsrender template for the inline error message box
+## @param { 'Msg' : xxxx }
+<script id="validationErrTemplate" type="text/x-jquery-tmpl">
+<div class="ui-state-error ui-corner-all pad-all">
+      <span class="ui-icon ui-icon-alert inline-error-icon"></span>
+      <span class="ui-state-error-text">{{=Msg}}</span>
+      <span id="close-icon" class="inline-error-close"></span>
+</div>
+</script>

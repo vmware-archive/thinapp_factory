@@ -1,0 +1,85 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+################################################################################
+## ThinApp Factory WebUI
+## (c) 2011 VMware, Inc. All rights reserved.
+##
+################################################################################
+## login.vm
+##
+#* @vtlvariable name="SPRING_SECURITY_LAST_EXCEPTION" type="org.springframework.security.authentication.BadCredentialsException" *#
+#* @vtlvariable name="SPRING_SECURITY_LAST_USERNAME" type="java.lang.String"  *#
+################################################################################
+
+<html lang="en-US" dir="ltr">
+
+## Contains the html head tag related content here.
+#set($pageTitle = "#springMessage('T.COMMON.LOGIN')")
+#parse("templates/head-newui.vm")
+
+<body>
+
+<div class="login-screen">
+   <div class="center">
+      <div class="logo"></div>
+      <h1>
+         <span class="product-name form">#springMessage("T.COMMON.PAGE_TITLE")</span>
+      </h1>
+        <form accept-charset="UTF-8" id="logInForm" method="POST" action="#springUrl('/j_spring_security_check')">
+
+            #if ($SPRING_SECURITY_LAST_EXCEPTION)
+               <div id="error-panel">
+                  <div>Username / Password entered is incorrect.</div>
+               </div>
+            #else
+               <br/>
+            #end
+
+            <div class="form">
+                <p>
+                    <label for="j_username" class="formLabel">
+                        Username:
+                    </label>
+                    <input class="text medium-field" type="text" id="j_username" name="j_username" tabindex="1"
+                    #if($SPRING_SECURITY_LAST_USERNAME)
+                        value="$!SPRING_SECURITY_LAST_USERNAME"
+                    #else
+                    ## TODO: Remove this if we start supporting multi-user auth.
+                        value="admin"
+                    #end
+                        size="30"/>
+                    <br/>
+                </p>
+
+                <p>
+                    <label for="j_password" class="formLabel">
+                        Password:
+                    </label>
+                    <input type="password" name="j_password" id="j_password" tabindex="2" size="30"/>
+                    <br/>
+                </p>
+
+                <p>
+                    <label for="_spring_security_remember_me" class="checkboxLabel">
+                        <input type='checkbox' name='_spring_security_remember_me' id="_spring_security_remember_me"
+                               tabindex="3" value="true"/>
+                        Remember Me
+                    </label>
+                    <br/>
+                </p>
+            </div>
+            <div class="buttons">
+                <p>
+                    <input id="login" class="button" type="submit" value="Log In" tabindex="4"/>
+                </p>
+            </div>
+        </form>
+        <div class="forgotPassword">
+            <a href="#" target="_parent" title="You can reset the password via the appliance console.">Forgot Password?</a>
+        </div>
+        <br/>
+        <div class="decor"></div>
+    </div> ## center
+</div> ## login-screen
+
+</body>
+</html>

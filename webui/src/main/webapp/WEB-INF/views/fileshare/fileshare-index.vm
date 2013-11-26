@@ -1,0 +1,77 @@
+################################################################################
+## ThinApp Factory WebUI
+## (c) 2011 VMware, Inc. All rights reserved.
+################################################################################
+
+################################################################################
+## fileshare-index.vm
+##
+## This file contains the HTML view for showing a list of fileshares.
+## No data is shown in the view by default: An ajax call is made to the server
+## to download file share data and populate the table dynamically.
+################################################################################
+
+<script type="text/javascript" defer="defer">
+#if ($newUI)
+#set($insideTab=true)
+addLoad(function () {
+#end
+   VmTAF.contentNavigator.AddReadyFunction(function _filesharesReady() {
+      if (!window.fsmgr) {
+         window.fsmgr = new FileShareManager($("#fileshare-table"));
+         window.fsmgr.UpdateFileShareList(5000);
+      }
+   });
+
+   VmTAF.contentNavigator.AddCleanupFunction(function _filesharesCleanup() {
+      window.fsmgr = fsmgr.Destruct();
+   });
+#if ($newUI)
+});
+#end
+</script>
+
+#parse("include/main-top.vm")
+
+## Note: the form is mainly used for style, it is not used to POST data
+## to the server.
+<form class="primary" onsubmit="return false;">
+
+   ##
+   ## Buttons for interacting with file shares.
+   ##
+   <div class="button-row">
+      <button class="button single-button"
+         onclick="VmTAF.contentNavigator.LoadPage('/fileshare/create');">
+         Add File Share
+      </button>
+
+      <button class="button"
+         onclick="fsmgr.DeleteSelectedFileShares();">
+         Delete
+      </button>
+   </div>
+
+   ##
+   ## Table for file shares
+   ## This gets populated dynamically using Ajax calls from Javascript.
+   ##
+   <table id="fileshare-table" class="data">
+      <thead>
+         <tr>
+            <th><input type="checkbox" class="table-row-selector"/></th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Last Scanned</th>
+            <th>Storage Name</th>
+            <th>Status</th>
+         </tr>
+      </thead>
+      <tbody>
+         ## Data is loaded dynamically from FileShareManager
+      </tbody>
+   </table>
+
+</form>
+
+#parse("include/main-bottom.vm")

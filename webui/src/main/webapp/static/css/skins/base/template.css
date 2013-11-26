@@ -1,0 +1,859 @@
+/* ***********************************************************************
+ * VMware ThinApp Factory
+ * Copyright (c) 2009-2013 VMware, Inc. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * ***********************************************************************/
+
+
+/*
+ * -----------------------------------------------------------------------------
+ * Overwriting CORE CSS.
+ * -----------------------------------------------------------------------------
+ */
+#page {
+   min-width: 850px;
+}
+
+/**
+ * Defines the css for displaying the license info to end user.
+ */
+.license-msg {
+   height: 12px;
+   padding: 3px 15px;
+   font-weight: bold;
+   font-style: italic;
+   clear: both;
+   width: 100%;
+   display: block;
+}
+
+/***   defines the header layout   ***/
+#page-header {
+   margin: 0;
+   min-height: 35px; /* Is min-height, as the license-msg is optional */
+   border: none;
+   background-color: #3580BF;
+   color: white;
+}
+
+.head-left {
+   height: 35px;
+   min-width: 435px;
+   float: left;
+   background-color: #4F99C9;
+}
+.head-right {
+   height: 35px;
+   float: right;
+   min-width: 300px;
+   background-color: #4F99C9;
+}
+#page-header .head-left .logo {
+   float: left;
+   margin: 12px 0 10px 15px;
+   width: 100px;
+   background: url('images/vmware-logo-white.png') center center no-repeat;
+   background-size: contain;
+}
+#page-header .head-left .name {
+   float: left;
+   font: bold 17px Gotham Narrow, sans-serif;
+   text-align: left;
+   padding: 9px 0 9px 15px;
+}
+#page-header .head-left .light-gradient {
+   float: right;
+   width: 35px;
+   height: 35px;
+   padding: 0;
+   background-color:#3580BF;
+   background-image:-moz-linear-gradient(right bottom, #3580BF 50%, #4F99C9 50%);
+   background-image:linear-gradient(right bottom, #3580BF 50%, #4F99C9 50%);
+   background-image:-webkit-gradient(linear, right bottom, left top, color-stop(50%,#3580BF), color-stop(50%,#4F99C9));
+   filter:progid:DXImageTransform.Microsoft.gradient(GradientType=1,startColorstr=#4F99C9, endColorstr=#3580BF);
+}
+
+#page-header .head-right .dark-gradient {
+   float: left;
+   width: 35px;
+   height: 35px;
+   padding: 0;
+   background-color:#4F99C9;
+   background-image:-moz-linear-gradient(right bottom, #4F99C9 50%, #3580BF 50%);
+   background-image:linear-gradient(right bottom, #4F99C9 50%, #3580BF 50%);
+   background-image:-webkit-gradient(linear, right bottom, left top, color-stop(50%,#4F99C9), color-stop(50%,#3580BF));
+   filter:progid:DXImageTransform.Microsoft.gradient(GradientType=1,startColorstr=#3580BF, endColorstr=#4F99C9);
+}
+#page-header .head-right .right-nav {
+   float: right;
+   padding: 10px 15px 10px 0;
+   width: 245px;
+}
+#page-header .head-right .right-nav img {
+   vertical-align: middle;
+}
+#page-header .head-right .right-nav button {
+   color: white;
+}
+
+#page-header ul {
+   float: right;
+   display: inline;
+   height: 18px;
+   width: 100%;
+   text-align: right;
+   padding-bottom: 2px;
+   overflow: hidden;
+}
+
+#page-header li {
+   font-size: 11px;
+   padding: 0 10px;
+   display: inline;
+   border-right:1px solid #ddd;
+}
+
+#page-header li.last {
+   border: 0;
+   padding-right: 0;
+}
+#page-header a {
+   color: white;
+}
+
+/*** This defines default (small) notification bar   ***/
+.notification {
+   border: 2px solid #AFCBAA;
+   border-bottom: none;
+   position: fixed;
+   bottom: 0;
+   left: 10px;
+   right: 200px;
+   padding: 5px;
+   height: 1.4em;
+   background: #EFFBEA;
+   z-index: 4;
+   -webkit-border-radius: 8px 8px 0 0;
+   -moz-border-radius: 8px 8px 0 0;
+   border-radius: 8px 8px 0 0;
+   min-width: 60px;
+   text-overflow: ellipsis;
+   white-space: nowrap;
+}
+
+.notification .status-bar {
+   width: 100%;
+   height: 100%;
+}
+
+.notification #notification-show {
+   background-image: url('images/slide_up.png');
+   background-size: 16px 16px; /* CSS3 only */
+   background-repeat: no-repeat;
+   width: 20px;
+   height: 20px;
+   cursor: pointer;
+   position:absolute;
+}
+
+.notification #notification-hide {
+   background-image: url('images/slide_down.png');
+   background-size: 16px 16px; /* CSS3 only */
+   background-repeat: no-repeat;
+   width: 20px;
+   height: 20px;
+   cursor: pointer;
+}
+
+.notification #notification-tab {
+   width: 100%;
+}
+
+/*
+ *------------------------------------------------------------------------------
+ * Style for tables
+ *------------------------------------------------------------------------------
+ */
+
+table.data th {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    padding:5px;
+    text-align: left;
+}
+
+/* Outer element opacity applys for all inner elements irrespective of the inner element opacity */
+table.data tr.inactive, table.data tr td.inactive {
+   opacity: 0.4;
+   filter: alpha(opacity=40);
+   font-style: italic;
+}
+
+table.data tr td.excluded {
+    opacity: 0.4;
+    filter: alpha(opacity=40);
+    font-style: italic;
+    text-decoration: line-through;
+}
+
+/* Disabled table rows */
+table.data tr.disabled, table.data tr.disabled a {
+   opacity: 0.4;
+   filter: alpha(opacity=40);
+   font-style: italic;
+   text-decoration: none;
+   cursor: default;
+}
+
+.no-round-corner {
+   -webkit-border-radius: 0 !important;
+   -moz-border-radius: 0 !important;
+   border-radius: 0 !important;
+}
+
+/*** sources for the apps table **/
+
+.data-source-icon {
+    width:16px;
+    height:16px;
+    display: block;
+    float: left;
+    margin-right: 3px;
+    margin-top: 1px;
+}
+.data-source-type-feed {
+    background-image: url('./images/app-source-feed-16.png');
+}
+.data-source-type-fileshare {
+    background-image: url('./images/app-source-file-16.png');
+}
+.data-source-type-upload {
+    background-image: url('./images/app-source-upload-16.png');
+}
+
+/*
+ * -----------------------------------------------------------------------------
+ *   Defines the progress container
+ * -----------------------------------------------------------------------------
+ */
+.progress-container {
+   border: 1px solid #DDD;
+   padding: 0;
+   position: relative;
+   z-index: 2;
+   overflow: hidden;
+   height: 17px;
+   width: 100%;
+   min-width: 125px;
+   background-color: #FFFFFF;
+}
+
+.progress-container .progress-text {
+   text-align: left;
+   position: absolute;
+   font-size: 11px;
+   left: 5px;
+   top: 2px;
+   padding: 0 !important;
+   z-index: 4;
+   overflow: hidden;
+   color: #000;
+}
+
+.progress-container .progress-bar {
+   display: block;
+   position: absolute;
+   left: 0;
+   top: 0;
+   overflow: hidden;
+   z-index: 1;
+   margin: 0;
+   padding: 0 !important;
+   width: 100px;
+   height: 15px;
+}
+
+.progress-container .progress-step {
+   text-align: left;
+   color: #000;
+   position: absolute;
+   font-size: 11px;
+   z-index: 3;
+   overflow: hidden;
+   width: 100%;
+   height: 100%;
+   padding: 0 !important;
+}
+
+.progress-container .progress-step span {
+   height: 100%;
+   text-align: center;
+   position: relative;
+   float: left;
+   display: inline;
+   color: #333;
+   border-right: 1px solid #BBB;
+   margin-right: -1px;
+   z-index: 3;
+   padding: 0 !important;
+}
+
+.progress-container .progress-step span.step-loading {
+   border-left: 1px solid #BBB;
+   margin-left: -1px;
+   border-top: 0;
+   background-image: url("images/pbar-orange.gif");
+   overflow: auto;
+}
+.progress-container .orange .progress-step span.step-loading {
+   background-image: url("images/pbar-orange.gif") !important;
+}
+.progress-container .red .progress-step span.step-loading {
+   background-image: url("images/pbar-orange.gif") !important;
+}
+
+.progress-container .green {
+   border-top: 1px solid #7ACC52;
+   border-bottom: 1px solid #7ACC52;
+   background-color: #C2FFA3;
+   background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#C2FFA3), to(#C2FFA3), color-stop(.5,#7ACC52));
+   background: -moz-linear-gradient(top, #C2FFA3 0%, #7ACC52 50%, #C2FFA3 100%);
+   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#C2FFA3', endColorstr='#7ACC52',GradientType=0 );
+}
+
+.progress-container .red {
+   border-top: 1px solid #FF704D;
+   border-bottom: 1px solid #FF704D;
+   background-color: #FFC2B2;
+   background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#FFC2B2), to(#FFC2B2), color-stop(.5,#FF704D));
+   background: -moz-linear-gradient(top, #FFC2B2 0%, #FF704D 50%, #FFC2B2 100%);
+   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#FFC2B2', endColorstr='#FF704D',GradientType=0 );
+}
+
+.progress-container .orange {
+   border-top: 1px solid #FF9933;
+   border-bottom: 1px solid #FF9933;
+   background-color: #FFC285;
+   background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#FFC285), to(#FFC285), color-stop(.5,#FF9933));
+   background: -moz-linear-gradient(top, #FFC285 0%, #FF9933 50%, #FFC285 100%);
+   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#FFC285', endColorstr='#FF9933',GradientType=0 );
+}
+
+
+.label {
+   width: 100%;
+   display: inline;
+}
+
+/*
+ * Defines that DIV that is used in place of content while we
+ * wait for an Ajax call to complete.
+ */
+.ajax-loader {
+   background-image: url('images/ajax-loader.gif') ;
+   background-repeat: no-repeat;
+   left: 50%;
+   position: relative;
+   width: 16px;
+   height: 16px;
+   margin-left: -8px;
+}
+
+/* Text after the ajax-loader to tell you what's loading */
+.ajax-loader-text {
+   width: 100%;
+   text-align: center;
+   font-weight: bold;
+   padding: 10px 0 10px 0;
+}
+
+/*** Style for the 'refresh-in-progress' indicator. ***/
+.refresh-indicator {
+   background-image: url('images/loading.gif');
+   float: right;
+   margin-right: 2px;
+   width: 16px;
+   height: 16px;
+   display: none;
+}
+
+/* Overwrite with a red image */
+.refresh-indicator.error {
+   background-position: -32px -192px;
+   background-image: url(jquery-ui/images/ui-icons_cd0a0a_256x240.png);
+   background-repeat: no-repeat;
+}
+
+/*
+ * Styling for the UI modal blocker (from jquery.blockUI)
+ */
+.blockMsg {
+   width: 40%;
+   top: 30%;
+   left: 30%;
+   text-align: center;
+   background-color: #fff;
+   border: 5px solid #3580BF;
+   border-radius: 10px;
+   -moz-border-radius: 10px;
+   -webkit-border-radius: 10px;
+   padding: 15px;
+   -moz-box-shadow: 0 0 10px #111;
+   -webkit-box-shadow: 0 0 10px #111;
+   box-shadow: 0 0 10px #111;
+}
+
+.blockOverlay {
+   opacity: 0.0;
+   cursor: wait;
+}
+
+.blockMsg h1 {
+   color: #000;
+   font-size: 12pt;
+}
+
+/* Progress bar on the processWait modal dialog */
+.blockMsg .waitProgressHolder {
+   margin-top: 10px;
+   min-width: 300px;
+}
+
+/*
+ * af-dialog is the palceholder for all the jquery ui dialog entities:
+ *  AfAlert, AfConfirm, AfProcessWait*, AfNotify
+ */
+.af-dialog {
+}
+
+/***   Modal class used for alert and confirm   ***/
+.af-alert, .af-confirm {
+   padding: 8px 10px;
+   text-align: center;
+}
+
+/***   Modal class used for processWait   ***/
+#modal-overlay {
+   background: url('images/ajax-loader.gif') left center no-repeat;
+   margin: 15px 10px;
+   vertical-align: middle;
+   padding-left: 25px;
+   text-align: center;
+}
+/*   Custom visibility setting for the close image.   */
+.modal-overlay-parent a.ui-dialog-titlebar-close {
+   visibility: hidden;
+   cursor: move;
+}
+/*
+ * AfNotify() related css.
+ *
+ * This div is the holder for all notification popups.
+ */
+#notify-holder {
+   z-index: 5;
+   top: 43px;
+   right: 130px;
+   width: 350px;
+   height: auto;
+   position: fixed;
+}
+
+/* Defines the css for the notification div. Displays green icon & text */
+#notify-holder .notify {
+   position: relative;
+   display: block;
+   border: 1px solid #99F261;
+   color: green;
+   width: 340px;
+   height: auto;
+   padding: 5px 8px;
+   background-color: #E6F6DA;
+   -webkit-border-radius: 5px;
+   -moz-border-radius: 5px;
+   border-radius: 5px;
+   margin-bottom: 5px;
+   -moz-box-shadow: 3px 3px 3px #999;
+   -webkit-box-shadow: 3px 3px 3px #999;
+   box-shadow: 3px 3px 3px #999;
+   opacity: 0.8;
+   filter: alpha(opacity=80);
+}
+/* The icon displayed to the left of the notification message */
+#notify-holder .notify .icon {
+   display: inline;
+   float: left;
+   vertical-align: middle;
+   width: 16px;
+   height: 16px;
+   background: url(jquery-ui/images/ui-icons_4eb305_256x240.png) -208px -192px no-repeat;
+}
+/* The actual message displayed on the notification */
+#notify-holder .notify .msg {
+   display: inline;
+   margin-left: 4px;
+   vertical-align: middle;
+   float: left;
+   width: 292px;
+}
+/* Title for the notification */
+#notify-holder .notify .msg .title {
+   font-weight: bold;
+   width: 100%;
+}
+/* Close icon to the right of the notification pop up. */
+#notify-holder .notify .close {
+   display: inline;
+   float: right;
+   vertical-align: middle;
+   width: 16px;
+   height: 16px;
+   background: url(jquery-ui/images/ui-icons_4eb305_256x240.png) -96px -128px no-repeat;
+   cursor: pointer;
+}
+
+/* Overwrite .notify with .notify.info: Uses blue icons & text */
+#notify-holder .notify.info {
+   border: 1px solid #3580BF;
+   background-color: #E4EFF6;
+   color: #3580BF;
+}
+#notify-holder .notify.info .close {
+   background-image: url(jquery-ui/images/ui-icons_217bc0_256x240.png);
+}
+#notify-holder .notify.info .icon {
+   background: url(jquery-ui/images/ui-icons_217bc0_256x240.png) -16px -144px no-repeat;
+}
+
+/* Overwrite .notify with .notify.warn: Uses orange/yellow icons & text */
+#notify-holder .notify.warn {
+   border: 1px solid #F7DA7C;
+   background-color: #FFF2D0;
+   color: orange;
+}
+#notify-holder .notify.warn .close {
+   background-image: url(jquery-ui/images/ui-icons_f9bd01_256x240.png);
+}
+#notify-holder .notify.warn .icon {
+   background: url(jquery-ui/images/ui-icons_f9bd01_256x240.png) 0 -144px no-repeat;
+}
+/* Overwrite .notify with .notify.error: Uses red icons & text */
+#notify-holder .notify.error {
+   border: 1px solid #FA8469;
+   background-color: #F2EBEB;
+   color: red;
+}
+#notify-holder .notify.error .close {
+   background-image: url(jquery-ui/images/ui-icons_cd0a0a_256x240.png);
+}
+#notify-holder .notify.error .icon {
+   background: url(jquery-ui/images/ui-icons_cd0a0a_256x240.png) -32px -192px no-repeat;
+}
+
+#notify-content td {
+   line-height:18px;
+}
+
+.validation-error-icon {
+   cursor: pointer;
+   margin-left: 4px;
+   width: 16px;
+   height: 16px;
+   background: url(jquery-ui/images/ui-icons_cd0a0a_256x240.png) -32px -192px no-repeat;
+   padding: 0 !important;
+   display: inline-block;
+}
+
+.validation-success-icon {
+   cursor: pointer;
+   margin-left: 4px;
+   width: 16px;
+   height: 16px;
+   background: url(jquery-ui/images/ui-icons_4eb305_256x240.png) -208px -192px no-repeat;
+   padding: 0 !important;
+   display: inline-block;
+}
+
+/*
+ * Asterisk which appears next to items with
+ * unsaved changes.
+ */
+.change-marker {
+   color: #a00;
+}
+
+em {
+   color: blue;
+   font-weight: lighter;
+   font-size: 10px;
+}
+
+/*
+ * Buttons that we want to look like links.
+ */
+.button-link {
+   background: none;
+   border: none;
+   padding: 0;
+   filter: none;
+   cursor: pointer;
+   text-decoration: underline;
+   text-align: left;
+}
+
+.top-desc .button-link {
+  font-size:11px;
+  position:absolute;
+  right:10px;
+}
+
+/*
+ * -----------------------------------------------------------------------------
+ * Settings for tabs
+ * -----------------------------------------------------------------------------
+ */
+
+.taf-horiz-tabs {
+   padding: 0;
+   border-width: 1px;
+   position: inherit;
+   -moz-border-radius: 0 !important;
+   -webkit-border-radius: 0 !important;
+   border-radius: 0 !important;
+   padding: 0 !important;
+   display: none;
+   /** you must include the argument when calling jQuery.tabs() of:
+      {show: function(){$(this).show()}
+     This eliminates double rendering of the tabs in pre-jQuery and post-jQuery
+     state. **/
+}
+
+.taf-horiz-tabs ul {
+   -moz-border-radius: 0 !important;
+   -webkit-border-radius: 0 !important;
+   border-radius: 0 !important;
+}
+
+.notification .icon {
+   margin-right: 4px;
+   width: 16px;
+   height: 16px;
+   float:left;
+}
+
+/** Blue info icon */
+.notification .info {
+   background: url(jquery-ui/images/ui-icons_217bc0_256x240.png) -16px -144px no-repeat;
+}
+
+/** Yellow warning icon */
+.notification .warn {
+   background: url(jquery-ui/images/ui-icons_f9bd01_256x240.png) 0 -144px no-repeat;
+}
+
+/** Red error icon */
+.notification .error {
+   background: url(jquery-ui/images/ui-icons_cd0a0a_256x240.png) -32px -192px no-repeat;
+}
+
+.notification #recent-event {
+    padding-bottom: 4px;
+    padding-left:20px;
+}
+.notification #recent-event-msg {
+    float:left;
+}
+
+/** Notification status bar text */
+.notification .status-bar {
+   float: left;
+   font: bold 12px Gotham Narrow,sans-serif;
+   text-align: left;
+}
+
+
+/*
+ * -----------------------------------------------------------------------------
+ * Defines the css for the capture task summary.
+ * -----------------------------------------------------------------------------
+ */
+#progress-holder {
+   z-index: 10;
+   bottom: 0;
+   right: 0;
+   width: 200px;
+   position: fixed;
+   font-size: 11px;
+}
+
+#progress-holder #task-progress-holder, #progress-holder #action-alert-holder {
+   position: relative;
+   z-index: 8;
+   display: block;
+}
+
+#task-progress-holder .summary {
+   padding: 8px;
+   background-color: #E6F6DA;
+   border: 1px solid #85d633;
+   border-radius: 5px 0 0 0;
+   -webkit-border-radius: 5px 0 0 0;
+   -moz-border-radius: 5px 0 0 0;
+}
+
+#task-progress-holder .summary .top-desc {
+   padding-bottom: 6px;
+   font-weight: bold;
+}
+
+#task-progress-holder .summary .top-desc button {
+   margin-left: 3px;
+}
+
+#task-progress-holder .summary .bottom-desc {
+   color: #333;
+   padding-top: 3px;
+}
+
+#task-progress-holder .summary .pbar {
+   width: 100%;
+   display: inline-block;
+}
+
+/* Commenting it out in case we add it back. css work takes time, so leaving it here.
+#task-progress-holder .summary .pause {
+   display: inline-block;
+   margin-left: 3px;
+   width: 16px;
+   height: 16px;
+   background: url(jquery-ui/images/ui-icons_4eb305_256x240.png) -16px -160px no-repeat;
+   cursor: pointer;
+   float: right;
+}
+*/
+
+#progress-holder #action-alert-holder {
+   max-height: 200px;
+   overflow: auto;
+   margin-right: -15px;
+   width: 100%;
+   display: block;
+}
+
+/*
+ * -----------------------------------------------------------------------------
+ * CSS for the persistant action alerts
+ * -----------------------------------------------------------------------------
+ */
+#action-alert-holder .action-alert {
+   position: relative;
+   padding: 5px;
+   border-radius: 5px 0 0 0;
+   -webkit-border-radius: 5px 0 0 0;
+   -moz-border-radius: 5px 0 0 0;
+}
+#action-alert-holder .action-alert a {
+   text-decoration: none;
+}
+#action-alert-holder .action-alert.warn {
+   border-top: 1px solid #F7DA7C;
+   border-left: 1px solid #F7DA7C;
+   background-color: #FFF2D0;
+}
+#action-alert-holder .action-alert.warn a {
+   color: #ffa500;
+}
+#action-alert-holder .action-alert.error {
+   border-top: 1px solid #FA8469;
+   border-left: 1px solid #FA8469;
+   background-color: #F2EBEB;
+}
+#action-alert-holder .action-alert.error a {
+   color: red;
+}
+
+#action-alert-holder .action-alert .icon {
+   float: left;
+   vertical-align: middle;
+   width: 16px;
+   height: 16px;
+   margin-right: 3px;
+}
+
+#action-alert-holder .action-alert.warn .icon {
+   background: url(jquery-ui/images/ui-icons_f9bd01_256x240.png) 0 -144px no-repeat;
+}
+
+#action-alert-holder .action-alert.error .icon {
+   background: url(jquery-ui/images/ui-icons_cd0a0a_256x240.png) 0 -144px no-repeat;
+}
+
+/*** The following provide generic css class for some common ones. ***/
+.no-show {
+   display: none;
+}
+.display-block {
+   display: block;
+}
+.clearDiv {
+   clear: both;
+}
+.pad-all {
+   padding: 10px !important;
+}
+.float-right {
+   float: right;
+}
+.float-left {
+   float: left;
+}
+.bold {
+   font-weight: bold;
+}
+.underline-dots {
+   border-bottom:1px dotted #333;
+}
+.line-through {
+   text-decoration: line-through;
+}
+.help {
+   cursor: help;
+}
+
+/* Close icon to the right of the inline error message box. */
+.inline-error-close {
+   display: inline;
+   float: right;
+   vertical-align: middle;
+   width: 16px;
+   height: 16px;
+   background: url(jquery-ui/images/ui-icons_cd0a0a_256x240.png) -96px -128px no-repeat;
+   cursor: pointer;
+}
+/* Inline error message for all dialog forms */
+.inline-error {
+   display: none;
+   padding-bottom: 10px;
+}
+/* Inline error alert icon position */
+.inline-error-icon {
+   float: left;
+   margin-right: .3em;
+}
+
+.modal-data-holder {
+   max-height: 400px;
+   overflow-y: auto;
+   word-wrap: break-word;
+}

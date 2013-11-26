@@ -1,0 +1,54 @@
+{
+   "version": "4",
+   "description": {
+      "content": "View Client Feed",
+      "contentType": "text/plain"
+   },
+
+   "includes" : [ ],
+
+   "applications": [ {
+      "vendor":"VMware",
+      "name":"View Client",
+      "version":"5.4.0",
+      "description":{
+         "content":"Client for VMware View 5.4.0",
+         "contentType":"text/plain"
+      },
+      "icons":[
+         {
+            "url":"http://www.vmware.com/files/images/screens_view/ipad/view-client-app-icon.png",
+            "contentType":"image/png",
+            "size":75
+         }
+      ],
+
+      "recipe":{
+         "name": "View Client Install",
+         "description": {
+            "content": "View Client Installation Recipe",
+            "contentType": "text/plain"
+         },
+
+         "files" : [
+            {"url": "run_view_installer.bat" }
+         ],
+
+         "install": {
+            "commands": [
+               {"label": "install", "command" : "run_view_installer.bat"}
+            ]
+         }
+      },
+
+      "file": {
+         "url":"https://download3.vmware.com/software/view/viewclients/VMware-viewclient-5.4.0-1219906.exe"
+      },
+      "categories":[
+         "Remote Deskstop"
+      ],
+      "lastRemoteUpdate":"2013-07-11 00:00:00"
+   } ],
+
+   "recipes" : [ ]
+}

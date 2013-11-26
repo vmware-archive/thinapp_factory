@@ -1,0 +1,58 @@
+################################################################################
+## ThinApp Factory WebUI
+## (c) 2011 VMware, Inc. All rights reserved.
+################################################################################
+
+################################################################################
+## app-add.vm
+##
+## This is the HTML view for submitting a new application from a file share.
+##
+## The user fills out the form in the UI. This is actually two HTML forms, one
+## for metadata, the other for the file upload, but the user doesn't know this.
+## When 'Save' is pressed, we submit the metadata form to the server. If it
+## checks out, the server saves into the user's session. Then, we automatically
+## submit the file upload form. We track upload progress. When complete, the
+## application is created.
+################################################################################
+
+<script type="text/javascript">
+addLoad(function () {
+   VmTAF.contentNavigator.AddReadyFunction(function _appAddReady() {
+      VmTAF.appMgr = new AppManager();
+      VmTAF.appMgr.validator = new Validator('#applicationMetadataForm');
+   });
+
+   VmTAF.contentNavigator.AddCleanupFunction(function _appAddCleanup() {
+      VmTAF.appMgr.validator = VmTAF.appMgr.validator.Destruct();
+      VmTAF.appMgr = VmTAF.appMgr.Destruct();
+   });
+
+   /*
+    * Function called when the user submits the main form.
+    * We validate the inputs, and then invoke appMgr.SubmitNewApplicationForm(),
+    * and then return 'false' to prevent further default event handling.
+    */
+   VmTAF.SubmitAppForm = function() {
+      VmTAF.appMgr.validator.OnSubmit(
+         VmTAF.appMgr.SubmitNewApplicationForm,
+         {
+            self: VmTAF.appMgr,
+            holder: $('#applicationMetadataForm'),
+            uploadForm: $("#uploadForm")
+         }
+      );
+      return false;
+   };
+});
+</script>
+
+#parse("include/main-top.vm")
+
+<div class='build-form-content'>
+
+      #parse("apps/app-add-form.vm")
+
+</div>
+
+#parse("include/main-bottom.vm")

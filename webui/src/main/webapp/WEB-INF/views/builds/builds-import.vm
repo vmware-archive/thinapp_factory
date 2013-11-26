@@ -1,0 +1,36 @@
+################################################################################
+## ThinApp Factory WebUI
+## (c) 2011 VMware, Inc. All rights reserved.
+################################################################################
+
+################################################################################
+## builds-import.vm
+##
+## Import projects from a datastore by adding it as a new datastore.
+################################################################################
+
+<script type="text/javascript">
+#if ($newUI)
+addLoad(function () {
+#end
+   VmTAF.contentNavigator.AddReadyFunction(function _buildsIndexReady() {
+      VmTAF.buildManager = new BuildManager();
+      VmTAF.buildManager.validator = new Validator('#datastore-form');
+   });
+
+   VmTAF.contentNavigator.AddCleanupFunction(function _buildsIndexCleanup() {
+      VmTAF.buildManager = VmTAF.buildManager.Destruct();
+      VmTAF.buildManager.validator = validator.Destruct();
+   });
+#if ($newUI)
+});
+#end
+</script>
+
+#parse("include/main-top.vm")
+
+<div class='datastore-edit-content'>
+   #parse("builds/builds-import-form.vm")
+</div>
+
+#parse("include/main-bottom.vm")

@@ -1,0 +1,86 @@
+################################################################################
+## ThinApp Factory WebUI
+## (c) 2011 VMware, Inc. All rights reserved.
+################################################################################
+
+################################################################################
+## apps-index.vm
+##
+## This file contains the HTML view for showing a list of applications, with an
+## optional category filter. No data is shown in the view by default: An Ajax
+## call is made to the server to download application data and populate the
+## table dynamically.
+################################################################################
+<script type="text/javascript">
+#if ($newUI)
+addLoad(function () {
+#end
+   window.appMgr = null;
+
+   VmTAF.contentNavigator.AddReadyFunction(function _appsReady() {
+      window.appMgr = new AppManager($("#apps-table"), "$!category");
+      window.appMgr.UpdateApps(5000);
+   });
+
+   VmTAF.contentNavigator.AddCleanupFunction(function _appsCleanup() {
+      window.appMgr = window.appMgr.Destruct();
+   });
+#if ($newUI)
+});
+#end
+</script>
+#parse("include/main-top.vm")
+<form class="primary tableHeaderButtons" onsubmit="return false;">
+   ##
+   ## Buttons for interacting with applications.
+   ##
+   <div class="button-row">
+   <button
+         class="button"
+         id="app-capture"
+         onClick="appMgr.BuildSelectedApps()">
+      #springMessage("T.APPS.CAPTURE")...
+   </button>
+   <button
+         class="button"
+         id="app-ignore"
+         onClick="appMgr.IgnoreSelectedApps()">
+      #springMessage("T.APPS.IGNORE")
+   </button>
+#if (!$newUI)
+   ## Retaining incase we need to add this feature.
+      <button
+         class="button"
+         id="app-reset-fail"
+         onClick="appMgr.ResetFailCounter()">
+         #springMessage("T.APPS.RESET_FAIL_COUNT")
+      </button>
+#end
+   </div>
+
+   ##
+   ## Table for applications
+   ## This gets populated dynamically using Ajax calls from Javascript.
+   ##
+   <table class="data display no-show" id="apps-table">
+      <thead>
+         <tr>
+            <th width="20"><input type="checkbox" class="table-row-selector"/></th>
+            <th>Installer</th>
+            <th>Version</th>
+            <th>Vendor</th>
+            <th width="50">Language</th>
+            <th width="50">Revision</th>
+#if (!$newUI)
+            <th width="50">Convert Failures</th>
+#end
+            <th>Data Source</th>
+         </tr>
+      </thead>
+      <tbody>
+      </tbody>
+   </table>
+
+</form>
+
+#parse("include/main-bottom.vm")

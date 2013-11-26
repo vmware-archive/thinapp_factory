@@ -1,0 +1,94 @@
+################################################################################
+## ThinApp Factory WebUI
+## (c) 2011 VMware, Inc. All rights reserved.
+################################################################################
+
+################################################################################
+## sources-index.vm
+##
+## XXX
+################################################################################
+
+<script type="text/javascript" charset="UTF-8">
+#if ($newUI)
+addLoad(function () {
+#end
+   window.srcMgr = null;
+
+   VmTAF.contentNavigator.AddReadyFunction(function _sourcesReady() {
+      window.srcMgr = new DataSourceManager($("#sources-table"));
+      window.srcMgr.UpdateDataSources(5000);
+   });
+
+   VmTAF.contentNavigator.AddCleanupFunction(function _sourcesCleanup() {
+      window.srcMgr = window.srcMgr.Destruct();
+   });
+#if ($newUI)
+addLoad(function () {
+#end
+</script>
+
+#parse("include/main-top.vm")
+
+## Note: the form is mainly used for style, it is not used to POST data
+## to the server.
+<form class="primary" onsubmit="return false;">
+   ##
+   ## Buttons for interacting with sources.
+   ##
+   <div class="button-row">
+      <button class="button"
+         onclick="VmTAF.contentNavigator.LoadPage('/feeds/create');">
+         Add Feed
+      </button>
+      <button class="button"
+         onclick="VmTAF.contentNavigator.LoadPage('/fileshare/create');">
+         Add File Share
+      </button>
+      <button class="button"
+         onclick="srcMgr.DeleteSelectedDataSources();">
+         Delete
+      </button>
+      <button class="button"
+         onclick="srcMgr.ResetSelectedDataSources();">
+         Reset
+      </button>
+      <button class="button"
+         onclick="srcMgr.ScanSelectedDataSources();">
+         Scan Now
+      </button>
+      <div class="sources-url">
+         <a href="$appfactory.appFeedGuideUrl" target="_blank">
+            #springMessage("M.FEEDS.GUIDE_LINK")
+         </a>
+      </div>
+   </div>
+
+   ##
+   ## Table for sources
+   ## This gets populated dynamically using Ajax calls from Javascript.
+   ##
+   <table id="sources-table" class="data">
+      <thead>
+         <tr>
+            <th width="20"><input type="checkbox" class="table-row-selector"/></th>
+            <th width="50">Type</th>
+            <th>Name</th>
+            <th width="70">Applications</th>
+            <th width="70">Recipes</th>
+            <th>Description</th>
+            <th width="80">Last Scanned</th>
+            <th width="80">Last Converted</th>
+            <th width="70">Status</th>
+         </tr>
+      </thead>
+      <tbody>
+         ## Populated dynamically by BuildManager
+      </tbody>
+   </table>
+</form>
+
+## Empty div needed to create the 'New DataSource' dialog
+<div id="dialog-holder" class="yui-skin-sam"/>
+
+#parse("include/main-bottom.vm")

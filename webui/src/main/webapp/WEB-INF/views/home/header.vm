@@ -1,0 +1,43 @@
+################################################################################
+## ThinApp Factory WebUI
+## (c) 2011 VMware, Inc. All rights reserved.
+################################################################################
+
+################################################################################
+## header.vm
+##
+## Page fragment that should appear at the top of every page. This includes
+## the VMware logo, and the common 'help', 'about', 'logout' links, etc.
+################################################################################
+
+<div class='head-left'>
+   <span class='logo'>&nbsp;</span>
+   <span class='name'> #if($pageTitle) $pageTitle #else $appfactory.productName #end </span>
+   <span class='light-gradient'>&nbsp;</span>
+</div>
+
+<div class='head-right'>
+   <span class='dark-gradient'>&nbsp;</span>
+   <span class='right-nav'>
+      <ul>
+         <!--<li><a href="${contextPath}/admin/help" target="windows">Help</a></li>-->
+         <li>
+            <a href='#' onclick="VmTAF.contentNavigator.LoadPage('/admin/settings')">
+               <img
+                  width="16" height="16"
+                  style="padding-right: 3px"
+                  src="${imagePath}/gear_48.png">Settings</img>
+         </a></li>
+         <li>
+            <a href="#springUrl('/auth/logout')">
+               #springMessage("T.COMMON.LOGOUT")
+            </a>
+         </li>
+         <li class='last'><a target="window" href="#springUrl('/store')">
+               #springMessage("T.THINAPP_STORE")
+         </a></li>
+      </ul>
+   </span>
+</div>
+
+#parse("include/license-check.vm")

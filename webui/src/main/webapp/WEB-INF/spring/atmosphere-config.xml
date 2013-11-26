@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ VMware ThinApp Factory
+  ~ (c) 2011 VMware, Inc. All rights reserved.
+  -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans   http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+   <!-- By default, mvc:annotation-driven beans do not look in the parent
+       context for beans.  This will keep us from sharing beans between
+       the default Spring servlet and the Atmosphere servlet.  But we can
+       force it to look in the parent context by adding this next element.
+       For more info, see:
+         http://forum.springsource.org/showthread.php?83752-lt-mvc-annotation-driven-gt-and-component-scanning
+   -->
+   <bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
+      <property name="detectHandlersInAncestorContexts" value="true"/>
+   </bean>
+
+</beans>

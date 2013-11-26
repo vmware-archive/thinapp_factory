@@ -1,0 +1,47 @@
+################################################################################
+## ThinApp Factory WebUI
+## (c) 2011 VMware, Inc. All rights reserved.
+################################################################################
+
+################################################################################
+## head.vm
+##
+## Common HTML 'head' block for all pages.
+## Note, this is fetched only once, since content is loaded in fragments.
+################################################################################
+
+##
+## Meta tags
+##
+
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta name="robots" content="noindex, nofollow" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+
+##
+## Page title
+## We use the same title for everything.
+##
+
+<title>
+   #if($pageTitle) $pageTitle #else $appfactory.productName #end
+</title>
+
+##
+## Init JavaScript variables and include JS libraries
+##
+#parse("/include/javascript.vm")
+
+##
+## Favorite and shortcut icons.
+##
+<link rel="shortcut icon" href="${imagePath}/favicon.png">
+<link rel="icon" href="${imagePath}/favicon.png" type="image/png">
+
+##
+## AppFactory CSS
+##
+<link href="${skinPath}/legacy.css" rel="stylesheet" type="text/css">
+<link href="${skinPath}/appfactory.css" rel="stylesheet" type="text/css">
+
+#set($IS_FRAGMENT = "true")

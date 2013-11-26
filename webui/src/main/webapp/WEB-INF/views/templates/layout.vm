@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+################################################################################
+## ThinApp Factory WebUI
+## (c) 2011 VMware, Inc. All rights reserved.
+################################################################################
+##
+################################################################################
+## layout.vm
+##
+## This template is used to wrap all main html pages with the "new" UI design
+##
+## This is NOT used for the application store, for the install wizard, or
+## for the old UI.
+##
+## The old UI screens use legacy.vm instead.
+##
+################################################################################
+<html lang="en-US" dir="ltr">
+
+## Contains the html head tag related content here.
+#parse("templates/head-newui.vm")
+
+<body>
+   <div id="outer">
+      <div id="idHeader">
+         <div id="idHeaderLeft">
+            <div id="idLogo">
+               <a href="#springUrl("/")">
+                  <img src="#imageUrl("vmware-logo-white.png")" width="80" height="12" alt="#springMessage("T.COMMON.VMWARE")"/>
+                  #springMessage("T.COMMON.APP_NAME")
+               </a>
+            </div>
+         </div>
+         <div id="idHeaderRight">
+            <ul>
+               <li><a id="idSettingsLink" href="#springUrl("/settings")" #if("settings" == $selectedTab) class="selected" #end >
+                     <img src='#imageUrl("gear_16.png")' alt="" width="16" height="16" />#springMessage("T.COMMON.SETTINGS")</a></li>
+               <li><a id="idLogoutLink" href="#springUrl('/auth/logout')">#springMessage("T.COMMON.LOGOUT")</a></li>
+               <li class="last"><a id="idStoreLink" href="#springUrl('/store')" target="_blank">#springMessage("T.COMMON.TAF_STORE")</a></li>
+            </ul>
+         </div>
+         <div id="idHeaderCenter">
+            <div id="idMenu">
+               <ul class="topLevelMenu">
+                  ## TODO: use list from SelectedTab enum
+                  #foreach ($menu in ["dashboard",
+                      "installers",
+                      "tasks",
+                      "projects"])
+                  #set($tabTitle = "T.COMMON.TAB_" + $menu.toUpperCase())
+                  <li class="topLevelMenuItem">
+                     <a href="#springUrl("/$menu")" #if($menu == $selectedTab) class="selected" #end >#springMessage($tabTitle)</a>
+                  </li>
+                  #end
+               </ul>
+            </div>
+         </div>
+      </div> ## div: idHeader
+
+      #if( "$!appfactory.feedbackUrl" != "" )
+      <div id="feedback-shadow" class="ui-widget ui-widget-shadow"></div>
+      <div id="feedback" class="ui-widget">
+         <a href="$!appfactory.feedbackUrl">#springMessage("T.FEEDBACK")</a>
+      </div>
+      #end
+
+      <div id="switcher"></div>
+
+      <div id="main">
+         $screen_content
+      </div>
+
+      ## Bottom notification bar
+      #parse("include/notify-bar.vm")
+
+      <div id="footer"></div>
+
+      #if ($!legacyUI)
+         ## Contains dialog and notification specific divs.
+         <div class="af-dialog">
+            <div id="modal-overlay"></div>
+            <div id="af-confirm"></div>
+            <div id="notify-holder"></div>
+            <div id="progress-holder">
+               <div id="action-alert-holder" class="no-show"></div>
+               <div id="task-progress-holder" class="no-show"></div>
+            </div>
+         </div>
+      #end
+   </div> ## div: outer
+   #parse("include/error-dialog.vm")
+
+#if ($!legacyUI)
+  #parse("include/javascript-cool-tricks.vm")
+#end
+</body>
+</html>

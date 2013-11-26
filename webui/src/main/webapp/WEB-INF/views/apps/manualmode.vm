@@ -1,0 +1,146 @@
+################################################################################
+## ThinApp Factory WebUI
+## (c) 2011 VMware, Inc. All rights reserved.
+################################################################################
+
+################################################################################
+## manualmode.vm
+##
+################################################################################
+<html>
+
+<head>
+   #parse("include/head.vm")
+<!-- vmrc.js taken from bora/apps/vmplayer/npplugin/test/test.js -->
+<script type="text/javascript" src="#jsUrl("vmrc.js")"></script>
+<script type="text/javascript" src="#jsUrl("VmrcManager.js")"></script>
+
+<script type="text/javascript">
+   var vmrcmgr = null;
+
+   $("#main").ready(function() {
+      // @see vmrc.js#vmrcInit()
+      vmrcInit();
+      var e = $("#mksVersion")[0];
+
+      try {
+         e.innerHTML = mks.getVersion();
+      } catch (TypeError) {
+         e.innerHTML = 'Unknown';
+      }
+
+      // Turn off event alert popups.
+      disableOnConnectionStateChange();
+      disableOnSizeChange();
+      disableOnWindowStateChange();
+      disableOnGrabStateChange();
+      disableOnMessage();
+      disableOnDeviceConnectionStateChange();
+      disableOnPhysicalClientDevicesChange();
+
+      // mks is being defined in vmrc.js.
+      // TODO: IE attaches event handlers differently.
+      //       mks.attachEvent("onSizeChange", function(width, height) {
+      //          mks.width = width;
+      //          mks.height = height;
+      //       });
+
+      // Firefox
+      mks.onSizeChange = function(width, height) {
+         var panel = $('#pluginPanel');
+         // put 1px gap between div and vmrc plugin object.
+         panel.width(width + 1);
+         panel.height(height + 1);
+         mks.width = String(width) + "px";
+         mks.height = String(height) + "px";
+      };
+
+      vmrcmgr = new VmrcManager();
+      vmrcmgr.Startup();
+   });
+
+   jQuery(window).bind('beforeunload', function() {
+      var nextStatus = $('#nextStatus').val();
+      if(nextStatus !== 'finished' && nextStatus !== 'cancelled') {
+         // this optional error message is only supported in IE.
+         var message = "About to close the window now, but you can resume the build from the task list.";
+         return message;
+      }
+      vmrcmgr = vmrcmgr.Destruct();
+   });
+</script>
+</head>
+
+<body>
+<div id="page">
+
+      <div id="page-header">
+         #parse("home/manualmode-header.vm")
+      </div>
+
+      <div class='page-body-wrapper'>
+         <div id="page-body">
+
+            <div id="main-panel">
+            <form class="primary" onsubmit="return false;">
+
+               <div class="panel-content">
+                  <div class="manualmode-content">Progress Detail:
+                     <span id="status"></span>
+                  </div>
+                  <div class="manualmode-content-right">
+                        <button class="button"
+                           disabled="disabled"
+                           id="next"
+                           onclick="vmrcmgr.Next();">
+                           Next
+                        </button>
+                        <button class="button"
+                           id="close" 
+                           onclick="vmrcmgr.Close();">
+                           Cancel
+                        </button>
+                  </div>
+                  <div class="progress-container">
+                     <span class="manualmode progress-step">
+                        <span>Preparing</span>
+                        <span title="This step may require user input" style="font-weight: bold;">Customize VM</span>
+                        <span>Pre-capturing</span>
+                        <span title="This step may require user input" style="font-weight: bold;">Install</span>
+                        <span>Finishing</span>
+                     </span>
+                     <span id="progress-bar" class="progress-bar green"></span>
+                  </div>
+               </div>
+
+               <input id="ticketId" type="hidden" value="$ticketId"/>
+               <input id="appId" type="hidden" value="$appId"/>
+               <input id="nextStatus" type="hidden" value=""/>
+
+               <div id="pluginPanel" style="margin: 10px auto; text-align:center; border: solid 2px gray; width: 801px; height: 601px;">
+                  <!--[if IE]>
+                     <object id="vmrc" classid="CLSID:291BA977-564B-4626-B868-A968FB8D4591" style="width: 100%; height: 100%;">
+                     </object>
+                  <![endif]-->
+                  <!--[if !IE]><!-->
+                     <object id="vmrc" type="application/x-vmware-remote-console-2011" width="800px" height="600px">
+                     </object>
+                  <!--<![endif]-->
+               </div>
+
+            </form>
+            </div> <!-- Main Panel -->
+
+      </div> <!-- page-body -->
+   </div> <!-- page-body-wrapper -->
+
+   <div id="page-footer">
+      <div class="footer-appname">
+         VMRC Version: <span id="mksVersion"/>
+      </div>
+   </div>
+
+</div> <!-- page -->
+
+</body>
+</html>

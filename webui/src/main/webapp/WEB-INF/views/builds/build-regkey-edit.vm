@@ -1,0 +1,35 @@
+################################################################################
+## ThinApp Factory WebUI
+## (c) 2011 VMware, Inc. All rights reserved.
+################################################################################
+
+################################################################################
+## build-regkey-edit.vm
+##
+## Simple form that is used in a dialog to let the user define a new registry
+## key (when editing build settings).
+################################################################################
+
+<form id="regkey-edit-form"
+      class="primary"
+      onsubmit="return false;">
+   <fieldset>
+
+      ## Value name
+      <div class="field text long">
+         <label for="name">Value Name:</label>
+         <input name="name" type="text" size="30"></input>
+      </div>
+
+      ## Value datatype
+      ## We can read these from the model
+      <div class="field select">
+         <label for="type">Type:</label>
+         <select name="type">
+            #foreach ($type in $appfactory.registryValueTypes)
+               <option value="$type">$type</option>
+            #end
+         </select>
+      </div>
+   </fieldset>
+</form>

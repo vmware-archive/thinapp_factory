@@ -1,0 +1,99 @@
+################################################################################
+## ThinApp Factory WebUI
+## (c) 2011 VMware, Inc. All rights reserved.
+################################################################################
+
+################################################################################
+## builds-all.vm
+##
+## Shows all builds information sorted by recent update first.
+## This page comes with a sidebar and filters that can be applied on this page.
+################################################################################
+
+<script type="text/javascript">
+addLoad(function () {
+   VmTAF.contentNavigator.AddReadyFunction(function _buildsForAppReady() {
+      // Create a button row and set the button with the current view as active.
+      $('#viewButtons').find('#${buildView}').addClass('ui-state-active').attr('disabled', false);
+      $('#viewButtons').buttonset();
+      VmTAF.buildManager = new BuildManager($("#builds-table"), null,
+         #if(${build.id}) ${build.id} #else null #end );
+      VmTAF.buildManager.UpdateBuildsView(3000);
+   });
+
+   AfMakeAsyncDialog("#idDialog", "#idImportProjectButton",
+      "$contextPath/builds/import?dialog=true", '#springMessage("T.IMPORT_PROJECTS")' );
+
+   VmTAF.contentNavigator.AddCleanupFunction(function _buildsForAppCleanup() {
+      VmTAF.buildManager = VmTAF.buildManager.Destruct();
+   });
+});
+</script>
+
+<div class="sidebar"> ## Displays the sidebar.
+   <div class="sidebar-section">
+      <div class="sidebar-head">Import</div>
+      <ul class="sidebarList">
+         <li><a class="button-link" id="idImportProjectButton">#springMessage("T.IMPORT_PROJECTS")...</a></li>
+      </ul>
+   </div>
+   <div class="sidebar-section">
+      <div class="sidebar-head">#springMessage("T.COMMON.STATUS")</div>
+      <ul class="sidebarList" id="idStatus"></ul>
+   </div>
+   <div class="sidebar-section">
+      <div class="sidebar-head">#springMessage("T.COMMON.SOURCE")</div>
+      <ul class="sidebarList" id="idSource"></ul>
+   </div>
+   <div class="sidebar-section">
+      <div class="sidebar-head">#springMessage("T.COMMON.OS")</div>
+      <ul class="sidebarList" id="idOS"></ul>
+   </div>
+   <div class="sidebar-section">
+      <div class="sidebar-head">#springMessage("T.COMMON.RUNTIME")</div>
+      <ul class="sidebarList" id="idRuntime"></ul>
+   </div>
+   <div class="sidebar-section">
+      <div class="sidebar-head">#springMessage("T.COMMON.DATASTORE")</div>
+      <ul class="sidebarList" id="idDatastore"></ul>
+   </div>
+</div>
+
+<div class="mainContent"> ## Display the main section.
+   ## Display title and choice buttons for different views
+   #parse("builds/builds-title.vm")
+
+   <form id="builds-form" class="primary" onsubmit="return false;">
+      ##
+      ## Buttons for operating on the builds
+      ##
+      <div class="button-row">
+         <button
+            class="button"
+            onclick="VmTAF.buildManager.SetStatuses('PUBLISHED');">
+            Publish
+         </button>
+         <button
+            class="button"
+            onclick="VmTAF.buildManager.SetStatuses('STAGED');">
+            Unpublish
+         </button>
+         <button
+            class="button"
+            onclick="VmTAF.buildManager.RebuildSelected();">
+            Rebuild
+         </button>
+         <button
+            class="button"
+            onclick="VmTAF.buildManager.DeleteSelected();">
+            Delete
+         </button>
+      </div>
+      ##
+      ## Table of builds for this application
+      ##
+      #parse("include/builds-table.vm")
+   </form>
+</div>
+
+<div id="idDialog"></div>

@@ -1,0 +1,43 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+<suite name="ThinApp Factory acceptance tests" verbose="2" parallel="false">
+   <test name="conversions">
+      <classes>
+         <class name="com.vmware.thinapp.tests.ConversionsTest"/>
+      </classes>
+   </test>
+   <test name="datastores" preserve-order="true" enabled="false">
+      <!--Disabled until CWS is configured to listen on an external port.-->
+      <classes>
+         <class name="com.vmware.thinapp.tests.DatastoresTest">
+            <!-- XXX: Have to do this to get methods to run in order. -->
+            <methods>
+               <include name="testCreateCifsDatastore"/>
+               <include name="testMountDatastore"/>
+               <include name="testUnmountDatastore"/>
+               <include name="testDeleteDatastore"/>
+            </methods>
+         </class>
+      </classes>
+   </test>
+   <test name="projects">
+      <classes>
+         <class name="com.vmware.thinapp.tests.ProjectsTest"/>
+      </classes>
+   </test>
+   <test name="syscfg">
+      <classes>
+         <class name="com.vmware.thinapp.tests.SyscfgTest"/>
+      </classes>
+   </test>
+   <test name="workpools">
+      <classes>
+         <class name="com.vmware.thinapp.tests.WorkpoolsTest"/>
+      </classes>
+   </test>
+   <test name="runtimes">
+      <classes>
+         <class name="com.vmware.thinapp.tests.RuntimesTest"/>
+      </classes>
+   </test>
+</suite>

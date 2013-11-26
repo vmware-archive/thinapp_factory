@@ -1,0 +1,139 @@
+################################################################################
+## ThinApp Factory WebUI
+## (c) 2011 VMware, Inc. All rights reserved.
+################################################################################
+
+################################################################################
+## app-edit.vm
+##
+## This is the HTML view for submitting an existing application info update.
+################################################################################
+
+<script type="text/javascript">
+addLoad(function () {
+   VmTAF.contentNavigator.AddReadyFunction(function _appAddReady() {
+      VmTAF.appMgr = new AppManager();
+      VmTAF.appMgr.validator = new Validator('#app-form');
+   });
+
+   VmTAF.contentNavigator.AddCleanupFunction(function _appAddCleanup() {
+      VmTAF.appMgr.validator = VmTAF.appMgr.validator.Destruct();
+      VmTAF.appMgr = VmTAF.appMgr.Destruct();
+   });
+});
+</script>
+
+#parse("include/main-top.vm")
+
+<div class='build-form-content'>
+   ##
+   <form id="app-form" onsubmit="return false;">
+      <div class="stack-editor editable">
+         <div class="stack-header">
+            <span>Edit Application</span>
+         </div>
+         ##
+         ##
+         <div class="stack-group"> ## App info
+            <div class="stack-row-head">
+               <div class="label">
+                  <div class="icon"></div>
+                  <label>Application Info</label>
+               </div>
+            </div>
+            <div class="stack-row">
+               <div class="label">
+                  <label for="name" class="stack-required">Name</label>
+               </div>
+               <div class="field text short">
+                  <input name="appName" type="text" placeholder="My application name"
+                        validate="{required:true}" value="$!{app.name}" onblur="this.value=jQuery.trim(this.value)"></input>
+               </div>
+            </div>
+            <div class="stack-row">
+               <div class="label">
+                  <label for="version" class="stack-required">Version</label>
+               </div>
+               <div class="field text short">
+                  <input name="appVersion" type="text" placeholder="1.0"
+                        validate="{required:true}" value="$!{app.version}" onblur="this.value=jQuery.trim(this.value)"></input>
+               </div>
+            </div>
+            <div class="stack-row">
+               <div class="label">
+                  <label for="vendor">Vendor</label>
+               </div>
+               <div class="field text short">
+                  <input name="appVendor" type="text" value="$!{app.vendor}" onblur="this.value=jQuery.trim(this.value)"></input>
+               </div>
+            </div>
+            <div class="stack-row">
+               <div class="label">
+                  <label for="revision">Revision</label>
+               </div>
+               <div class="field text short">
+                  <input name="appRevision" type="text" value="$!{app.installerRevision}" onblur="this.value=jQuery.trim(this.value)"></input>
+               </div>
+            </div>
+            <div class="stack-row">
+               <div class="label">
+                  <label for="locale">Locale</label>
+               </div>
+               <div class="field text short">
+                  <input name="appLocale" type="text" value="$!{app.locale}" onblur="this.value=jQuery.trim(this.value)"></input>
+               </div>
+            </div>
+            <div class="stack-row">
+               <div class="label">
+                  <label for="download">Download Location</label>
+               </div>
+               <div class="field text short">
+                  <input type="text"
+                     value="$linkTool.decode($!{app.download.URI})"
+                     readonly="readonly"></input>
+               </div>
+            </div>
+            <div class="stack-row">
+               <div class="label">
+                  <label for="installer">Install Command</label>
+               </div>
+               <div class="field text short">
+                  <input name="appInstallCommandOption" type="text" value="$!esc.html($!{app.install.command})"
+                     onblur="this.value=jQuery.trim(this.value)"
+                     #if($app.dataSourceType == 'feed')
+                        disabled="true"
+                     #end
+                     ></input>
+               </div>
+            </div>
+         </div> ## stack-group
+
+         ##
+         ##
+         <div class="stack-footer">
+            <button
+               class="button"
+               onclick="VmTAF.appMgr.validator.OnSubmit( function(){
+                  VmTAF.appMgr.SubmitEditApplicationForm($('#app-form'), $('#hidden-form')); } )">
+               #springMessage('T.COMMON.SAVE')
+            </button>
+            <button
+               class="button"
+               onclick="VmTAF.appMgr.LoadAppDetailWithFormData($('#hidden-form'));">
+               #springMessage('T.COMMON.CANCEL')
+            </button>
+         </div> ##stack-footer
+      </div> ##stack-editor
+   </form>
+
+   ## Hidden fields that are not part of the edit application are stored here. They are used for navigation.
+   <form id="hidden-form">
+      <input type="hidden" name="appId" value="$app.id"></input>
+       ## form field values carried over from previous request
+      <input type="hidden" name="recipeId" value="$!recipeId"></input>
+      <input type="hidden" name="selectionData" value="$!selectionData"></input>
+   </form>
+
+</div>
+
+#parse("include/main-bottom.vm")

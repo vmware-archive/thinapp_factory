@@ -1,0 +1,37 @@
+################################################################################
+## ThinApp Factory WebUI
+## (c) 2011 VMware, Inc. All rights reserved.
+################################################################################
+
+################################################################################
+## admin-index.vm
+##
+## This file contains the HTML view for showing administration options.
+################################################################################
+
+<script type="text/javascript">
+#if ($newUI)
+#set($insideTab=true)
+addLoad(function () {
+#end
+   VmTAF.contentNavigator.AddReadyFunction(function _adminReady() {
+      VmTAF.admManager = new AdminManager();
+      VmTAF.admManager.CreateAdminEditor($('#admin-content'));
+      VmTAF.admManager.UpdateServerInfo();
+      VmTAF.admManager.ShowTimeSync();
+   });
+
+   VmTAF.contentNavigator.AddCleanupFunction(function _adminCleanup() {
+      VmTAF.admManager = VmTAF.admManager.Destruct();
+   });
+#if ($newUI)
+});
+#end
+</script>
+
+#parse("include/main-top.vm")
+
+<div id='admin-content'>
+</div>
+
+#parse("include/main-bottom.vm")

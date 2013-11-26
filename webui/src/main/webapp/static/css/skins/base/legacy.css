@@ -1,0 +1,1582 @@
+/* ***********************************************************************
+ * VMware ThinApp Factory
+ * Copyright (c) 2009-2013 VMware, Inc. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * ***********************************************************************/
+
+
+@import url('jquery-ui/jquery-ui-1.8.12.no-effects.css');
+@import url('jquery-ui/jquery-ui-1.8.12.no-effects.overwrite.css');
+
+@import url('datatable/data_table.css');
+@import url('datatable/override.css');
+
+/**
+ * Base styles which cannot be loaded in the new CSS
+ **/
+
+/***   Standard elements   ***/
+body {
+   font: normal 12px Arial,sans-serif;
+   margin: 0;
+   padding: 0;
+   border: 0;
+   background-color: #1C3D66;
+}
+input {
+   margin: 0;
+   font-size: 12px;
+   padding: 2px;
+   border: 1px solid #AAA;
+}
+select {
+   border: 1px solid #AAA;
+   font-size: 12px;
+   margin-left: 0;
+   margin-top: 1px;
+}
+a img {
+   border: none;
+}
+a,.button-link {
+   color: #3377AA;
+   margin: 0;
+   text-decoration: none;
+   font: normal 12px Arial;
+}
+.button-link {
+   text-align: left;
+}
+a:hover,.button-link:hover {
+   text-decoration: underline;
+   cursor: pointer;
+}
+a.button:hover {
+   text-decoration: none !important;
+}
+a,.title-link {
+   color: #2B5480;
+   font: bold 12px Arial;
+}
+ul {
+   padding: 0;
+   margin: 0;
+   border: 0;
+}
+
+checkbox:checked, radio:checked {
+   background-color: #90b6ff;
+}
+
+h1 {
+   color: black;
+   font: normal 20px Arial;
+   padding: 0;
+   margin: 0;
+}
+h2 {
+   color: black;
+   font: normal 16px Arial;
+   padding: 0;
+   margin: 0;
+}
+h3 {
+   color: black;
+   margin: 0;
+   padding: 0;
+}
+h4 {
+   color: black;
+   font-style: italic;
+   margin: 0;
+   padding: 0;
+}
+
+/*
+ *------------------------------------------------------------------------------
+ * Style for tables
+ *------------------------------------------------------------------------------
+ */
+
+table button, table .button {
+/*   height: 20px;*/
+   border: 0;
+   padding: 0 4px 4px 4px;
+}
+
+/***   defines the body layout   ***/
+table.data {
+   width: 100%;
+   border-spacing: 0;
+   border-style: solid;
+   border-top: 1px solid #aaa;
+   border-bottom: 1px solid #aaa;
+   border-left: 1px solid #aaa;
+   border-right: 0;
+}
+
+/** Datatables' input text field with validation icon */
+table.data .required-text-field {
+   width: 75%;
+   display: inline;
+}
+
+/* Cells containing the row index created by TableWrapper.js */
+table.data .row-key {
+   color: #f00;
+   display: none;
+}
+
+table.display, table.data tr {
+   height: 20px;
+   border: 0;
+}
+
+table.data tr.inactive {
+   color: #666;
+   font-style: italic;
+}
+
+table.data tr td.excluded {
+   color: #666 !important;
+   font-style: italic;
+   text-decoration: line-through;
+}
+
+table.data tr:hover, table.data tr:hover, table.data tr:hover a {
+   background-color: #A1C2E2 !important;
+   color: #FFFFFF !important;
+}
+
+/* Disabled table rows */
+table.data tr.disabled, table.data tr.disabled a {
+   color: #666 !important;
+   background-color: inherit !important;
+   font-style: italic;
+   text-decoration: none;
+   cursor: default;
+}
+
+table.data tr:nth-child(even) {
+   background-color: #e9f3f9; /*E6F1FD*/
+}
+
+table.data tr:nth-child(odd) {
+   background-color: #fff;
+}
+table.display, table.data th {
+   padding: 4px 5px;
+   background-color: #e7e7e7 !important;
+   color: #666;
+   font-size: 11px;
+   text-align: left;
+   border-right: 1px solid #aaa;
+   border-bottom: 1px solid #aaa;
+}
+
+table.data td {
+   padding: 4px 5px;
+   border-right: 1px solid #aaa;
+}
+
+.no-round-corner {
+   -webkit-border-radius: 0 !important;
+   -moz-border-radius: 0 !important;
+   border-radius: 0 !important;
+}
+
+/*** all color and styling related to stack editors **/
+
+/*
+ * -----------------------------------------------------------------------------
+ * Stack editor: global stuff
+ * -----------------------------------------------------------------------------
+ */
+
+.stack-editor {
+    border: 1px solid #AAA;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    -moz-box-shadow: 4px 4px 4px #999;
+    -webkit-box-shadow: 4px 4px 4px #999;
+    box-shadow: 4px 4px 4px #999;
+}
+
+.ui-dialog .stack-editor {
+    border:none;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+/*
+ * -----------------------------------------------------------------------------
+ * Stack editor header
+ * -----------------------------------------------------------------------------
+ */
+
+.stack-header {
+    background-color: #e7e9ea;
+    -webkit-border-radius: 5px 5px 0 0;
+    -moz-border-radius: 5px 5px 0 0;
+    border-radius: 5px 5px 0 0;
+    color: #333;
+}
+
+.stack-header span {
+    padding: 7px 0;
+    display: block;
+    word-wrap: break-word;
+}
+
+/*
+ * -----------------------------------------------------------------------------
+ * Stack editor footer
+ * -----------------------------------------------------------------------------
+ */
+
+.stack-footer {
+    background-color: #f2f2f2;
+    -webkit-border-radius: 0 0 5px 5px;
+    -moz-border-radius: 0 0 5px 5px;
+    border-radius: 0 0 5px 5px;
+    height: 32px;
+}
+
+.stack-footer .icon {
+    cursor: pointer;
+    border: 1px solid #f2f2f2;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+}
+
+.stack-footer .icon:hover {
+    border: 1px solid #aaaaaa;
+}
+
+.stack-footer .icon.disabled {
+    opacity: 0.5;
+    filter: alpha(opacity=50);
+    cursor: default;
+}
+
+/*
+ * -----------------------------------------------------------------------------
+ * Stack editor: group (of rows)
+ * -----------------------------------------------------------------------------
+ */
+
+.stack-editor .stack-group {
+    border-bottom: 1px solid #ddd;
+}
+
+.stack-editor .stack-group .stack-row-head .label {
+    color: #666;
+}
+
+.stack-editor .stack-group .stack-row-head {
+    height: 27px;
+}
+/*
+ * -----------------------------------------------------------------------------
+ * Stack editor collapsible groups
+ * -----------------------------------------------------------------------------
+ */
+
+.stack-group.collapsible .stack-row-head .label:hover {
+    cursor: pointer;
+}
+.stack-group.collapsible .stack-row-head .label:hover label {
+    text-decoration: underline;
+    cursor: pointer;
+}
+/*   Css for expand and collapse images for stack-group-head  */
+.stack-group.collapsible .stack-row-head .icon {
+    background-image: url(jquery-ui/images/ui-icons_217bc0_256x240.png);
+    background-repeat: no-repeat;
+    width: 15px;
+    height: 15px;
+    display: inline;
+    float: left;
+    background-position: -66px -17px;
+}
+.stack-group.collapsible .stack-row-head .label:hover .icon {
+    background-position: -66px -1px;
+}
+/* collapsed class indicates the icon should be collapsed. */
+.stack-group.collapsible.collapsed .stack-row-head .label .icon {
+    background-position: -34px -17px;
+}
+.stack-group.collapsible.collapsed .stack-row-head .label:hover .icon {
+    background-position: -34px -1px;
+}
+
+
+/*
+ * -----------------------------------------------------------------------------
+ * Stack editor row
+ * -----------------------------------------------------------------------------
+ */
+
+.stack-editor .stack-row {
+    color: #444;
+}
+
+.stack-editor .label {
+    background-color: #e4eff6;
+}
+
+.ui-dialog .stack-editor .label {
+    background: inherit;
+}
+
+/*
+ * -----------------------------------------------------------------------------
+ * Stack editor text fields
+ * -----------------------------------------------------------------------------
+ */
+
+/* When not using editable, the input text does not have a border */
+.stack-editor.editable .field.text input {
+    border: 1px solid #AAA;
+}
+
+/*
+ * -----------------------------------------------------------------------------
+ * Overwriting CORE CSS.
+ * -----------------------------------------------------------------------------
+ */
+#page {
+    background-color:#4F99C9;
+    filter:progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr=#4F99C9, endColorstr=#1C3D66);
+    background-image:-moz-linear-gradient(top, #4F99C9 33%, #1C3D66 76%);
+    background-image:linear-gradient(top, #4F99C9 33%, #1C3D66 76%);
+    background-image:-webkit-gradient(linear, right top, right bottom, color-stop(33%,#4F99C9), color-stop(76%,#1C3D66));
+}
+
+/**
+ * Defines the css for displaying the license info to end user.
+ */
+.license-msg {
+    font: bold 12px sans-serif;
+    color: yellow;
+}
+
+/***   defines the footer layout   ***/
+#page-footer {
+    clear: both;
+    height: 42px;
+    margin-bottom: 10px;
+    text-align: center;
+    color: white;
+}
+
+#page-footer a {
+    font-size: 0.8em;
+    text-decoration: underline;
+    color: #fff;
+}
+
+
+/***   defines the body layout   ***/
+
+.page-body-wrapper {
+    clear: both;
+    margin: 0 10px 10px 10px;
+    padding: 8px 5px 5px 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    background-color: #97BCDC;/* old browsers */
+    background: -moz-linear-gradient(top, #97BCDC 0%, #8C99AE 100%); /* firefox */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#97BCDC), color-stop(100%,#8C99AE)); /* webkit */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#97BCDC', endColorstr='#8C99AE',GradientType=0 ); /* ie */
+}
+
+#page-body {
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    background-color: white;
+}
+
+.text-align-right {
+    text-align: right;
+}
+
+.panel-left {
+    background-color: #97BCDC;
+    border-right: 2px solid #97BCDC;
+    width: 200px;
+    float: left;
+    -webkit-border-bottom-left-radius: 5px;
+    -moz-border-radius-bottomleft: 5px;
+    border-bottom-left-radius: 5px;
+}
+.panel-right {
+    background-color: #97BCDC;
+    border-left: 2px solid #97BCDC;
+    margin-left: 200px;
+    -webkit-border-bottom-right-radius: 5px;
+    -moz-border-radius-bottomright: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+
+#page-body .panel .panel-title {
+    padding: 7px 10px;
+    margin: 0;
+    font-weight: bold;
+    color: #333;
+    border-bottom: 1px solid #97BCDC;
+    background: #dfe1e5; /* old browsers d9dde0*/
+    background: -moz-linear-gradient(top, #dfe1e5 0%, #b9bbbf 100%); /* firefox */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#dfe1e5), color-stop(100%,#b9bbbf)); /* webkit */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#dfe1e5', endColorstr='#b9bbbf',GradientType=0 ); /* ie */
+    background: -o-linear-gradient(top, #dfe1e5 0%,#b9bbbf 100%); /* opera */
+    -webkit-border-radius: 5px 5px 0 0;
+    -moz-border-radius: 5px 5px 0 0;
+    border-radius: 5px 5px 0 0;
+}
+
+#page-body .panel .panel-title .panel-title-right {
+    float: right;
+    font-weight: normal;
+    color: #666;
+}
+#page-body .panel .panel-content {
+    padding: 10px;
+    background-color: white;
+}
+/*   @TODO:  Need a better fix   */
+#page-body .panel-right .panel-content {
+    padding: 1px;
+}
+
+/***   defines the form elements   ***/
+
+form.primary {
+    padding: 5px;
+    margin: 5px;
+}
+
+form.primary fieldset {
+    border: 1px solid #888;
+    margin-bottom: 5px;
+}
+
+form.primary fieldset div {
+    padding: 5px;
+}
+
+form.primary legend {
+    font-weight: bold;
+    padding: 2px;
+    background: #FFF;
+}
+
+form.primary .field.text label {
+    display: inline-block;
+    width: 50%;
+}
+
+form.primary .field.text input {
+    border: 1px solid #AAA;
+    font-size: 10pt;
+    padding: 2px;
+}
+
+form.primary .field.text.short input {
+    width: 50%;
+    display: block;
+}
+
+form.primary .field.text.long input {
+    width: 100%;
+}
+
+form.primary .field.text.number input {
+    display: block;
+    width: 5em;
+}
+
+form.primary .field.checkbox label {
+    display: inline-block;
+}
+
+form.primary .default input {
+    font-style: italic;
+    color: #666;
+    float: right;
+}
+form.primary input#filter {
+    margin-top: 5px;
+}
+
+/***   defines the button element   ***/
+.button-row {
+    padding: 5px 5px 5px 0;
+}
+button, .button {
+    border: 1px solid #949494;
+    text-align: center;
+    color: #333;
+    font-style: normal;
+    font-size: 12px;
+    padding: 1px 8px 3px 8px;
+    /*    height: 22px; */
+    cursor: pointer;
+    background: #e6e6e6; /*** to: #fefefe */
+    background: -moz-linear-gradient(top, #fefefe 0%, #e6e6e6 100%); /* firefox */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#fefefe), color-stop(100%,#e6e6e6)); /* webkit */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fefefe', endColorstr='#e6e6e6',GradientType=0 ); /* ie */
+    background: -o-linear-gradient(top, #fefefe 0%,#e6e6e6 100%); /* opera */
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+}
+.button-row .button {
+    margin-right: 5px;
+}
+.button:hover {
+    background-color: #c7e9ff; /*** to: #90b6ff */
+    background: -moz-linear-gradient(top, #c7e9ff 0%, #90b6ff 100%); /* firefox */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#c7e9ff), color-stop(100%,#90b6ff)); /* webkit */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#c7e9ff', endColorstr='#90b6ff',GradientType=0 ); /* ie */
+    background: -o-linear-gradient(top, #c7e9ff 0%,#90b6ff 100%); /* opera */
+    border: 1px solid #93cbef;
+}
+
+/***   Need explicitly? */
+.button:active {
+}
+.button:disabled {
+    color: #999 !important;
+    border: 1px solid #999 !important;
+    cursor: auto !important;
+}
+.button.default  {
+    border: 1px solid #93cbef !important;
+}
+
+/*
+ *------------------------------------------------------------------------------
+ * Style for tables
+ *------------------------------------------------------------------------------
+ */
+
+/** Datatables' input text field with validation icon */
+table.data .required-text-field {
+    width: 75%;
+    display: inline;
+}
+
+/* Cells containing the row index created by TableWrapper.js */
+table.data .row-key {
+    color: #f00;
+    display: none;
+}
+
+table.display, table.data tr {
+    height: 20px;
+    border: 0;
+}
+
+table.data tr.inactive {
+    color: #666;
+    font-style: italic;
+}
+
+table.data tr.excluded td, table.data tr.excluded div{
+    color: #666 !important;
+    font-style: italic;
+    text-decoration: line-through;
+}
+
+table.data tr.excluded img {
+    opacity: 0.4;
+    filter: alpha(opacity=40);
+}
+
+table.data tr:hover, table.data tr:hover, table.data tr:hover a {
+    /*background-color: #A1C2E2 !important;*/
+    /*color: #FFFFFF !important;*/
+}
+
+/* Disabled table rows */
+table.data tr.disabled, table.data tr.disabled a {
+    color: #666 !important;
+    background-color: inherit !important;
+    font-style: italic;
+    text-decoration: none;
+    cursor: default;
+}
+
+.no-round-corner {
+    -webkit-border-radius: 0 !important;
+    -moz-border-radius: 0 !important;
+    border-radius: 0 !important;
+}
+
+/*** The following provide generic css class for some commom ones. ***/
+.no-show {
+    display: none;
+}
+.clearDiv {
+    clear: both;
+}
+.pad-all {
+    padding: 10px !important;
+}
+.float-right {
+    float: right;
+}
+.float-left {
+    float: left;
+}
+.bold {
+    font-weight: bold;
+}
+
+/*
+ * -----------------------------------------------------------------------------
+ *   Defines the progress container
+ * -----------------------------------------------------------------------------
+ */
+.progress-container {
+    border: 1px solid #DDD;
+    padding: 0;
+    position: relative;
+    z-index: 2;
+    overflow: hidden;
+    height: 17px;
+    width: 100%;
+    min-width: 125px;
+    background-color: #FFFFFF;
+}
+
+.progress-container .progress-text {
+    text-align: left;
+    position: absolute;
+    font-size: 11px;
+    left: 5px;
+    top: 2px;
+    padding: 0 !important;
+    z-index: 4;
+    overflow: hidden;
+    color: #000;
+}
+
+.progress-container .progress-bar {
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    overflow: hidden;
+    z-index: 1;
+    margin: 0;
+    padding: 0 !important;
+    width: 100px;
+    height: 15px;
+}
+
+.progress-container .progress-step {
+    text-align: left;
+    color: #000;
+    position: absolute;
+    font-size: 11px;
+    z-index: 3;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+}
+
+.progress-container .progress-step span {
+    height: 100%;
+    text-align: center;
+    position: relative;
+    float: left;
+    display: inline;
+    color: #333;
+    border-right: 1px solid #BBB;
+    margin-right: -1px;
+    z-index: 3;
+}
+
+.progress-container .progress-step span.step-loading {
+    border-left: 1px solid #BBB;
+    margin-left: -1px;
+    border-top: 0;
+    background-image: url("images/pbar-orange.gif");
+    overflow: auto;
+}
+.progress-container .orange .progress-step span.step-loading {
+    background-image: url("images/pbar-orange.gif") !important;
+}
+.progress-container .red .progress-step span.step-loading {
+    background-image: url("images/pbar-orange.gif") !important;
+}
+
+.progress-container .green {
+    border-top: 1px solid #7ACC52;
+    border-bottom: 1px solid #7ACC52;
+    background-color: #C2FFA3;
+    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#C2FFA3), to(#C2FFA3), color-stop(.5,#7ACC52));
+    background: -moz-linear-gradient(top, #C2FFA3 0%, #7ACC52 50%, #C2FFA3 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#C2FFA3', endColorstr='#7ACC52',GradientType=0 );
+}
+
+.progress-container .red {
+    border-top: 1px solid #FF704D;
+    border-bottom: 1px solid #FF704D;
+    background-color: #FFC2B2;
+    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#FFC2B2), to(#FFC2B2), color-stop(.5,#FF704D));
+    background: -moz-linear-gradient(top, #FFC2B2 0%, #FF704D 50%, #FFC2B2 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#FFC2B2', endColorstr='#FF704D',GradientType=0 );
+}
+
+.progress-container .orange {
+    border-top: 1px solid #FF9933;
+    border-bottom: 1px solid #FF9933;
+    background-color: #FFC285;
+    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#FFC285), to(#FFC285), color-stop(.5,#FF9933));
+    background: -moz-linear-gradient(top, #FFC285 0%, #FF9933 50%, #FFC285 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#FFC285', endColorstr='#FF9933',GradientType=0 );
+}
+
+
+.label {
+    width: 100%;
+    display: inline;
+}
+
+/*
+ * Defines that DIV that is used in place of content while we
+ * wait for an Ajax call to complete.
+ */
+.ajax-loader {
+    background-image: url('images/ajax-loader.gif') ;
+    background-repeat: no-repeat;
+    left: 50%;
+    position: relative;
+    width: 16px;
+    height: 16px;
+    margin-left: -8px;
+}
+
+/* Text after the ajax-loader to tell you what's loading */
+.ajax-loader-text {
+    width: 100%;
+    text-align: center;
+    font-weight: bold;
+    padding: 10px 0 10px 0;
+}
+
+/*** Style for the 'refresh-in-progress' indicator. ***/
+.refresh-indicator {
+    background-image: url('images/loading.gif');
+    float: right;
+    margin: 3px;
+    width: 16px;
+    height: 16px;
+}
+
+/* Overwrite with a red image */
+.refresh-indicator.error {
+    background-position: -32px -192px;
+    background-image: url(jquery-ui/images/ui-icons_cd0a0a_256x240.png);
+    background-repeat: no-repeat;
+}
+
+/*
+ * Styling for the UI modal blocker (from jquery.blockUI)
+ */
+.blockMsg {
+    width: 40%;
+    top: 30%;
+    left: 30%;
+    text-align: center;
+    background-color: #fff;
+    border: 5px solid #3580BF;
+    border-radius: 10px;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    padding: 15px;
+    margin: 15px 10px;
+}
+
+.blockOverlay {
+    opacity: 0.0;
+    cursor: wait;
+}
+
+.blockMsg h1 {
+    color: #000;
+    font-size: 12pt;
+}
+
+
+/*
+ * af-dialog is the palceholder for all the jquery ui dialog entities:
+ *  AfAlert, AfConfirm, AfProcessWait*, AfNotify
+ */
+.af-dialog {
+}
+
+/***   Modal class used for alert and confirm   ***/
+.af-alert, .af-confirm {
+    padding: 8px 10px;
+    text-align: center;
+}
+
+/***   Modal class used for processWait   ***/
+#modal-overlay {
+    background: url('images/ajax-loader.gif') left center no-repeat;
+    margin: 15px 10px;
+    vertical-align: middle;
+    padding-left: 25px;
+    text-align: center;
+}
+/*   Custom visibility setting for the close image.   */
+.modal-overlay-parent a.ui-dialog-titlebar-close {
+    visibility: hidden;
+    cursor: move;
+}
+/*
+ * AfNotify() related css.
+ *
+ * This div is the holder for all notification popups.
+ */
+#notify-holder {
+    z-index: 5;
+    top: 43px;
+    right: 25px;
+    width: 350px;
+    height: auto;
+    position: fixed;
+}
+
+/* Defines the css for the notification div. Displays green icon & text */
+#notify-holder .notify {
+    position: relative;
+    display: block;
+    border: 1px solid #99F261;
+    color: green;
+    width: 340px;
+    height: auto;
+    padding: 5px 8px;
+    background-color: #E6F6DA;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    margin-bottom: 5px;
+    -moz-box-shadow: 3px 3px 3px #999;
+    -webkit-box-shadow: 3px 3px 3px #999;
+    box-shadow: 3px 3px 3px #999;
+    opacity: 0.8;
+    filter: alpha(opacity=80);
+}
+/* The icon displayed to the left of the notification message */
+#notify-holder .notify .icon {
+    display: inline;
+    float: left;
+    vertical-align: middle;
+    width: 16px;
+    height: 16px;
+    background: url(jquery-ui/images/ui-icons_4eb305_256x240.png) -208px -192px no-repeat;
+}
+/* The actual message displayed on the notification */
+#notify-holder .notify .msg {
+    display: inline;
+    margin-left: 4px;
+    vertical-align: middle;
+    float: left;
+    width: 292px;
+}
+/* Title for the notification */
+#notify-holder .notify .msg .title {
+    font-weight: bold;
+    width: 100%;
+}
+/* Close icon to the right of the notification pop up. */
+#notify-holder .notify .close {
+    display: inline;
+    float: right;
+    vertical-align: middle;
+    width: 16px;
+    height: 16px;
+    background: url(jquery-ui/images/ui-icons_4eb305_256x240.png) -96px -128px no-repeat;
+    cursor: pointer;
+}
+
+/* Overwrite .notify with .notify.info: Uses blue icons & text */
+#notify-holder .notify.info {
+    border: 1px solid #3580BF;
+    background-color: #E4EFF6;
+    color: #3580BF;
+}
+#notify-holder .notify.info .close {
+    background-image: url(jquery-ui/images/ui-icons_217bc0_256x240.png);
+}
+#notify-holder .notify.info .icon {
+    background: url(jquery-ui/images/ui-icons_217bc0_256x240.png) -16px -144px no-repeat;
+}
+
+/* Overwrite .notify with .notify.warn: Uses orange/yellow icons & text */
+#notify-holder .notify.warn {
+    border: 1px solid #F7DA7C;
+    background-color: #FFF2D0;
+    color: orange;
+}
+#notify-holder .notify.warn .close {
+    background-image: url(jquery-ui/images/ui-icons_f9bd01_256x240.png);
+}
+#notify-holder .notify.warn .icon {
+    background: url(jquery-ui/images/ui-icons_f9bd01_256x240.png) 0 -144px no-repeat;
+}
+/* Overwrite .notify with .notify.error: Uses red icons & text */
+#notify-holder .notify.error {
+    border: 1px solid #FA8469;
+    background-color: #F2EBEB;
+    color: red;
+}
+#notify-holder .notify.error .close {
+    background-image: url(jquery-ui/images/ui-icons_cd0a0a_256x240.png);
+}
+#notify-holder .notify.error .icon {
+    background: url(jquery-ui/images/ui-icons_cd0a0a_256x240.png) -32px -192px no-repeat;
+}
+
+.validation-error-icon {
+    cursor: pointer;
+    margin-left: 4px;
+    width: 16px;
+    height: 16px;
+    background: url(jquery-ui/images/ui-icons_cd0a0a_256x240.png) -32px -192px no-repeat;
+    padding: 0 !important;
+    display: inline-block;
+}
+
+.validation-success-icon {
+    cursor: pointer;
+    margin-left: 4px;
+    width: 16px;
+    height: 16px;
+    background: url(jquery-ui/images/ui-icons_4eb305_256x240.png) -208px -192px no-repeat;
+    padding: 0 !important;
+    display: inline-block;
+}
+
+/*
+ * Asterisk which appears next to items with
+ * unsaved changes.
+ */
+.change-marker {
+    color: #a00;
+}
+
+em {
+    color: blue;
+    font-weight: lighter;
+    font-size: 10px;
+}
+
+/*
+ * Buttons that we want to look like links.
+ */
+.button-link {
+    background: none;
+    border: none;
+    padding: 0;
+    filter: none;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.top-desc .button-link {
+    font-size:11px;
+    position:absolute;
+    right:10px;
+}
+
+/*
+ * -----------------------------------------------------------------------------
+ * Settings for tabs
+ * -----------------------------------------------------------------------------
+ */
+
+.taf-horiz-tabs {
+    padding: 0;
+    border: 0;
+    position: inherit;
+    -moz-border-radius: 0 !important;
+    -webkit-border-radius: 0 !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+    display: none;
+    /** you must include the argument when calling jQuery.tabs() of:
+    {show: function(){$(this).show()}
+   This eliminates double rendering of the tabs in pre-jQuery and post-jQuery
+   state. **/
+}
+
+.taf-horiz-tabs ul {
+    -moz-border-radius: 0 !important;
+    -webkit-border-radius: 0 !important;
+    border-radius: 0 !important;
+}
+
+.notification .icon {
+    margin-right: 4px;
+    width: 16px;
+    height: 16px;
+    padding: 0 !important;
+}
+
+/** Blue info icon */
+.notification .info {
+    background: url(jquery-ui/images/ui-icons_217bc0_256x240.png) -16px -144px no-repeat;
+}
+
+/** Yellow warning icon */
+.notification .warn {
+    background: url(jquery-ui/images/ui-icons_f9bd01_256x240.png) 0 -144px no-repeat;
+}
+
+/** Red error icon */
+.notification .error {
+    background: url(jquery-ui/images/ui-icons_cd0a0a_256x240.png) -32px -192px no-repeat;
+}
+
+.notification #recent-event span,.notification #recent-event img {
+    vertical-align: top;
+}
+
+/** Notification status bar text */
+.notification .status-bar {
+    float: left;
+    font: bold 12px Gotham Narrow,sans-serif;
+    text-align: left;
+}
+
+
+/*
+ * -----------------------------------------------------------------------------
+ * Defines the css for the capture task summary.
+ * -----------------------------------------------------------------------------
+ */
+#progress-holder {
+    z-index: 10;
+    bottom: 0;
+    right: 0;
+    width: 200px;
+    position: fixed;
+    font-size: 11px;
+}
+
+#progress-holder #task-progress-holder, #progress-holder #action-alert-holder {
+    position: relative;
+    z-index: 8;
+    display: block;
+}
+
+#task-progress-holder .summary {
+    padding: 8px 8px;
+    background-color: #E6F6DA;
+    border: 1px solid #85d633;
+    border-radius: 5px 0 0 0;
+    -webkit-border-radius: 5px 0 0 0;
+    -moz-border-radius: 5px 0 0 0;
+}
+
+#task-progress-holder .summary .top-desc {
+    padding-bottom: 6px;
+    font-weight: bold;
+}
+
+#task-progress-holder .summary .top-desc button {
+    margin-left: 3px;
+}
+
+#task-progress-holder .summary .bottom-desc {
+    color: #333;
+    padding-top: 3px;
+}
+
+#task-progress-holder .summary .pbar {
+    width:160px;
+    display: inline-block;
+}
+
+#task-progress-holder .summary .pause {
+    display: inline-block;
+    margin-left: 3px;
+    width: 16px;
+    height: 16px;
+    background: url(jquery-ui/images/ui-icons_4eb305_256x240.png) -16px -160px no-repeat;
+-160px no-repeat;
+cursor: pointer;
+float: right;
+    }
+
+#progress-holder #action-alert-holder {
+    max-height: 200px;
+    overflow: auto;
+    margin-right: -15px;
+    width: 100%;
+    display: block;
+}
+
+/*
+ * -----------------------------------------------------------------------------
+ * CSS for the persistant action alerts
+ * -----------------------------------------------------------------------------
+ */
+#action-alert-holder .action-alert {
+    position: relative;
+    padding: 5px;
+    border-radius: 5px 0 0 0;
+    -webkit-border-radius: 5px 0 0 0;
+    -moz-border-radius: 5px 0 0 0;
+}
+
+#action-alert-holder .action-alert.warn {
+    color: #ffa500;
+    border-top: 1px solid #F7DA7C;
+    border-left: 1px solid #F7DA7C;
+    background-color: #FFF2D0;
+}
+
+#action-alert-holder .action-alert.error {
+    color: red;
+    border-top: 1px solid #FA8469;
+    border-left: 1px solid #FA8469;
+    background-color: #F2EBEB;
+}
+
+#action-alert-holder .action-alert .icon {
+    display: inline;
+    float: left;
+    vertical-align: middle;
+    width: 16px;
+    height: 16px;
+    margin-right: 3px;
+}
+
+#action-alert-holder .action-alert.warn .icon {
+    background: url(jquery-ui/images/ui-icons_f9bd01_256x240.png) 0 -144px no-repeat;
+}
+
+#action-alert-holder .action-alert.error .icon {
+    background: url(jquery-ui/images/ui-icons_cd0a0a_256x240.png) 0 -144px no-repeat;
+}
+
+/***   defines the button element   ***/
+
+.button.big {
+    font-size: 16px;
+    font-weight: bold;
+    padding: 5px 6px 6px 6px;
+    -webkit-border-radius: 12px;
+    -moz-border-radius: 12px;
+    border-radius: 12px;
+}
+
+/** The following is used for workpool, runtime, datastore picker widget **/
+.pick-wp-rt-ds {
+    background-color: #E0F0D0;
+    border-radius: 8px;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    box-shadow: 3px 3px 3px #999;
+    -moz-box-shadow: 3px 3px 3px #999;
+    -webkit-box-shadow: 3px 3px 3px #999;
+}
+.pick-wp-rt-ds .button-holder {
+    border-top: 1px solid #AAA;
+    margin: 2px 5px;
+    padding: 4px 0 2px 0;
+    text-align: center;
+    font-size: 14px;
+    font-weight: bold;
+}
+.pick-wp-rt-ds select, .pick-wp-rt-ds input {
+    max-width: 160px;
+}
+
+/*
+ * -----------------------------------------------------------------------------
+ * ThinApp Factory WebUI
+ * (c) 2011 VMware, Inc. All rights reserved.
+ * -----------------------------------------------------------------------------
+ */
+
+
+/*
+ * -----------------------------------------------------------------------------
+ * Stack editor: global stuff
+ * -----------------------------------------------------------------------------
+ */
+
+.stack-editor {
+    border: 1px solid #AAA;
+    margin: 10px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    -moz-box-shadow: 4px 4px 4px #999;
+    -webkit-box-shadow: 4px 4px 4px #999;
+    box-shadow: 4px 4px 4px #999;
+}
+
+.ui-dialog .stack-editor {
+    border:none;
+    margin:0;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+/*
+ * -----------------------------------------------------------------------------
+ * Stack editor header
+ * -----------------------------------------------------------------------------
+ */
+
+.stack-header {
+    background-color: #e7e9ea;
+    font-weight: bold;
+    min-height: 27px;
+    width: 96%;
+    padding-left: 2%;
+    padding-right: 2%;
+    -webkit-border-radius: 5px 5px 0 0;
+    -moz-border-radius: 5px 5px 0 0;
+    border-radius: 5px 5px 0 0;
+    color: #333;
+}
+
+.stack-header span {
+    padding: 7px 0;
+    display: block;
+    word-wrap: break-word;
+}
+
+/*
+ * -----------------------------------------------------------------------------
+ * Stack editor footer
+ * -----------------------------------------------------------------------------
+ */
+
+.stack-footer {
+    background-color: #f2f2f2;
+    height: 32px;
+    padding-left: 2%;
+    -webkit-border-radius: 0 0 5px 5px;
+    -moz-border-radius: 0 0 5px 5px;
+    border-radius: 0 0 5px 5px;
+}
+
+.stack-footer .button {
+    margin: 5px 5px 0 0;
+}
+
+.stack-footer .icon {
+    cursor: pointer;
+    width: 16px;
+    height: 16px;
+    margin: 6px 5px;
+    float: right;
+    border: 1px solid #f2f2f2;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+}
+
+.stack-footer .icon:hover {
+    border: 1px solid #aaaaaa;
+}
+
+.stack-footer .icon.disabled {
+    opacity: 0.5;
+    filter: alpha(opacity=50);
+    cursor: default;
+}
+
+/*
+ * -----------------------------------------------------------------------------
+ * Stack editor: group (of rows)
+ * -----------------------------------------------------------------------------
+ */
+
+.stack-editor .stack-group {
+    border-bottom: 1px solid #ddd;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    text-align: left;
+}
+
+.ui-dialog .stack-editor .stack-group {
+    border-bottom: none;
+}
+
+.stack-editor .stack-group .stack-row-head {
+    height: 27px;
+}
+
+.stack-editor .stack-group .stack-row-head .label {
+    font-weight: bold;
+    padding-top: 5px;
+    padding-bottom: 8px;
+    text-align: left;
+    color: #666;
+}
+
+.stack-editor .stack-group .stack-row-head .label img {
+    padding-right: 5px;
+}
+
+
+/*
+ * -----------------------------------------------------------------------------
+ * Stack editor collapsible groups
+ * -----------------------------------------------------------------------------
+ */
+
+.stack-group.collapsible .stack-row-head .label:hover {
+    cursor: pointer;
+}
+.stack-group.collapsible .stack-row-head .label:hover label {
+    text-decoration: underline;
+    cursor: pointer;
+}
+/*   Css for expand and collapse images for stack-group-head  */
+.stack-group.collapsible .stack-row-head .icon {
+    background-image: url(jquery-ui/images/ui-icons_217bc0_256x240.png);
+    background-repeat: no-repeat;
+    width: 15px;
+    height: 15px;
+    display: inline;
+    float: left;
+    background-position: -66px -17px;
+}
+.stack-group.collapsible .stack-row-head .label:hover .icon {
+    background-position: -66px -1px;
+}
+/* collapsed class indicates the icon should be collapsed. */
+.stack-group.collapsible.collapsed .stack-row-head .label .icon {
+    background-position: -34px -17px;
+}
+.stack-group.collapsible.collapsed .stack-row-head .label:hover .icon {
+    background-position: -34px -1px;
+}
+
+
+/*
+ * -----------------------------------------------------------------------------
+ * Stack editor row
+ * -----------------------------------------------------------------------------
+ */
+
+.stack-editor .stack-row {
+    clear: both;
+    color: #444;
+}
+
+.stack-editor .label {
+    padding: 2px 1% 3px 1%;
+    width: 28%;
+    background-color: #e4eff6;
+    float: left;
+    text-align: right;
+    min-height: 15px;
+    word-wrap: break-word;
+}
+
+.ui-dialog .stack-editor .label {
+    background: inherit;
+}
+
+.stack-editor.editable .label {
+    padding-top: 4px;
+    padding-bottom: 5px;
+}
+
+.stack-editor.editable .label em {
+    padding-right: 5px;
+}
+
+/*
+ * -----------------------------------------------------------------------------
+ * Stack editor fields (any type)
+ * -----------------------------------------------------------------------------
+ */
+
+.stack-editor .stack-row .field {
+    float: right;
+    padding: 0 2% 0 1%;
+    width: 67%;
+    vertical-align: middle;
+    height: 100%;
+}
+
+.stack-editor .field span {
+    padding: 3px 5px;
+    display: inline-block;
+}
+
+.stack-editor .field label {
+    padding: 3px 5px 0 5px;
+    display: inline-block;
+}
+
+.stack-editor .field input {
+    display: inline;
+    vertical-align: middle;
+    float: left;
+}
+
+.stack-editor .field select {
+    display: inline;
+    vertical-align: middle;
+    float: left;
+    max-width: 100%;
+}
+
+/* Full width fields have no label, span the entire width */
+.stack-editor .stack-row .field.full-width {
+    width: 96%;
+    padding: 2%;
+}
+
+.stack-editor .stack-row .field.full-width input {
+    width: 100%;
+}
+
+.stack-editor .stack-row .field.full-width select {
+    width: 100%;
+}
+
+/*
+ * -----------------------------------------------------------------------------
+ * Stack editor text fields
+ * -----------------------------------------------------------------------------
+ */
+
+/* When not using editable, the input text does not have a border */
+.stack-editor.editable .field.text input {
+    border: 1px solid #AAA;
+}
+
+.stack-editor.editable .field.text.no-border input {
+    border: 0 !important;
+}
+
+/* All text inputs */
+.stack-editor .field.text input {
+    border: 0;
+}
+
+/* Text inputs for numbers */
+.stack-editor .field.text.number input {
+    width: 5em;
+}
+
+/* Text inputs for short strings */
+.stack-editor .field.text.short input {
+    width: 50%;
+}
+
+/* Text inputs for long strings */
+.stack-editor .field.text.long input {
+    width: 90%;
+}
+
+/* Text inputs for long strings, but with space for extra icons */
+.stack-editor .field.text.almost-long input {
+    width: 85%;
+}
+
+/* .field.text.full should not have a span following it  */
+.stack-editor .field.text.full input {
+    width: 100%;
+}
+
+
+/*
+ * -----------------------------------------------------------------------------
+ * Stack editor checkbox / radio fields
+ * -----------------------------------------------------------------------------
+ */
+
+.stack-editor .field.checkbox input {
+    margin-top: 4px;
+    border: 0;
+}
+.stack-editor .field.radio input {
+    margin-top: 1px;
+    border: 0;
+    float: none;
+}
+
+/*
+ * -----------------------------------------------------------------------------
+ * Stack editor jquery ui slider
+ * -----------------------------------------------------------------------------
+ */
+
+.stack-editor .field .slider {
+    margin: 5px 8px 0 8px;
+}
+
+.stack-editor .field.text.number .slider {
+    width: 70%;
+    float: left;
+}
+
+.stack-editor .field.text.short .slider {
+    width: 45%;
+    float: left;
+}
+
+.stack-required {
+    font-weight: bold;
+}
+
+.stack-required:before {
+    content: "* ";
+    font-weight: bold;
+    color:darkred;
+}
+
+.dataTables_info {
+    float:left;
+}
+
+.app-left img.app-icon {
+    right:0 !important;
+}
+
+.app-detail-main .app-left, .recipe-app-main .app-left {
+    padding-top:0 !important;
+}
+
+/******/

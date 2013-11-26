@@ -1,0 +1,16 @@
+# files the git should ignore - appfactory.git
+/build/
+.project
+.settings/
+.classpath
+target/
+/Local.mk
+.springBeans
+META-INF
+
+# IntelliJ
+*.iml
+*.ipr
+*.iws
+rebel.xml
+

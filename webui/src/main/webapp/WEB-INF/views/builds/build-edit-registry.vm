@@ -1,0 +1,92 @@
+################################################################################
+## ThinApp Factory WebUI
+## (c) 2011 VMware, Inc. All rights reserved.
+################################################################################
+
+################################################################################
+## build-edit-registry.vm
+##
+## This view allows editing of registry data from build settings.
+################################################################################
+
+<div class="button-row">
+   <button
+         class="button"
+         onclick="
+         VmTAF.buildManager.SaveRegistry(VmTAF.buildEditor.regEditor);
+         VmTAF.buildEditor.regEditor.MarkAsUnchanged();">
+      Save Registry
+   </button>
+   <button
+         class="button"
+         onclick="
+               VmTAF.buildManager.ResetAndReload('$buildId', 'registry', function(data) {
+               regData = data;
+               VmTAF.buildEditor.regEditor.Populate('$buildId', regData);
+               VmTAF.buildEditor.regEditor.PopulateValues(null);
+               VmTAF.buildEditor.regEditor.MarkAsUnchanged();
+               });">
+      Reset Registry
+   </button>
+</div>
+
+<div id="registry-editor" class="registry-editor">
+   <form id="registry-form"
+         onsubmit="return false;"
+         onkeypress="return (window.event.keyCode != 13);">
+      <div class="stack-editor registry-keys">
+         <div class="stack-header">
+            <span>Keys</span>
+         </div>
+         <div id="registry-tree-holder" class="stack-group">
+         ##
+         ## Registry trees will be created here. They are created
+         ## dynamically by the RegistryEditor.
+         ##
+            <div class="ajax-loader"></div>
+         </div>
+         <div class="stack-footer">
+            <button
+                  class="button"
+                  onclick="VmTAF.buildEditor.regEditor.CreateKey();">
+               New
+            </button>
+            <button
+                  class="button"
+                  onclick="VmTAF.buildEditor.regEditor.RenameKey();">
+               Rename
+            </button>
+            <button
+                  class="button"
+                  onclick="VmTAF.buildEditor.regEditor.DuplicateKey();">
+               Duplicate
+            </button>
+            <button
+                  class="button"
+                  onclick="VmTAF.buildEditor.regEditor.DeleteKey();">
+               Delete
+            </button>
+         </div> ##stack-footer
+      </div> ##stack-editor ## .registry-navigator
+
+      <div class="registry-values stack-editor editable">
+         <div class="stack-header">
+            <span id="registry-values-header">Values</span>
+         </div>
+         <div id="registry-data-holder">
+            ##
+            ## Registry values will be created here. They are created
+            ## dynamically by the RegistryEditor.
+            ##
+         </div>
+         <div class="stack-footer">
+            <button
+                  class="button"
+                  onclick="VmTAF.buildEditor.regEditor.CreateValue('dialog-holder', VmTAF.buildManager);">
+               New Value
+            </button>
+         </div> ##stack-footer
+      </div> ##stack-editor, registry-values
+   </form>
+</div>
+<div class="clearDiv"></div>
