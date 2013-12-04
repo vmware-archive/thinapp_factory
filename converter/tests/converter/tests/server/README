@@ -1,0 +1,19 @@
+Files that were in the fixtures directory and removed due to inability to
+redistribute:
+
+fixtures/testshare
+fixtures/testshare/AppDeploy
+fixtures/testshare/AppDeploy/.blank # blank
+fixtures/testshare/AppInstaller
+fixtures/testshare/AppInstaller/TestApp
+fixtures/testshare/AppInstaller/TestApp/override.ini # blank
+fixtures/testshare/AppInstaller/TestApp/post.bat # blank
+fixtures/testshare/AppInstaller/TestApp/TestApp.exe # a copy of txpeng540.exe
+fixtures/testshare/AppInstaller/TestApp2
+fixtures/testshare/AppInstaller/TestApp2/Test App.exe # a copy of txpeng540.exe
+fixtures/TextPad
+fixtures/TextPad/txpeng540.exe
+fixtures/textpad.zip # contains txpeng540.exe
+
+You could restore this by downloading txpeng540.exe (freeware) and restoring
+this hiearchy.

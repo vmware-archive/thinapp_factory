@@ -1,0 +1,6 @@
+/converter.egg-info
+/development.db
+/development.ini
+/build/
+/converter/server/runner/bin
+/converter/server/runner/lib

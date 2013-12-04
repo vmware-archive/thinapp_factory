@@ -1,0 +1,6 @@
+recursive-include converter/web/public *
+recursive-include converter/web/templates *
+
+recursive-include converter/server/bin *
+
+include converter/appliance.ini
