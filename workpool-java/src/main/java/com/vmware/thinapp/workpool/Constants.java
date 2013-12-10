@@ -25,7 +25,7 @@ public class Constants {
    static final String GUEST_USERNAME = "administrator";
 
    /** Default guest password. */
-   static final String GUEST_PASSWORD = "thinstalled!";
+   static final String GUEST_PASSWORD = "TAFc0nversion!";
 
    /** Snapshot name of the clean snapshot created after instancing a VM. */
    static final String THINAPP_CLEAN_SNAPSHOT = "ThinApp Clean Snapshot";

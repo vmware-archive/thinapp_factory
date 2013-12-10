@@ -172,6 +172,7 @@ public class Config implements ApplicationContextAware {
 
    @Bean
    public DataSource workpoolDataSource() {
+      try { Class.forName("org.postgresql.Driver"); } catch (ClassNotFoundException e) { return null; }
       return new DriverManagerDataSource(String.format("jdbc:postgresql:%s", workpoolDbName), dbUsername, dbPassword);
    }
 
@@ -187,7 +188,7 @@ public class Config implements ApplicationContextAware {
       factory.setDataSource(workpoolDataSource());
       Properties hibProps = new Properties();
       hibProps.setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
-      // Don't automatically update database schema but validate that it's correct.
+      // Don't automatically update database schema but validate that it's correct
       hibProps.setProperty("hibernate.hbm2ddl.auto", "validate");
       factory.setHibernateProperties(hibProps);
       return factory;

@@ -71,7 +71,7 @@ $(DEPS_UNZIPSFX):
 # Retrieves the Windows version of unzipsfx.exe
 # You probably only have the Linux one if you're here
 	$(MKDIR) -p build
-	@if test -f "$(LOCAL_UNZIPSFX_EXE)"; then
+	@if test -f "$(LOCAL_UNZIPSFX_EXE)"; then \
 	   $(CP) -f "$(LOCAL_UNZIPSFX_EXE)" $@; \
 	elif ! test -f "build/$(UNZIPSFX_EXE)"; then \
 	   echo "*** Attempting to download $(UNZIP_INSTALLER_URL)"; \

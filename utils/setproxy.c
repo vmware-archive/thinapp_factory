@@ -29,90 +29,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <winsock2.h>
 #include <windows.h>
-#include <ws2tcpip.h>
 #include <wininet.h>
 #include <tchar.h>
-
-/*
- * MinGW32's wininet.h is incomplete.
- * Extra definitions borrowed from MinGW64 here:
- * http://sourceforge.net/apps/trac/mingw-w64/browser/experimental/headers_additions_test/include/wininet.h
- */
-#ifdef __MINGW32__
-typedef struct {
-  DWORD dwOption;
-  union {
-    DWORD dwValue;
-    LPSTR pszValue;
-    FILETIME ftValue;
-  } Value;
-} INTERNET_PER_CONN_OPTIONA,*LPINTERNET_PER_CONN_OPTIONA;
-
-typedef struct {
-  DWORD dwOption;
-  union {
-    DWORD dwValue;
-    LPWSTR pszValue;
-    FILETIME ftValue;
-  } Value;
-} INTERNET_PER_CONN_OPTIONW,*LPINTERNET_PER_CONN_OPTIONW;
-
-#ifdef UNICODE
-#define INTERNET_PER_CONN_OPTION INTERNET_PER_CONN_OPTIONW
-#else
-#define INTERNET_PER_CONN_OPTION INTERNET_PER_CONN_OPTIONA
-#endif
-
-typedef struct {
-  DWORD dwSize;
-  LPSTR pszConnection;
-  DWORD dwOptionCount;
-  DWORD dwOptionError;
-  LPINTERNET_PER_CONN_OPTIONA pOptions;
-} INTERNET_PER_CONN_OPTION_LISTA,*LPINTERNET_PER_CONN_OPTION_LISTA;
-
-typedef struct {
-  DWORD dwSize;
-  LPWSTR pszConnection;
-  DWORD dwOptionCount;
-  DWORD dwOptionError;
-  LPINTERNET_PER_CONN_OPTIONW pOptions;
-} INTERNET_PER_CONN_OPTION_LISTW,*LPINTERNET_PER_CONN_OPTION_LISTW;
-
-#ifdef UNICODE
-#define INTERNET_PER_CONN_OPTION_LIST INTERNET_PER_CONN_OPTION_LISTW
-#else
-#define INTERNET_PER_CONN_OPTION_LIST INTERNET_PER_CONN_OPTION_LISTA
-#endif
-
-#define INTERNET_PER_CONN_FLAGS 1
-#define INTERNET_PER_CONN_PROXY_SERVER 2
-#define INTERNET_PER_CONN_PROXY_BYPASS 3
-#define INTERNET_PER_CONN_AUTOCONFIG_URL 4
-#define INTERNET_PER_CONN_AUTODISCOVERY_FLAGS 5
-#define INTERNET_PER_CONN_AUTOCONFIG_SECONDARY_URL 6
-#define INTERNET_PER_CONN_AUTOCONFIG_RELOAD_DELAY_MINS 7
-#define INTERNET_PER_CONN_AUTOCONFIG_LAST_DETECT_TIME 8
-#define INTERNET_PER_CONN_AUTOCONFIG_LAST_DETECT_URL 9
-#define INTERNET_PER_CONN_FLAGS_UI 10
-
-#define INTERNET_OPTION_PER_CONNECTION_OPTION 75
-
-#define PROXY_TYPE_DIRECT 0x00000001
-#define PROXY_TYPE_PROXY 0x00000002
-#define PROXY_TYPE_AUTO_PROXY_URL 0x00000004
-#define PROXY_TYPE_AUTO_DETECT 0x00000008
-
-#define AUTO_PROXY_FLAG_USER_SET 0x00000001
-#define AUTO_PROXY_FLAG_ALWAYS_DETECT 0x00000002
-#define AUTO_PROXY_FLAG_DETECTION_RUN 0x00000004
-#define AUTO_PROXY_FLAG_MIGRATED 0x00000008
-#define AUTO_PROXY_FLAG_DONT_CACHE_PROXY_RESULT 0x00000010
-#define AUTO_PROXY_FLAG_CACHE_INIT_RUN 0x00000020
-#define AUTO_PROXY_FLAG_DETECTION_SUSPECT 0x00000040
-
-#endif /* __MINGW32__ */
 
 #define HELP_STRING \
 L"Syntax:\n" \
@@ -132,7 +52,7 @@ usage(void)
 }
 
 int
-_tmain(int argc, _TCHAR *argv[])
+wmain(int argc, wchar_t *argv[])
 {
    enum {
       PROXY_NONE,
@@ -377,7 +297,7 @@ _tmain(int argc, _TCHAR *argv[])
                GetLastError());
    } else {
       // Refresh the settings
-      InternetSetOption(NULL, INTERNET_OPTION_REFRESH, NULL, NULL);
+      InternetSetOption(NULL, INTERNET_OPTION_REFRESH, NULL, 0);
    }
 
    if (temp) {

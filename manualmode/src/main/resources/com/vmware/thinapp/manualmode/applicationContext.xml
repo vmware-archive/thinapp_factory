@@ -14,9 +14,9 @@
    <bean id="manualModeProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
       <property name="locations">
          <util:list>
-            <value>classpath:manualmodesvc.properties</value>
+            <value>classpath:manualmode.properties</value>
             <!-- For overriding default settings. -->
-            <value>classpath:manualmodesvc-local.properties</value>
+            <value>classpath:manualmode-local.properties</value>
          </util:list>
       </property>
       <!--manualmodesvc-local.properties may not exist so ignore nonexistent resources. -->

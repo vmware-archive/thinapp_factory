@@ -19,11 +19,11 @@
 #include <stdio.h>
 #include <tchar.h>
 
-int _tmain(int argc, _TCHAR* argv[])
+int wmain(int argc, wchar_t* argv[])
 {
    if (argc!=5)
-      printf("Usage: %ls Section Key Value IniFilename\n"
-             "   example: %ls BuildOptions QualityReportingEnabled 1 .\\package.ini\n",
+      wprintf(L"Usage: %ls Section Key Value IniFilename\n"
+              L"   example: %ls BuildOptions QualityReportingEnabled 1 .\\package.ini\n",
              argv[0], argv[0]);
    else
    {
@@ -32,10 +32,10 @@ int _tmain(int argc, _TCHAR* argv[])
       if (!WritePrivateProfileString(argv[1], argv[2], Value, argv[4]))
       {
          DWORD ErrCode=GetLastError();
-         printf("WritePrivateProfileString failed with error code %lu\n"
-                "\"%ls\" \"%ls\" \"%ls\" \"%ls\"\n",
-                ErrCode,
-                argv[1], argv[2], argv[3], argv[4]);
+         wprintf(L"WritePrivateProfileString failed with error code %lu\n"
+                 L"\"%ls\" \"%ls\" \"%ls\" \"%ls\"\n",
+                 ErrCode,
+                 argv[1], argv[2], argv[3], argv[4]);
       }
       else
          printf("Set [%ls] %ls=%ls for %ls\n", argv[1], argv[2], Value ? Value : L"NULL", argv[4]);

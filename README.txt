@@ -38,120 +38,140 @@ TAF comprises of multiple components and some of the functional units are:
     Library to automatically install Windows templates from ISO, clone, and
     lease out VMs needed for conversion.
 3. Datastore manager
-    Handles management of internal and external datastores (Storage).
-4. Newer workpool Manager (/workpool-java)
+    Handles management of internal and external datastores.
+4. Workpool & ManualMode Manager
     Workpool service with a REST API that manages the lifecycle of conversion VMs
-Manualmode (/manualmode)
+Manual mode (in manualmode/)
     REST service that, despite its name, does both automatic as well as manual
     captures.
-5. Admin UI (/webui)
+5. Admin UI (webui)
     The main web interface to ThinApp Factory
 6. ThinApp Store and client.
     Client application and browser plugin used to download and thinreg
     applications from the ThinApp Store
 7. TAF Appliance and initial setup.
 
-
-
 Are all components open sourced?
 --------------------------------
-No, but we want to, and are working towards it. However, we will expose
-a significant chunk of the code that can be deployed over an existing
-TAF appliance and call it Phase 1.
 
-As part of TAF Open sourcing, Phase 1 will contain the following:
-1. Workpool and manualmode manager (most of it.)
-2. Admin UI
-3. ThinApp Store
+The only part that is not currently open sourced is the ability to
+automatically provision a Windows work VM given an ISO file. Additionally,
+we require the 'vmrun' utility (part of the freeware VIX SDK) to interact
+with worker VMs.
 
+TAF Prerequisites
+-----------------
 
-When will the rest come out?
-----------------------------
-We are currently working on it and there is no specific code drop date.
+On a Ubuntu system (we used 12.04 LTS), you need these prerequisites:
 
+build-essential
+libsqlite3-0
+libcurl3
+samba
+samba-common-bin
+cifs-utils
+tomcat6
+openjdk-6-jdk
+postgresql-9.1
+python-dev
+python-migrate
+python-psycopg2
+python-sqlalchemy
+python-setuptools
+postgresql-server-dev-9.1
+wine
+zip
+maven2
+mingw-w64
+mingw-w64-dev
+mingw-w64-tools
 
-How do i build TAF?
--------------------
-TAF code is written in various languages and each module can be built
-separately and the following section outlines each logical group. The phase 1
-components include scala/java projects.
+Running TAF requires the VIX SDK to be installed. You can download VIX from:
 
-Building scala/java modules
----------------------------
+https://my.vmware.com/group/vmware/details?productId=352&downloadGroup=VIXAPI112
 
-The following show the project hierarchy and the parent pom.xml
+You need a My VMware account to download and a EULA must be accepted. Once the
+installer is copied to your server, simply run it with:
 
-ThinApp Factory
-   |--> pom.xml     (main pom.xml, that builds all)
-   |--> settings.xml.in (necessary settings.xml configs)
-   |--> workpool
-        |--> pom.xml
-        |--> workpool-web
-                |--> pom.xml
-   |--> manualmode
-        |--> pom.xml
-    |--> manualmode-web
-                |--> pom.xml
-   |--> client
-        |--> pom.xml
-   |--> webui
-        |--> pom.xml
+sh VMware-VIX... (whatever the filename is)
 
+(Note that version 1.13.0 does not appear to work well with TAF.)
 
-Build Setup
------------
-1. Download and install Oracle JDK 1.6.x
+Building TAF
+------------
 
-2. Download and install Apache Maven 2.2.1
+Assuming you have all the prerequisites, go into the source tree, type make and
+everything will be built for you. After editing setup.cfg, you should then be
+able to type make setup. To refresh the Java webapps and Python eggs after the
+initial deploy, run make deploy.
 
-3. Setup the classpath for JAVA_HOME, M2_HOME and update path accordingly.
+The setup process deletes Tomcat's ROOT webapp and replaces it with TAF.
+It may be possible to run TAF in the future as a non-ROOT webapp, but we
+haven't had time to try that out yet. Keep this in mind if you have something
+important as a ROOT webapp.
 
-4. Validate the above by running the following (windows cmd as below):
-    C:\Users\keerthi> java -version
-        java version "1.6.0_37"
-        Java(TM) SE Runtime Environment (build 1.6.0_37-b06)
-        ...
+Once you run the setup procedure, you should be able to hit Tomcat and get
+a TAF login screen. The default admin password is blank.
 
-    C:\Users\keerthi> mvn -v
-        Apache Maven 2.2.1 (r801777; 2009-08-06 12:16:01-0700)
-        Java version: 1.6.0_26
-        Java home: C:\Program Files\Java\jdk1.6.0_26\jre
-        ...
+After deploying you are responsible for staging a ThinApp runtime here. Here
+are some tested versions we have used:
 
-5. Now that you have maven installed, you will have to ensure the necessary
-remote repositories are set. The template settings.xml.in file is provided and
-you can use this file, or copy the remote repositories needed for building TAF.
+4.5.0-238809
+4.6.0-287958
+4.6.1-361923
+4.6.2-467908
+4.7.0-519532
+4.7.1-677178
+4.7.2-753608
+4.7.3-891762
 
-NOTE: settings.xml loc: M2_HOME/conf/settings.xml or $HOME/.m2/settings.xml)
+In the runtimes directory of your $install_dir (usually /var/lib/taf), create a
+directory named as the above (thinapp version-build number.) It should have the
+following files:
 
-6. Build TAF java projects:
-    thinapp_factory> mvn clean install -Dmaven.test.skip=true
+AppSync.exe
+boot_loader.exe
+Branding.dll
+CustomMsi.dll
+license.thinapp.4.0.e1.200805 <or similarly named license.* file>
+os_exe.dat
+QualityAgent.exe
+QualityAgentPlugIn.dll
+runtime_res.dll
+sbmerge.exe
+scripting.dll
+snapshot.exe
+snapshot.ini
+template.msi
+templates/
+thinreg.exe
+tlink.exe
+vftool.exe
+vregtool.exe
+logging.dll
+nt0_dll.dat
+nt0_dll64.dat
 
-    NOTE: Skip tests and hence use args -Dmaven.test.skip=true
-    If everything goes fine, you should see a “BUILD SUCCESSFUL” message at the end.
+Once done, restart tomcat, then you should be able to see the runtime appear in
+TAF settings.
 
-7. TAF needs 1 external java library that is not available on maven
-repositories. Hence the following steps should be followed.
+Creating a Workpool VM
+----------------------
 
-a. Download vijava from here:
-    http://sourceforge.net/projects/vijava/files/vijava/VI%20Java%20API%202.1/
-
-b.Deploy vijava to your local maven repository:
-    thinapp_factory> mvn install:install-file -DgroupId=net.sourceforge.vijava -DartifactId=vijava -Dversion=2120100824 -Dpackaging=jar -Dfile=c:\vijava-2120100824.jar
-
+TODO
 
 IDE Setup
 ---------
 You can use Eclipse / SpringSource Tool Suite(STS) / IntelliJ Idea. I used STS
 and here are some useful tips (The same can be used for Eclipse):
 
-a. I have used STS Version: 2.6.1.RELEASE, (and JUNO eclipse works too).
+a. I was using STS Version: 2.6.1.RELEASE, (JUNO eclipse worked too).
     Cofigure eclipse: network, proxy, etc.
     Configure jvm params appropriately. (min-max: 0.25 - 1 GB)
 
 b. (optional) Generate eclipse artifacts for TAF java projects:
-    thinapp_factory> mvn eclipse:eclipse (generate project artifacts)
-    thinapp_factory> mvn eclipse:clean   (clean project artifacts)
+    ...\appfactory> mvn eclipse:eclipse (generate project artifacts)
+    ...\appfactory> mvn eclipse:clean   (clean project artifacts)
 
 c. You can use plugins for working on scala, velocity, import maven projects, etc.
 
@@ -259,67 +279,6 @@ the service URLs to:
 NOTE: This step can be done on webui-local.properties as well.
 
 
-Hacking TAF Appliance
----------------------
-
-1. Accessing TAF console
-        Login: user / user (Gain root access: sudo su - )
-2. Access packages folder:
-        Login: user / user (ThinApp-ed packages)
-3. Postgres DB access info location:
-        /home/user/appfactory.properties
-4. Deployed VC and its configuration
-        /home/user/workpool.ini
-5. Web Server
-        /etc/nginx
-6. Tomcat webapps folder:
-        /var/lib/tomcat6/webapps
-7. Appliance version & build info:
-        /var/lib/tomcat6/common/classes/appliance-version.properties
-8. Admin UI & ThinApp store war:
-        ROOT.war (Customer facing renamed from webui*.war)
-9. Manualmode & workpool war:
-        mm.war (API access, restricted by Nginx, renamed from manualmode*.war)
-10. Log location
-        /home/user/logs
-        /home/user/nginx/
-        /home/user/tomcat6/
-11. Runtime location:
-        /opt/appfactory/runtimes/
-        NOTE: vmw.lic is needed, and can be replicated from other runtimes.
-12. To change files in the appliance and have it persist across reboots
-you have to put them under folder:
-        /home/user/overlay
-    Ex: If you wanted to add your own runtime you could add:
-    /home/user/overlay/opt/appfactory/runtimes/4.9.0-1234. The files would then
-    transparently show up in /opt/appfactory/runtimes/4.9.0-1234 and survive
-    reboots.
-
-Deploying into a TAF Appliance
-------------------------------
-Due to legal limitations, and the limited source code exposed as opensource,
-we have to use a workaround for some non-java artifacts. There are a few *.exe
-files that are built outside the java projects but deployed within the war. These
-files are not opensourced and have to be extracted from the existing appliance.
-
-Follow these steps to extract these files:
-Option 1:
----------
-1. Copy *.war from folder /var/lib/tomcat6/webapps
-2. Extract the contents of these war files. [Ex: mm.war --> mm/]
-3. Now, copy mm/WEB-INF/classes/*.exe, mm/WEB-INF/classes/*.vbs to the resource
-    folder under: thinapp_factory/manualmode/src/main/resources
-4. If you need the client installer that that can install and thinreg ThinApps
-    on the client machine, then you need to copy the installer:
-    ROOT/WEB-INF/classes/setup.exe to the resource folder under:
-    thinapp_factory/webui/src/main/resources
-
-Option 2:
----------
-Instead of step #3, #4, you can copy those files mentioned above to the classpath loc:
-    /var/lib/tomcat6/common/classes
-
-
 SONAR for TAF
 -------------
 You can also hookup sonar to these java projects by using sonar-pom.xml.
@@ -333,3 +292,20 @@ Proxy for tomcat setup
 If you use ninite.com feed or download from other external source, and you
 have a proxy, ensure the following is set.
     -DproxySet=true -DproxyHost=proxy.your.copmany.com -DproxyPort=port
+
+Known bugs
+----------
+
+1. The 'tasks' view does not work, but conversions are fine.
+
+2. When a conversion fails and you end up restarting Tomcat to unwedge it,
+   the job may still appear to be in 'running' state forever. All running
+   jobs should be set to 'failed' after the webapp restarts.
+
+3. Incremental builds are dangerously nonfunctional. If you modify Java code
+   a clean build is suggested.
+
+4. The 'ThinApp store' does not work because of a missing setup.exe which
+   is difficult to build at this time in an OSS environment. It requires
+   proper code signing for its browser integration. OSS users will more likely
+   be better served by designing a new delivery mechanism.

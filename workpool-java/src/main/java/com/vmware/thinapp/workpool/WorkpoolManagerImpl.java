@@ -30,6 +30,7 @@ import org.ini4j.Profile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
@@ -47,6 +48,9 @@ import scala.Option;
 
 public class WorkpoolManagerImpl extends TypedActor implements WorkpoolManager {
    private static final Logger log = LoggerFactory.getLogger(WorkpoolManagerImpl.class);
+
+   @Value("#{workpoolProperties['iniPath']}")
+   private String INI_PATH;
 
    @Autowired
    private WorkpoolRepository workpoolDao;
@@ -118,9 +122,9 @@ public class WorkpoolManagerImpl extends TypedActor implements WorkpoolManager {
    private void loadVcConfig() {
       Ini ini = null;
       try {
-         ini = new Ini(new File("/home/user/workpool.ini"));
+         ini = new Ini(new File(INI_PATH));
       } catch (IOException e) {
-         log.info("Skipping VC configuration because workpool.ini was not found.");
+         log.info("Skipping VC configuration because " + INI_PATH + " was not found.");
          return;
       }
 

@@ -88,7 +88,7 @@ public class RequestFactory {
    @Autowired
    private RuntimeManager runtimeManager;
 
-   private static final String PROJECT_LOG_FILE = "Support/appfactory.log";
+   private static final String PROJECT_LOG_FILE = "Support/taf.log";
 
    /**
     * Create a new MM or automatic capture request for a given ticket.

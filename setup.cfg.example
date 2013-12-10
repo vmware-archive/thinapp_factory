@@ -1,0 +1,92 @@
+#!/bin/sh
+# ThinApp Factory setup response file
+# Use with: setup.sh setup.cfg
+# Make sure to read and edit the WHOLE file before trying out setup.sh!
+
+# install_dir: Home directory for TAF where it puts everything
+#
+# TODO: The webapp is hardcoded in several places to look in /var/lib/taf
+# -- specifically for workpool.ini and the ThinApp 'runtimes' directory.
+# If you change this, you will still need to move those two files to
+# /var/lib/taf, until that bug is fixed.
+install_dir=/var/lib/taf
+
+# easy_install_dir: When you easy_install a Python egg with a binary,
+# this is the dir the egg will deploy its binaries into. It's usually
+# /usr/local/bin but it's tweakable here in case it isn't.
+easy_install_dir=/usr/local/bin
+
+# network_interface: The outward facing network interface that worker VMs
+# will be able to use to see the TAF machine.
+network_interface=eth0
+
+# postgres_user: The username that postgres runs as (for creating DB)
+# We 'su' to this user to benefit from Postgres' ident authentication.
+postgres_user=postgres
+
+# db_user: The username that TAF should create for its database operations.
+db_user=taf
+
+# db_password: The password to use for the above user.
+# If you don't have pwgen, you could generate your own and put it here
+# as a literal.
+db_password=$(pwgen 20 1)
+
+# taf_user: The system user that will be created for TAF's use.
+taf_user=taf
+
+# tomcat_root: Tomcat's root including a place to put common properties
+# files as well as the webapps. The default usually works.
+# NOTE: TAF expects to be the ROOT war, so any existing ROOT webapp will
+# be deleted! Tread carefully.
+tomcat_root=/var/lib/tomcat6
+
+# tomcat_user: The user which Tomcat runs as so that we can properly give
+# it rights to write to datastores and such. If not 'tomcat6' it's usually
+# www-data.
+tomcat_user=tomcat6
+
+# vc_host: The vCenter server that this TAF instance should use for its
+# work VMs.
+vc_host=vcenter.yourcorp.com
+
+# vc_user: The vCenter server user that TAF should authenticate as.
+# It's a best practice to give TAF its own user, but many use Administrator..
+vc_user=Administrator
+
+# vc_password: The password for the $vc_user account.
+# Warning: If it contains shell special characters, use quotes appropriately.
+vc_password=secret
+
+# vc_ignoreCertificate: If $vc_host has an invalid / self signed SSL certificate
+# set this to True to bypass warnings. If not, set to False for maximum paranoia
+# Other values such as yes, no, 0 and 1 do not work. True and False only.
+vc_ignoreCertificate=False
+
+# vc_datacenter: The datacenter that TAF should use to deploy additional VMs.
+vc_datacenter="My DC"
+
+# vc_computeResource: The compute resource (individual esx host, cluster,
+# resource pool, etc.) that TAF should use to deploy additional VMs.
+vc_computeResource="My Cluster"
+
+# vc_resourcePool: The resource pool that TAF should use to deploy additional
+# work VMs. If there's none explicitly created, try 'Resources' for the implicit
+# one that exists for all compute resources.
+vc_resourcePool='My Resource Pool'
+
+# vc_datastore: The datastore that TAF should use to deploy additional VMs.
+# If a cluster, all members of the cluster should be able to address this
+# datastore.
+vc_datastore="My SAN"
+
+# thinapp_user: The name which ThinApp is licensed under. Freeform.
+thinapp_user="John Smith"
+
+# thinapp_license: Your ThinApp license key. We can't verify it during setup
+# so check it twice!
+thinapp_license=XXXXX-XXXXX-XXXXX-XXXXX-XXXXX
+
+# i_didnt_read_to_the_end: Set to 0 if you've read through to the end.
+# setup.sh will fail otherwise.
+i_didnt_read_to_the_end=1

@@ -182,9 +182,9 @@ addLoad(function () {
                   <div class="label"><label> </label></div>
                   <div class="field radio">
                      <label for="selectISO">
-                        <input name="sourceType" type="radio" id="selectISO" value="selectISO"
+                        <input name="sourceType" type="radio" disabled="true" id="selectISO" value="selectISO"
                            onclick="VmTAF.wpMgr.ToggleImageForm(this, $('#vi-browser'));"/>
-                        Use ISO to create a new VM
+                        Use ISO to create a new VM (disabled)
                      </label>
                      </input>
                   </div>

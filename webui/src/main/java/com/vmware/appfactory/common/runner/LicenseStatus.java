@@ -84,25 +84,14 @@ public class LicenseStatus implements Runnable {
          setRemainingTicks(remainingTicks - 1);
       }
       else {
-         try {
-            final Date expDate = _cwsClient.getLicenseExpirationDate();
-            if (expDate != null) {
-               _expirationDate = expDate;
-               calculateNumDaysToExpiration();
-               _log.info("Refreshed expiration status from CWS: " + expDate);
+         final Date expDate = _cwsClient.getLicenseExpirationDate();
+         if (expDate != null) {
+            _expirationDate = expDate;
+            calculateNumDaysToExpiration();
+            _log.info("Refreshed expiration status from CWS: " + expDate);
 
-               /* Slow down refreshes now that one has succeeded */
-               slowDownRefresh();
-            }
-            else {
-               _log.info("Failed to get expiration date from CWS (result was null)!");
-               /* Schedule refreshes more frequently until they stop failing */
-               hastenRefresh();
-            }
-         } catch (CwsException e) {
-            _log.error("Failed to get expiration date from CWS!", e);
-            /* Schedule refreshes more frequently until they stop failing */
-            hastenRefresh();
+            /* Slow down refreshes now that one has succeeded */
+            slowDownRefresh();
          }
       }
    }

@@ -135,7 +135,7 @@ class ProjectsController(BaseController):
 
    @ExceptionToError
    def create(self):
-      if request.match_accept(['application/json', None]) is None:
+      if request.accept.best_match(['application/json']) is None:
          abort(httplib.NOT_ACCEPTABLE)
 
       message = self._getBody(request, self.CREATE_PROJECT_JSON_KEYS)
@@ -152,7 +152,7 @@ class ProjectsController(BaseController):
 
    @ExceptionToError
    def update(self, id):
-      if request.match_accept(['application/json', None]) is None:
+      if request.accept.best_match(['application/json']) is None:
          abort(httplib.NOT_ACCEPTABLE)
 
       message = self._getBody(request)
@@ -178,7 +178,7 @@ class ProjectsController(BaseController):
 
    @ExceptionToError
    def show(self, id):
-      if request.match_accept(['application/json', None]) is None:
+      if request.accept.best_match(['application/json']) is None:
          abort(httplib.NOT_ACCEPTABLE)
 
       projectId = int(id)
@@ -270,7 +270,7 @@ class ProjectsController(BaseController):
 
    @ExceptionToError
    def show_packageini(self, id):
-      if request.match_accept(['application/json', None]) is None:
+      if request.accept.best_match(['application/json']) is None:
          abort(httplib.NOT_ACCEPTABLE)
 
       projectId = int(id)
@@ -304,7 +304,7 @@ class ProjectsController(BaseController):
 
    @ExceptionToError
    def update_packageini(self, id):
-      if request.match_accept(['application/json', None]) is None:
+      if request.accept.best_match(['application/json']) is None:
          abort(httplib.NOT_ACCEPTABLE)
 
       projectId = int(id)
@@ -329,7 +329,7 @@ class ProjectsController(BaseController):
 
    @ExceptionToError
    def show_directory(self, id, did):
-      if request.match_accept(['application/json', None]) is None:
+      if request.accept.best_match(['application/json']) is None:
          abort(httplib.NOT_ACCEPTABLE)
 
       projectId = int(id)
@@ -388,7 +388,7 @@ class ProjectsController(BaseController):
    @ExceptionToError
    def create_directory(self, id):
       log.debug('create_directory')
-      if request.match_accept(['application/json', None]) is None:
+      if request.accept.best_match(['application/json']) is None:
          abort(httplib.NOT_ACCEPTABLE)
 
       projectId = int(id)
@@ -415,7 +415,7 @@ class ProjectsController(BaseController):
 
    @ExceptionToError
    def update_directory(self, id, did):
-      if request.match_accept(['application/json', None]) is None:
+      if request.accept.best_match(['application/json']) is None:
          abort(httplib.NOT_ACCEPTABLE)
 
       projectId = int(id)
@@ -438,7 +438,7 @@ class ProjectsController(BaseController):
 
    @ExceptionToError
    def create_file(self, id, did):
-      if request.match_accept(['application/json', None]) is None:
+      if request.accept.best_match(['application/json']) is None:
          abort(httplib.NOT_ACCEPTABLE)
 
       projectId = int(id)
@@ -510,7 +510,7 @@ class ProjectsController(BaseController):
 
    @ExceptionToError
    def update_file(self, id, fid):
-      if request.match_accept(['application/json', None]) is None:
+      if request.accept.best_match(['application/json']) is None:
          abort(httplib.NOT_ACCEPTABLE)
 
       projectId = int(id)
@@ -536,7 +536,7 @@ class ProjectsController(BaseController):
 
    @ExceptionToError
    def show_registry(self, id, rid):
-      if request.match_accept(['application/json', None]) is None:
+      if request.accept.best_match(['application/json']) is None:
          abort(httplib.NOT_ACCEPTABLE)
 
       projectId = int(id)
@@ -583,7 +583,7 @@ class ProjectsController(BaseController):
 
    @ExceptionToError
    def update_registry(self, id, rid):
-      if request.match_accept(['application/json', None]) is None:
+      if request.accept.best_match(['application/json']) is None:
          abort(httplib.NOT_ACCEPTABLE)
 
       projectId = int(id)
@@ -632,7 +632,7 @@ class ProjectsController(BaseController):
 
    @ExceptionToError
    def create_registry(self, id):
-      if request.match_accept(['application/json', None]) is None:
+      if request.accept.best_match(['application/json']) is None:
          abort(httplib.NOT_ACCEPTABLE)
 
       projectId = int(id)

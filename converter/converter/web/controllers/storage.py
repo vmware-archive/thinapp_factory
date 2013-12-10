@@ -126,7 +126,7 @@ class StorageController(BaseController):
    @ExceptionToError
    @ExceptionToCode(DataStoreNotFoundError, httplib.NOT_FOUND)
    def show(self, id):
-      if request.match_accept(['application/json', None]) is None:
+      if request.accept.best_match(['application/json']) is None:
          abort(httplib.NOT_ACCEPTABLE)
 
       status = self.ds.GetStatus(id)
@@ -137,7 +137,7 @@ class StorageController(BaseController):
 
    @ExceptionToError
    def list(self):
-      if request.match_accept(['application/json', None]) is None:
+      if request.accept.best_match(['application/json']) is None:
          abort(httplib.NOT_ACCEPTABLE)
 
       status = []

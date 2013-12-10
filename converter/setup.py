@@ -18,7 +18,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='converter',
-    version='0.1',
+    version='1.0',
     description='Converter Service',
     author='',
     author_email='',
@@ -26,19 +26,20 @@ setup(
     namespace_packages=['converter'],
     install_requires=[
       # For web.
-        "Pylons==1.0",
+        "Pylons==1.0.1",
+        "WebTest==1.3.1",
+        "WebOb==1.1.1",
         "Spawning==0.9.7",
       # For server.
         "SQLAlchemy==0.6.4",
         "path.py>=5.0",
         "pypng==0.0.12",
       # For both.
-        "eventlet==0.9.14",
-        "PyPubSub==3.1.1b1",
+        "eventlet==0.9.17",
+        "PyPubSub==3.1.2",
         "Inject==1.0.1",
-        "thrift05==0.5",
         "pyparsing==1.5.5",
-        "psycopg2==2.4.2",
+        "psycopg2>=2.4.2",
       # Other TAF stuff
         "syscfg==1.0",
         "cifsmount==1.0",

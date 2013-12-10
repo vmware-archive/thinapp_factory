@@ -45,7 +45,7 @@ class ConfigController(BaseController):
       return self._sendFileResponse(filePath, fileName)
 
    def getTimeSync(self):
-      if request.match_accept(['application/json', None]) is None:
+      if request.accept.best_match(['application/json']) is None:
          abort(httplib.NOT_ACCEPTABLE)
 
       log.info('Calling syscfg.getTimeSync() to get the state of host/guest '\
@@ -82,7 +82,7 @@ class ConfigController(BaseController):
       response.status = httplib.OK
 
    def getInfo(self):
-      if request.match_accept(['application/json', None]) is None:
+      if request.accept.best_match(['application/json']) is None:
          abort(httplib.NOT_ACCEPTABLE)
 
       log.info('Calling syscfg.getInfo() to get appliance info')

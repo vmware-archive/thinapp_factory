@@ -1,7 +1,7 @@
 # Paths to build utilities
 # They can either be in your PATH, or specified with full paths here.
-CXX := i586-mingw32msvc-g++
-STRIP := i586-mingw32msvc-strip
+CC := i686-w64-mingw32-gcc
+STRIP := i686-w64-mingw32-strip
 RM := rm
 CUT := cut
 CP := cp
@@ -27,8 +27,8 @@ UNZIPSFX_EXE := unzipsfx.exe
 LOCAL_UNZIPSFX_EZE :=
 
 # We unzip unzipsfx.exe from this
-UNZIP_INSTALLER := unz600x3.exe
-UNZIP_INSTALLER_URL := ftp://ftp.info-zip.org/pub/infozip/msdos/$(UNZIP_INSTALLER)
+UNZIP_INSTALLER := unz600xn.exe
+UNZIP_INSTALLER_URL := ftp://ftp.info-zip.org/pub/infozip/win32/$(UNZIP_INSTALLER)
 
 # This config variable is used to grab the open-source VIJava, which doesn't
 # exist in Maven repos. You can set LOCAL_VIJAVA_ZIP here just as you do with

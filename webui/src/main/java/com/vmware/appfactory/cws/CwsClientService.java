@@ -798,28 +798,13 @@ public class CwsClientService
 
    /**
     * Get the license expiration date from CWS.
-    * CWS should return an expiration date in yyyy-mm-dd ISO format.
+    * CWS should return an expiration date in yyyy-mm-dd ISO format, or
+    * null if none is available.
     *
-    * @return License expiration date, or null if the server doesn't have one.
-    * @throws CwsException if any error raised while invoking CWS '/config/expire' endpoint.
+    * @return Always null; TAF is open, and never expires! Hooray!
     */
-   public Date getLicenseExpirationDate() throws CwsException {
-      try {
-         @SuppressWarnings("unchecked")
-         Map<String, String> resMap = _rest.getForObject(baseCWSUrl() + "/config/expire", Map.class);
-         String strDate = resMap.get("date");
-         _log.debug("Received expire date: " + strDate);
-         return AfUtil.parseIsoDate(strDate);
-      }
-      catch (HttpStatusCodeException ex) {
-         if (ex.getStatusCode() == HttpStatus.NOT_FOUND) {
-            return null;
-         }
-         throw new CwsException(ex);
-      }
-      catch(RestClientException ex) {
-         throw new CwsException(ex);
-      }
+   public Date getLicenseExpirationDate() {
+      return null;
    }
 
 
