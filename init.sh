@@ -31,7 +31,7 @@ start()
    options="$options sqlalchemy.url=${sqlalchemy_url}/converter storage.system.path=$install_dir smb.user=$taf_user smb.password=$db_password"
 
    # Determine current IP of $network_interface to build certain CWS URLs
-   ip=$(ifconfig "$network_interface" | grep 'inet addr' | cut -d: -f2 | cut -d' ' -f1)
+   ip=$(/sbin/ifconfig "$network_interface" | grep 'inet addr' | cut -d: -f2 | cut -d' ' -f1)
    options="$options ip=$ip"
    options="$options netbios.name=$ip"
 
@@ -40,7 +40,7 @@ start()
       export LANG
    fi
 
-   spawning                             \
+   ${easy_install_dir}/spawning                             \
       --chuid "$taf_user":$(id -gn "$taf_user")         \
       --processes 1                                     \
       --threads 0                                       \

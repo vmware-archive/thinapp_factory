@@ -223,6 +223,7 @@ taf_user="$taf_user"
 db_username="$db_user"
 db_password="$db_password"
 network_interface="$network_interface"
+easy_install_dir="$easy_install_dir"
 EOF
 
 echo "*** Writing workpool.ini"
