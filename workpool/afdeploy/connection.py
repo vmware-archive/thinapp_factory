@@ -177,7 +177,7 @@ class VIConnection(object):
       dcName = self.GetDefaultDatacenterName(dcName)
       root = self.GetVMFolder(dcName)
 
-      return self.GetAllObjectNames(pyVmomi.Vim.VirtualMachine, root)
+      return self.GetAllObjectNames(pyVmomi.vim.VirtualMachine, root)
 
    ### Locating ComputeResource objects (per-Datacenter) ###
    def GetAllComputeResourceNames(self, dcName=None):
@@ -186,7 +186,7 @@ class VIConnection(object):
       else:
          root = None
 
-      return self.GetAllObjectNames(pyVmomi.Vim.ComputeResource, root)
+      return self.GetAllObjectNames(pyVmomi.vim.ComputeResource, root)
 
    def GetComputeResource(self, resName, dcName=None):
       if dcName is not None:
@@ -194,7 +194,7 @@ class VIConnection(object):
       else:
          root = None
 
-      return self.GetObjectByName(pyVmomi.Vim.ComputeResource, resName, root)
+      return self.GetObjectByName(pyVmomi.vim.ComputeResource, resName, root)
 
    ### Locating ResourcePool objects (per-ComputeResource) ###
    def GetAllResourcePoolNames(self, resource):
@@ -203,7 +203,7 @@ class VIConnection(object):
       prefixMap = {}
       foundRoot = False
       poolList = self._FindAll(pathSet=('name', 'resourcePool'),
-                               objType=pyVmomi.Vim.ResourcePool,
+                               objType=pyVmomi.vim.ResourcePool,
                                root=resource)
 
       # poolList is very fast and gives us the full hierarchy though we have
@@ -234,17 +234,17 @@ class VIConnection(object):
       obj = resource.resourcePool
 
       for pool in poolTree:
-         obj = self.GetObjectByName(pyVmomi.Vim.ResourcePool, pool, obj)
+         obj = self.GetObjectByName(pyVmomi.vim.ResourcePool, pool, obj)
 
       return obj
 
    ### Locating Datacenter objects (global) ###
    def GetAllDatacenterNames(self):
-      return self.GetAllObjectNames(pyVmomi.Vim.Datacenter)
+      return self.GetAllObjectNames(pyVmomi.vim.Datacenter)
 
    def GetDatacenter(self, dcName=None):
       dcName = self.GetDefaultDatacenterName(dcName)
-      return self.GetObjectByName(pyVmomi.Vim.Datacenter, dcName)
+      return self.GetObjectByName(pyVmomi.vim.Datacenter, dcName)
 
    ### Locating Datastore objects (per-Datacenter) ###
    def GetAllDatastoreNames(self, dcName=None):
@@ -253,7 +253,7 @@ class VIConnection(object):
       else:
          root = None
 
-      return self.GetAllObjectNames(pyVmomi.Vim.Datastore, root)
+      return self.GetAllObjectNames(pyVmomi.vim.Datastore, root)
 
    def GetAllDatastores(self, dcName=None):
       if dcName is not None:
@@ -261,7 +261,7 @@ class VIConnection(object):
       else:
          root = None
 
-      return self.GetAllObjects(pyVmomi.Vim.Datastore, root)
+      return self.GetAllObjects(pyVmomi.vim.Datastore, root)
 
    def GetDatastore(self, dsName, dcName=None):
       if dcName is not None:
@@ -269,7 +269,7 @@ class VIConnection(object):
       else:
          root = None
 
-      return self.GetObjectByName(pyVmomi.Vim.Datastore, dsName, root)
+      return self.GetObjectByName(pyVmomi.vim.Datastore, dsName, root)
 
    def GetVMByPath(self, fullPath, dcName=None):
       return self.GetIndex().FindByDatastorePath(self.GetDatacenter(dcName), fullPath)
@@ -280,7 +280,7 @@ class VIConnection(object):
       """
 
       vms = self._FindAll(pathSet=keys,
-                          objType=pyVmomi.Vim.VirtualMachine,
+                          objType=pyVmomi.vim.VirtualMachine,
                           root=self.GetVMFolder(dcName))
       if many:
          ret = []
@@ -353,10 +353,10 @@ class VIConnection(object):
    def WaitTask(self, task, actionName='job', hideResult=False):
       log.info('Waiting for %s to complete.' % actionName)
 
-      while task.info.state == pyVmomi.Vim.TaskInfo.State.running:
+      while task.info.state == pyVmomi.vim.TaskInfo.State.running:
          time.sleep(2)
 
-      if task.info.state == pyVmomi.Vim.TaskInfo.State.success:
+      if task.info.state == pyVmomi.vim.TaskInfo.State.success:
          if task.info.result is not None and not hideResult:
             log.info('%s completed successfully, result: %s' % (actionName, task.info.result))
          else:
@@ -391,7 +391,7 @@ class VIConnection(object):
       elif root is None:
          raise VIException('Must either specify a root or a datacenter name')
 
-      resList = self._FindAll(objType=pyVmomi.Vim.VirtualMachine,
+      resList = self._FindAll(objType=pyVmomi.vim.VirtualMachine,
                               root=root,
                               pathSet=('name', 'config.vAppConfig.product',))
 
@@ -422,12 +422,12 @@ class VIConnection(object):
 
       # Get the current config
       config = vm.config.vAppConfig
-      configSpec = pyVmomi.Vim.vApp.VmConfigSpec()
+      configSpec = pyVmomi.vim.vApp.VmConfigSpec()
 
       for prop in config.property:
          if prop.id in values:
             # XXX: No type checking right now.
-            propSpec = pyVmomi.Vim.vApp.PropertySpec()
+            propSpec = pyVmomi.vim.vApp.PropertySpec()
             propSpec.operation = 'edit'
             propSpec.info = prop
             propSpec.info.value = values[prop.id]
@@ -435,7 +435,7 @@ class VIConnection(object):
             configSpec.property.append(propSpec)
 
       # Send it back.
-      spec = pyVmomi.Vim.Vm.ConfigSpec()
+      spec = pyVmomi.vim.vm.ConfigSpec()
       spec.vAppConfig = configSpec
 
       task = vm.Reconfigure(spec)
@@ -459,8 +459,8 @@ class VIConnection(object):
 
       browser = ds.browser
 
-      spec = pyVmomi.Vim.Host.DatastoreBrowser.SearchSpec()
-      spec.details = pyVmomi.Vim.Host.DatastoreBrowser.FileInfo.Details()
+      spec = pyVmomi.vim.host.DatastoreBrowser.SearchSpec()
+      spec.details = pyVmomi.vim.host.DatastoreBrowser.FileInfo.Details()
 
       spec.details.fileSize = True
       spec.details.fileType = True
@@ -473,7 +473,7 @@ class VIConnection(object):
       self.WaitTask(task, 'datastore search', hideResult=True)
 
       # WaitTask will raise exception so if we are here everything is OK.
-      return dict([(f.path, (isinstance(f, pyVmomi.Vim.Host.DatastoreBrowser.FolderInfo), f.fileSize)) for f in task.info.result.file])
+      return dict([(f.path, (isinstance(f, pyVmomi.vim.host.DatastoreBrowser.FolderInfo), f.fileSize)) for f in task.info.result.file])
 
    def DatastorePathExists(self, dsName, path, dcName=None, restrict=None):
       log.debug("Checking if '[%s] %s' exists on the server." % (dsName, path))
@@ -485,7 +485,7 @@ class VIConnection(object):
 
       try:
          files = self.DatastoreListDirectory(dsName, parent)
-      except pyVmomi.Vim.Fault.FileNotFound:
+      except pyVmomi.vim.fault.FileNotFound:
          log.info('directory %s not present on datastore', parent)
          return False
 
@@ -512,7 +512,7 @@ class VIConnection(object):
    def DatastoreMkdir(self, dsName, path):
       try:
          self.instance.content.fileManager.MakeDirectory(self.MakePath(dsName, path), self.GetDatacenter())
-      except pyVmomi.Vim.Fault.FileAlreadyExists:
+      except pyVmomi.vim.fault.FileAlreadyExists:
          log.debug('Directory %s already exists on server, nothing to do.' % path)
       return True
 
@@ -655,25 +655,25 @@ class VIConnection(object):
       collector = self.instance.content.propertyCollector
 
       # Create ObjectSpec to begin traversal
-      oSpec = pyVmomi.Vmodl.Query.PropertyCollector.ObjectSpec()
+      oSpec = pyVmomi.vmodl.query.PropertyCollector.ObjectSpec()
       oSpec.obj = viewRef
       oSpec.skip = True
 
-      tSpec = pyVmomi.Vmodl.Query.PropertyCollector.TraversalSpec()
+      tSpec = pyVmomi.vmodl.query.PropertyCollector.TraversalSpec()
       tSpec.name = 'traverseEntities'
       tSpec.path = 'view'
       tSpec.skip = False
-      tSpec.type = pyVmomi.Vim.View.ContainerView
+      tSpec.type = pyVmomi.vim.view.ContainerView
       oSpec.selectSet = [tSpec]
 
-      pSpec = pyVmomi.Vmodl.Query.PropertyCollector.PropertySpec()
+      pSpec = pyVmomi.vmodl.query.PropertyCollector.PropertySpec()
       pSpec.type = objType
       if len(pathSet) == 0:
          log.warning('No pathSet passed in, very expensive query.')
          pSpec.all = True
       pSpec.pathSet = list(pathSet)
 
-      fSpec = pyVmomi.Vmodl.Query.PropertyCollector.FilterSpec()
+      fSpec = pyVmomi.vmodl.query.PropertyCollector.FilterSpec()
       fSpec.objectSet = [oSpec]
       fSpec.propSet = [pSpec]
 

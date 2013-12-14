@@ -385,7 +385,7 @@ class Worker(object):
       elif oldId is not None and oldId != id:
          log.warning('Overwriting UUID for %s with %s', vm, id)
 
-      reconf = pyVmomi.Vim.Vm.ConfigSpec()
+      reconf = pyVmomi.vim.vm.ConfigSpec()
       reconf.annotation = '%s:%s:%s' % (kind, self.info.name, id)
 
       task = vm.Reconfigure(reconf)

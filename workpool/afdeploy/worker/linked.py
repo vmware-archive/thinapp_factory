@@ -244,25 +244,25 @@ class LinkedCloneWorker(base.Worker):
          self.Refresh()
 
    def _MakeCloneSpec(self):
-      cloneSpec = pyVmomi.Vim.Vm.CloneSpec()
-      cloneSpec.config = pyVmomi.Vim.Vm.ConfigSpec()
+      cloneSpec = pyVmomi.vim.vm.CloneSpec()
+      cloneSpec.config = pyVmomi.vim.vm.ConfigSpec()
       if self.conn.useAnnotations:
          cloneSpec.config.annotation = '%s:%s' % (conf.VM_ANNOTATION_LINKED_SLAVE, self.templateId)
 
-      customSpec = pyVmomi.Vim.Vm.Customization.Specification()
-      reloSpec = pyVmomi.Vim.Vm.RelocateSpec()
-      sysPrep = pyVmomi.Vim.Vm.Customization.Sysprep()
-      globalIp = pyVmomi.Vim.Vm.Customization.GlobalIPSettings()
-      userData = pyVmomi.Vim.Vm.Customization.UserData()
-      guiUnattended = pyVmomi.Vim.Vm.Customization.GuiUnattended()
-      guiRunOnce = pyVmomi.Vim.Vm.Customization.GuiRunOnce()
-      adapterMap = pyVmomi.Vim.Vm.Customization.AdapterMapping()
+      customSpec = pyVmomi.vim.vm.customization.Specification()
+      reloSpec = pyVmomi.vim.vm.RelocateSpec()
+      sysPrep = pyVmomi.vim.vm.customization.Sysprep()
+      globalIp = pyVmomi.vim.vm.customization.GlobalIPSettings()
+      userData = pyVmomi.vim.vm.customization.UserData()
+      guiUnattended = pyVmomi.vim.vm.customization.GuiUnattended()
+      guiRunOnce = pyVmomi.vim.vm.customization.GuiRunOnce()
+      adapterMap = pyVmomi.vim.vm.customization.AdapterMapping()
 
       # Set everything!
-      adapterMap.adapter = pyVmomi.Vim.Vm.Customization.IPSettings()
-      adapterMap.adapter.ip = pyVmomi.Vim.Vm.Customization.DhcpIpGenerator()
+      adapterMap.adapter = pyVmomi.vim.vm.customization.IPSettings()
+      adapterMap.adapter.ip = pyVmomi.vim.vm.customization.DhcpIpGenerator()
 
-      userData.computerName = pyVmomi.Vim.Vm.Customization.PrefixNameGenerator()
+      userData.computerName = pyVmomi.vim.vm.customization.PrefixNameGenerator()
 
       userData.computerName.base = conf.CLONE_NETBIOS_PREFIX
       userData.fullName = self.info.userName
@@ -282,14 +282,14 @@ class LinkedCloneWorker(base.Worker):
       # logons required since the count is reset when reverting to a
       # previous snapshot.
       guiUnattended.autoLogonCount = 999
-      guiUnattended.password = pyVmomi.Vim.Vm.Customization.Password()
+      guiUnattended.password = pyVmomi.vim.vm.customization.Password()
       guiUnattended.password.plainText = True
       guiUnattended.password.value = self.info.guestPass
       # XXX: Should get time zone from appliance UI or something
       guiUnattended.timeZone = 4
 
       sysPrep.guiUnattended = guiUnattended
-      sysPrep.guiRunOnce = pyVmomi.Vim.Vm.Customization.GuiRunOnce()
+      sysPrep.guiRunOnce = pyVmomi.vim.vm.customization.GuiRunOnce()
 
       # On Vista and above, customizing rearms the activation. We have
       # to do this because customization does not take care of it for us.
@@ -317,13 +317,13 @@ class LinkedCloneWorker(base.Worker):
       cmdList.append('shutdown -s -t 0')
 
       sysPrep.guiRunOnce.commandList = cmdList
-      sysPrep.identification = pyVmomi.Vim.Vm.Customization.Identification()
+      sysPrep.identification = pyVmomi.vim.vm.customization.Identification()
       sysPrep.identification.joinWorkgroup = conf.CLONE_WORKGROUP
       sysPrep.userData = userData
 
       customSpec.identity = sysPrep
       customSpec.globalIPSettings = globalIp
-      customSpec.options = pyVmomi.Vim.Vm.Customization.WinOptions()
+      customSpec.options = pyVmomi.vim.vm.customization.WinOptions()
       customSpec.options.changeSID = True
       customSpec.options.deleteAccounts = True
       customSpec.nicSettingMap = [adapterMap]
@@ -335,7 +335,7 @@ class LinkedCloneWorker(base.Worker):
          pool = resource.resourcePool
 
       # This is the linked clone magic
-      reloSpec.diskMoveType = pyVmomi.Vim.Vm.RelocateSpec.DiskMoveOptions.createNewChildDiskBacking
+      reloSpec.diskMoveType = pyVmomi.vim.vm.RelocateSpec.DiskMoveOptions.createNewChildDiskBacking
       reloSpec.pool = pool
 
       cloneSpec.customization = customSpec
@@ -345,7 +345,7 @@ class LinkedCloneWorker(base.Worker):
       cloneSpec.template = False
 
       cloneSpec.config.extraConfig = []
-      opt = pyVmomi.Vim.Option.OptionValue()
+      opt = pyVmomi.vim.option.OptionValue()
       opt.key = "com.vmware.thinappfactory"
       opt.value = socket.gethostname()
       cloneSpec.config.extraConfig.append(opt)
@@ -385,14 +385,14 @@ class LinkedCloneWorker(base.Worker):
       # CD device to a hosted deviceType. We must fix this or cloning will fail
       # Note that this is idempotent, so calling it on a VM that's already fixed
       # is a no-op.
-      reconfig = pyVmomi.Vim.Vm.ConfigSpec()
-      flopSpec = pyVmomi.Vim.Vm.Device.VirtualDeviceSpec()
-      cdSpec = pyVmomi.Vim.Vm.Device.VirtualDeviceSpec()
+      reconfig = pyVmomi.vim.vm.ConfigSpec()
+      flopSpec = pyVmomi.vim.vm.device.VirtualDeviceSpec()
+      cdSpec = pyVmomi.vim.vm.device.VirtualDeviceSpec()
 
       for device in vmObj.config.hardware.device:
-         if isinstance(device, pyVmomi.Vim.Vm.Device.VirtualCdrom):
+         if isinstance(device, pyVmomi.vim.vm.device.VirtualCdrom):
             cdSpec.device = device
-         elif isinstance(device, pyVmomi.Vim.Vm.Device.VirtualFloppy):
+         elif isinstance(device, pyVmomi.vim.vm.device.VirtualFloppy):
             flopSpec.device = device
          if cdSpec.device is not None and flopSpec.device is not None:
             break
@@ -404,15 +404,15 @@ class LinkedCloneWorker(base.Worker):
       devices = []
 
       if cdSpec.device is not None:
-         cdSpec.device.backing = pyVmomi.Vim.Vm.Device.VirtualCdrom.RemoteAtapiBackingInfo()
+         cdSpec.device.backing = pyVmomi.vim.vm.device.VirtualCdrom.RemoteAtapiBackingInfo()
          cdSpec.device.backing.useAutoDetect = True
-         cdSpec.operation = pyVmomi.Vim.Vm.Device.VirtualDeviceSpec.Operation.edit
+         cdSpec.operation = pyVmomi.vim.vm.device.VirtualDeviceSpec.Operation.edit
          devices.append(cdSpec)
 
       if flopSpec.device is not None:
-         flopSpec.device.backing = pyVmomi.Vim.Vm.Device.VirtualFloppy.RemoteDeviceBackingInfo()
+         flopSpec.device.backing = pyVmomi.vim.vm.device.VirtualFloppy.RemoteDeviceBackingInfo()
          flopSpec.device.backing.useAutoDetect = True
-         flopSpec.operation = pyVmomi.Vim.Vm.Device.VirtualDeviceSpec.Operation.edit
+         flopSpec.operation = pyVmomi.vim.vm.device.VirtualDeviceSpec.Operation.edit
          devices.append(flopSpec)
 
       if len(devices) > 0:
@@ -427,7 +427,7 @@ class LinkedCloneWorker(base.Worker):
 
    @staticmethod
    def AddExtraConfig(extraCfgs, key, value):
-      opt = pyVmomi.Vim.Option.OptionValue()
+      opt = pyVmomi.vim.option.OptionValue()
       opt.key = key
       opt.value = value
       extraCfgs.append(opt)
@@ -435,7 +435,7 @@ class LinkedCloneWorker(base.Worker):
    @staticmethod
    def SetVideo(conn, vmObj):
       log.info('reconfig video')
-      reconfig = pyVmomi.Vim.Vm.ConfigSpec()
+      reconfig = pyVmomi.vim.vm.ConfigSpec()
       reconfig.extraConfig = []
       reconfig.deviceChange = []
 
@@ -445,13 +445,13 @@ class LinkedCloneWorker(base.Worker):
       LinkedCloneWorker.AddExtraConfig(reconfig.extraConfig, "svga.autodetect", "FALSE")
 
       for device in vmObj.config.hardware.device:
-         if isinstance(device, pyVmomi.Vim.Vm.Device.VirtualVideoCard):
+         if isinstance(device, pyVmomi.vim.vm.device.VirtualVideoCard):
             if device.videoRamSizeInKB >= 8192:
                return
 
             device.videoRamSizeInKB = 8192
-            spec = pyVmomi.Vim.Vm.Device.VirtualDeviceSpec()
-            spec.operation = pyVmomi.Vim.Vm.Device.VirtualDeviceSpec.Operation.edit
+            spec = pyVmomi.vim.vm.device.VirtualDeviceSpec()
+            spec.operation = pyVmomi.vim.vm.device.VirtualDeviceSpec.Operation.edit
             spec.device = device
             reconfig.deviceChange.append(spec)
 

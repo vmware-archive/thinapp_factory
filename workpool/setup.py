@@ -19,7 +19,7 @@ from setuptools import find_packages, setup
 if sys.platform.startswith('win'):
    raise Exception('only builds on Linux')
 
-install_requires = ['pySdk>=4.1.0', 'path.py>=5.0']
+install_requires = ['pyvmomi>=4.1.0', 'path.py>=5.0']
 
 setup(name='afdeploy',
       version='1.0',
