@@ -221,7 +221,7 @@ If you use ninite.com feed or download from other external source, and you
 have a proxy, ensure the following properties are set.
 
 	proxySet=true
-	proxyHost=proxy.your.copmany.com
+	proxyHost=proxy.your.company.com
 	proxyPort=port
 
 A TODO is to make this settable in setup.cfg.
