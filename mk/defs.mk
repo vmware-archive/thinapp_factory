@@ -24,7 +24,7 @@ MVN_FLAGS := -Dmaven.test.skip=true -DuseOnlineRepositories=true
 # Manual Mode. Alternatively, if LOCAL_UNZIPSFX_EXE is set and exists, the
 # download step is skipped.
 UNZIPSFX_EXE := unzipsfx.exe
-LOCAL_UNZIPSFX_EZE :=
+LOCAL_UNZIPSFX_EXE :=
 
 # We unzip unzipsfx.exe from this
 UNZIP_INSTALLER := unz600xn.exe
