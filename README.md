@@ -37,6 +37,7 @@ On a Ubuntu system (we used 12.04 LTS), you need these prerequisites:
 
 	build-essential
 	libsqlite3-0
+	curl
 	libcurl3
 	samba
 	samba-common-bin
