@@ -1,4 +1,5 @@
 # What is VMware ThinApp Factory (TAF)?
+# VMware has ended active development of this project, this repository will no longer be updated.
 
 TAF is a tool that simplifies generation of VMware ThinApps to an extent
 that it can be configured to keep generating ThinApps by picking up
